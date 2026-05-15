@@ -1,0 +1,53 @@
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Infrastructure.deps.json
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Infrastructure.dll
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Infrastructure.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Application.dll
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Domain.dll
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Application.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Domain.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.csproj.AssemblyReference.cache
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.AssemblyInfoInputs.cache
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.AssemblyInfo.cs
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.csproj.CoreCompileInputs.cache
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolEr.2ABE6D33.Up2Date
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.dll
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\refint\SchoolErp.Infrastructure.dll
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\ref\SchoolErp.Infrastructure.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Infrastructure.deps.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Infrastructure.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Infrastructure.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Application.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Domain.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Application.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\SchoolErp.Domain.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.csproj.AssemblyReference.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.AssemblyInfoInputs.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.AssemblyInfo.cs
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.csproj.CoreCompileInputs.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolEr.2ABE6D33.Up2Date
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\refint\SchoolErp.Infrastructure.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\SchoolErp.Infrastructure.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\obj\Debug\net10.0\ref\SchoolErp.Infrastructure.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-Black.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-BlackItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-Bold.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-BoldItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-ExtraBold.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-ExtraBoldItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-ExtraLight.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-ExtraLightItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-Italic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-Light.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-LightItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-Medium.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-MediumItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-Regular.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-SemiBold.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-SemiBoldItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-Thin.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\Lato-ThinItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Infrastructure\bin\Debug\net10.0\LatoFont\OFL.txt

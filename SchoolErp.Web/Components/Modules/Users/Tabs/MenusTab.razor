@@ -1,0 +1,195 @@
+@using SchoolErp.Application.Common.Models
+@using SchoolErp.Application.Features.Menu
+@using SchoolErp.Application.Common.Mediator
+@using SchoolErp.Web.Components.Shared
+@inject IMediator Mediator
+
+<div class="page-header">
+    <h2 class="page-title">Menus Management</h2>
+    @if (!ShowMenuForm)
+    {
+        <button class="btn-add" @onclick="ShowCreateMenuForm">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Add New Menu</span>
+        </button>
+    }
+</div>
+
+@if (ShowMenuForm)
+{
+    <div class="form-card animate-fade-in-up">
+        <h3 class="form-title">@(IsMenuEditMode ? "Edit Menu" : "Create New Menu")</h3>
+        <EditForm Model="MenuForm" OnValidSubmit="SaveMenu">
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label">Menu Name</label>
+                    <InputText @bind-Value="MenuForm.Name" class="form-control-modern" placeholder="e.g. Dashboard, Admissions" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">URL Path</label>
+                    <InputText @bind-Value="MenuForm.Url" class="form-control-modern" placeholder="/dashboard" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Icon Class (FontAwesome/Bootstrap)</label>
+                    <InputText @bind-Value="MenuForm.Icon" class="form-control-modern" placeholder="bi bi-house" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Display Order</label>
+                    <InputNumber @bind-Value="MenuForm.Order" class="form-control-modern" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <SelectPicker Items="ActiveStatusPickerItems" Value="@MenuForm.IsActive.ToString()" ValueChanged="@(v => MenuForm.IsActive = int.Parse(v ?? "1"))" ValueField="Value" LabelField="Label" Placeholder="Select Status" Searchable="false" Clearable="false" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary-modern" @onclick="() => ShowMenuForm = false">Discard</button>
+                <button type="submit" class="btn-primary-modern">@(IsMenuEditMode ? "Update Menu" : "Save Menu")</button>
+            </div>
+        </EditForm>
+    </div>
+}
+else
+{
+    <div class="table-card animate-fade-in-up">
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Menu Name</th>
+                        <th>URL</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (MenusList == null)
+                    {
+                        <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                    }
+                    else if (!MenusList.Any())
+                    {
+                        <tr><td colspan="5" class="text-center">No menus found.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var menu in MenusList)
+                        {
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        @if (!string.IsNullOrEmpty(menu.ICON)) { <i class="@menu.ICON"></i> }
+                                        <span style="font-weight: 600;">@menu.MENU_NAME</span>
+                                    </div>
+                                </td>
+                                <td><code>@menu.MENU_URL</code></td>
+                                <td>@menu.DISPLAY_ORDER</td>
+                                <td>
+                                    <span class="badge-modern @(menu.IS_ACTIVE == 1 ? "badge-success" : "badge-danger")">
+                                        @(menu.IS_ACTIVE == 1 ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons" style="justify-content: flex-end;">
+                                        <button class="btn-icon-modern" @onclick="() => EditMenu(menu)" title="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                        <button class="btn-icon-modern danger" @onclick="() => DeleteMenu(menu.MENU_ID)" title="Delete"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    private bool ShowMenuForm = false;
+    private bool IsMenuEditMode = false;
+    private MenuFormModel MenuForm = new();
+    private IEnumerable<MenuDto>? MenusList;
+
+    private static readonly IEnumerable<object> ActiveStatusPickerItems = new object[]
+    {
+        new { Value = "1", Label = "Active" },
+        new { Value = "0", Label = "Inactive" }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMenus();
+    }
+
+    private async Task LoadMenus()
+    {
+        MenusList = await Mediator.Send(new GetMenusQuery());
+    }
+
+    private void ShowCreateMenuForm()
+    {
+        IsMenuEditMode = false;
+        MenuForm = new MenuFormModel();
+        ShowMenuForm = true;
+    }
+
+    private void EditMenu(MenuDto menu)
+    {
+        IsMenuEditMode = true;
+        MenuForm = new MenuFormModel
+        {
+            Id = menu.MENU_ID,
+            Name = menu.MENU_NAME,
+            Url = menu.MENU_URL,
+            Icon = menu.ICON,
+            Order = menu.DISPLAY_ORDER,
+            IsActive = menu.IS_ACTIVE
+        };
+        ShowMenuForm = true;
+    }
+
+    private async Task SaveMenu()
+    {
+        if (IsMenuEditMode)
+        {
+            await Mediator.Send(new UpdateMenuCommand 
+            { 
+                Id = MenuForm.Id!, 
+                Name = MenuForm.Name, 
+                Url = MenuForm.Url, 
+                Icon = MenuForm.Icon, 
+                Order = MenuForm.Order, 
+                IsActive = MenuForm.IsActive 
+            });
+        }
+        else
+        {
+            await Mediator.Send(new CreateMenuCommand 
+            { 
+                Name = MenuForm.Name, 
+                Url = MenuForm.Url, 
+                Icon = MenuForm.Icon, 
+                Order = MenuForm.Order 
+            });
+        }
+        ShowMenuForm = false;
+        await LoadMenus();
+    }
+
+    private async Task DeleteMenu(string id)
+    {
+        await Mediator.Send(new DeleteMenuCommand { Id = id });
+        await LoadMenus();
+    }
+
+    public class MenuFormModel
+    {
+        public string? Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? Url { get; set; }
+        public string? Icon { get; set; }
+        public int Order { get; set; } = 1;
+        public int IsActive { get; set; } = 1;
+    }
+}

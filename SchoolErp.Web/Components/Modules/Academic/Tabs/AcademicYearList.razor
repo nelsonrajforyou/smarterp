@@ -1,0 +1,275 @@
+@using SchoolErp.Application.Common.Interfaces
+@using SchoolErp.Application.Common.Queries
+@using Dapper
+@inject ICommonDataService CommonData
+@inject IAcademicService AcademicService
+@inject SchoolErp.Application.Common.Mediator.IMediator Mediator
+@using SchoolErp.Application.Features.Academic
+@using System.ComponentModel.DataAnnotations
+
+<div class="animate-fade-in">
+    <div class="tab-content-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0;">Academic Sessions</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">Manage school terms and active periods</p>
+        </div>
+        <button class="btn-primary-modern" @onclick="OpenAddModal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Session
+        </button>
+    </div>
+
+    <div class="academic-year-grid">
+        @foreach (var year in Years)
+        {
+            <div class="year-card @(year.IsActive == "1" ? "current" : "")">
+                <div class="card-status">
+                    @if (year.IsActive == "1")
+                    {
+                        <span class="active-pill">Active Session</span>
+                    }
+                    else
+                    {
+                        <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Previous Session</span>
+                    }
+                </div>
+                <div class="year-info">
+                    <span class="year-label">Academic Year</span>
+                    <span class="year-value">@year.YearName</span>
+                </div>
+                <div class="year-dates">
+                    <div class="date-item">
+                        <span class="d-label">Term Start</span>
+                        <span class="d-value">@year.FromDate</span>
+                    </div>
+                    <div class="date-item">
+                        <span class="d-label">Term End</span>
+                        <span class="d-value">@year.ToDate</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-secondary-modern" style="flex: 1; height: 36px; padding: 0;" @onclick="() => EditYear(year)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Edit
+                    </button>
+                    @if (year.IsActive == "0")
+                    {
+                        <button class="btn-primary-modern" style="flex: 1.5; height: 36px; padding: 0; background: var(--primary-500);" @onclick="() => SetActive(year.YearId)">
+                            Make Active
+                        </button>
+                    }
+                    <button class="btn-icon-modern danger" style="width: 36px; height: 36px;" @onclick="() => DeleteYear(year.YearId)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (ShowModal)
+{
+    <div class="modal-backdrop">
+        <div class="form-card animate-fade-in-up" style="max-width: 450px; width: 100%; margin: 1.5rem;">
+            <div class="form-title">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <span>@(IsEditMode ? "Edit Session" : "Create New Session")</span>
+                    <button @onclick="CloseModal" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.5rem;">&times;</button>
+                </div>
+            </div>
+            
+            <EditForm Model="YearModel" OnValidSubmit="SaveYear">
+                <DataAnnotationsValidator />
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label class="form-label">Session Name</label>
+                        <InputText class="form-control-modern" @bind-Value="YearModel.YearName" placeholder="e.g. 2026-27" />
+                        <ValidationMessage For="@(() => YearModel.YearName)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Start Date</label>
+                        <InputDate class="form-control-modern" @bind-Value="YearModel.FromDateRaw" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">End Date</label>
+                        <InputDate class="form-control-modern" @bind-Value="YearModel.ToDateRaw" />
+                    </div>
+                    <div class="col-12">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: var(--gray-50); border-radius: 10px;">
+                            <InputCheckbox id="is-active-chk" @bind-Value="YearModel.IsActiveBool" style="width: 18px; height: 18px;" />
+                            <label for="is-active-chk" style="font-weight: 600; font-size: 0.9rem; cursor: pointer;">Set as current active session</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary-modern" @onclick="CloseModal">Cancel</button>
+                    <button type="submit" class="btn-primary-modern">
+                        @(IsEditMode ? "Save Changes" : "Create Session")
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<style>
+    .academic-year-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .year-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .year-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .year-card.current {
+        border-color: var(--primary-400);
+        background: linear-gradient(180deg, var(--primary-50) 0%, white 100%);
+    }
+
+    .active-pill {
+        background: var(--primary-500);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+    }
+
+    .year-info { margin-bottom: 1.5rem; margin-top: 0.75rem; }
+    .year-label { display: block; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.25rem; }
+    .year-value { font-size: 1.75rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }
+
+    .year-dates {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border-color);
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+    }
+
+    .d-label { display: block; color: var(--text-muted); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+    .d-value { font-weight: 700; color: var(--text-secondary); font-size: 0.9rem; }
+
+    .card-footer { display: flex; gap: 0.75rem; align-items: center; }
+</style>
+
+@code {
+    private List<AcademicYearDto> Years { get; set; } = new();
+    private bool ShowModal = false;
+    private bool IsEditMode = false;
+    private YearViewModel YearModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        Years = await Mediator.Send(new GetAcademicYearsQuery());
+        StateHasChanged();
+    }
+
+    private void OpenAddModal()
+    {
+        IsEditMode = false;
+        YearModel = new YearViewModel 
+        { 
+            FromDateRaw = DateTime.Today, 
+            ToDateRaw = DateTime.Today.AddYears(1),
+            IsActive = "0"
+        };
+        ShowModal = true;
+    }
+
+    private void EditYear(AcademicYearDto year)
+    {
+        IsEditMode = true;
+        YearModel = new YearViewModel
+        {
+            YearId = year.YearId,
+            YearName = year.YearName,
+            FromDateRaw = DateTime.TryParse(year.FromDate, out var f) ? f : DateTime.Today,
+            ToDateRaw = DateTime.TryParse(year.ToDate, out var t) ? t : DateTime.Today,
+            IsActive = year.IsActive
+        };
+        ShowModal = true;
+    }
+
+    private async Task SaveYear()
+    {
+        bool success;
+        var fromDateStr = YearModel.FromDateRaw.ToString("yyyy-MM-dd");
+        var toDateStr = YearModel.ToDateRaw.ToString("yyyy-MM-dd");
+
+        if (IsEditMode)
+        {
+            success = await AcademicService.UpdateAcademicYearAsync(YearModel.YearId, YearModel.YearName, fromDateStr, toDateStr, YearModel.IsActive);
+        }
+        else
+        {
+            success = await AcademicService.CreateAcademicYearAsync(YearModel.YearName, fromDateStr, toDateStr, YearModel.IsActive);
+        }
+
+        if (success)
+        {
+            await LoadData();
+            CloseModal();
+        }
+    }
+
+    private async Task SetActive(string id)
+    {
+        if (await AcademicService.SetActiveAcademicYearAsync(id))
+        {
+            await LoadData();
+        }
+    }
+
+    private async Task DeleteYear(string id)
+    {
+        if (await AcademicService.DeleteAcademicYearAsync(id))
+        {
+            await LoadData();
+        }
+    }
+
+    private void CloseModal() => ShowModal = false;
+
+    public class YearViewModel
+    {
+        public string YearId { get; set; } = "";
+        
+        [Required(ErrorMessage = "Session Name is required")]
+        public string YearName { get; set; } = "";
+        
+        public string FromDate { get; set; } = "";
+        public string ToDate { get; set; } = "";
+        
+        [Required(ErrorMessage = "Start Date is required")]
+        public DateTime FromDateRaw { get; set; }
+        
+        [Required(ErrorMessage = "End Date is required")]
+        public DateTime ToDateRaw { get; set; }
+        
+        public string IsActive { get; set; } = "0";
+        public bool IsActiveBool { get => IsActive == "1"; set => IsActive = value ? "1" : "0"; }
+    }
+}

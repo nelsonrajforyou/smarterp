@@ -1,0 +1,201 @@
+@using SchoolErp.Application.Common.Models
+@using SchoolErp.Application.Features.Users
+@using SchoolErp.Application.Features.Menu
+@using SchoolErp.Application.Common.Mediator
+@using SchoolErp.Web.Components.Shared
+@inject IMediator Mediator
+
+<div class="page-header">
+    <h2 class="page-title">Role Permissions (Role-Menus)</h2>
+    @if (!ShowRoleMenuForm)
+    {
+        <button class="btn-add" @onclick="ShowCreateRoleMenuForm">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Assign Permissions</span>
+        </button>
+    }
+</div>
+
+@if (ShowRoleMenuForm)
+{
+    <div class="form-card animate-fade-in-up">
+        <h3 class="form-title">@(IsRoleMenuEditMode ? "Edit Assignment" : "Assign Menu to Role")</h3>
+        <EditForm Model="RoleMenuForm" OnValidSubmit="SaveRoleMenu">
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <label class="form-label">Select Role</label>
+                    <SelectPicker Items="RolesPickerItems" Value="@RoleMenuForm.RoleId" ValueChanged="v => RoleMenuForm.RoleId = v ?? string.Empty" ValueField="Value" LabelField="Label" Placeholder="Select Role" Disabled="@IsRoleMenuEditMode" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Select Menu</label>
+                    <SelectPicker Items="MenusPickerItems" Value="@RoleMenuForm.MenuId" ValueChanged="v => RoleMenuForm.MenuId = v ?? string.Empty" ValueField="Value" LabelField="Label" Placeholder="Select Menu" Disabled="@IsRoleMenuEditMode" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <SelectPicker Items="ActiveStatusPickerItems" Value="@RoleMenuForm.IsActive.ToString()" ValueChanged="@(v => RoleMenuForm.IsActive = int.Parse(v ?? "1"))" ValueField="Value" LabelField="Label" Placeholder="Select Status" Searchable="false" Clearable="false" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary-modern" @onclick="() => ShowRoleMenuForm = false">Discard</button>
+                <button type="submit" class="btn-primary-modern">@(IsRoleMenuEditMode ? "Update Assignment" : "Assign Menu")</button>
+            </div>
+        </EditForm>
+    </div>
+}
+else
+{
+    <div class="table-card animate-fade-in-up">
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Assigned Menu</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (RoleMenusList == null)
+                    {
+                        <tr><td colspan="3" class="text-center">Loading...</td></tr>
+                    }
+                    else if (!RoleMenusList.Any())
+                    {
+                        <tr><td colspan="3" class="text-center">No assignments found.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var rm in RoleMenusList)
+                        {
+                            <tr>
+                                <td><span style="font-weight: 600;">@rm.ROLE_NAME</span></td>
+                                <td>@rm.MENU_NAME</td>
+                                <td>
+                                    <span class="badge-modern @(rm.IS_ACTIVE == 1 ? "badge-success" : "badge-danger")">
+                                        @(rm.IS_ACTIVE == 1 ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons" style="justify-content: flex-end;">
+                                        <button class="btn-icon-modern" @onclick="() => EditRoleMenu(rm)" title="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                        <button class="btn-icon-modern danger" @onclick="() => DeleteRoleMenu(rm.ROLE_ID, rm.MENU_ID)" title="Delete"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    private bool ShowRoleMenuForm = false;
+    private bool IsRoleMenuEditMode = false;
+    private RoleMenuFormModel RoleMenuForm = new();
+    
+    private IEnumerable<RoleMenuDto>? RoleMenusList;
+    private IEnumerable<RoleDto>? RolesList;
+    private IEnumerable<MenuDto>? MenusList;
+
+    private IEnumerable<object> RolesPickerItems => 
+        RolesList?.Select(r => (object)new { Value = r.ROLE_ID, Label = r.NAME }) ?? Enumerable.Empty<object>();
+
+    private IEnumerable<object> MenusPickerItems => 
+        MenusList?.Select(m => (object)new { Value = m.MENU_ID, Label = m.MENU_NAME }) ?? Enumerable.Empty<object>();
+
+    private static readonly IEnumerable<object> ActiveStatusPickerItems = new object[]
+    {
+        new { Value = "1", Label = "Active" },
+        new { Value = "0", Label = "Inactive" }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAllData();
+    }
+
+    private async Task LoadAllData()
+    {
+        var tasks = new List<Task>
+        {
+            LoadRoleMenus(),
+            LoadRoles(),
+            LoadMenus()
+        };
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task LoadRoles()
+    {
+        RolesList = await Mediator.Send(new GetRolesQuery());
+    }
+
+    private async Task LoadMenus()
+    {
+        MenusList = await Mediator.Send(new GetMenusQuery());
+    }
+
+    private async Task LoadRoleMenus()
+    {
+        RoleMenusList = await Mediator.Send(new GetRoleMenuAssignmentsQuery());
+    }
+
+    private void ShowCreateRoleMenuForm()
+    {
+        IsRoleMenuEditMode = false;
+        RoleMenuForm = new RoleMenuFormModel();
+        ShowRoleMenuForm = true;
+    }
+
+    private void EditRoleMenu(RoleMenuDto rm)
+    {
+        IsRoleMenuEditMode = true;
+        RoleMenuForm = new RoleMenuFormModel
+        {
+            RoleId = rm.ROLE_ID,
+            MenuId = rm.MENU_ID,
+            IsActive = rm.IS_ACTIVE
+        };
+        ShowRoleMenuForm = true;
+    }
+
+    private async Task SaveRoleMenu()
+    {
+        if (IsRoleMenuEditMode)
+        {
+            await Mediator.Send(new UpdateRoleMenuCommand 
+            { 
+                RoleId = RoleMenuForm.RoleId, 
+                MenuId = RoleMenuForm.MenuId,
+                IsActive = RoleMenuForm.IsActive
+            });
+        }
+        else
+        {
+            await Mediator.Send(new AssignRoleMenuCommand 
+            { 
+                RoleId = RoleMenuForm.RoleId, 
+                MenuId = RoleMenuForm.MenuId,
+                IsActive = RoleMenuForm.IsActive
+            });
+        }
+        ShowRoleMenuForm = false;
+        await LoadRoleMenus();
+    }
+
+    private async Task DeleteRoleMenu(string roleId, string menuId)
+    {
+        await Mediator.Send(new UnassignRoleMenuCommand { RoleId = roleId, MenuId = menuId });
+        await LoadRoleMenus();
+    }
+
+    public class RoleMenuFormModel
+    {
+        public string RoleId { get; set; } = string.Empty;
+        public string MenuId { get; set; } = string.Empty;
+        public int IsActive { get; set; } = 1;
+    }
+}

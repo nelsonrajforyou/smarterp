@@ -1,0 +1,298 @@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject IJSRuntime JS
+
+<div class="theme-switcher-container">
+    <button class="header-icon-btn" @onclick="TogglePanel" title="Theme Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+    </button>
+
+    @if (ShowPanel)
+    {
+        <div class="theme-panel animate-in">
+            <div class="panel-header">
+                <h4>System Customization</h4>
+                <button @onclick="TogglePanel">&times;</button>
+            </div>
+
+            <!-- Dark / Light Mode Toggle -->
+            <div class="panel-section">
+                <label>Appearance</label>
+                <div class="mode-toggle-row">
+                    <span class="mode-label">
+                        <i class="bi @(IsDark ? "bi-moon-stars-fill" : "bi-sun-fill")"></i>
+                        @(IsDark ? "Dark Mode" : "Light Mode")
+                    </span>
+                    <button class="toggle-switch @(IsDark ? "on" : "")" @onclick="ToggleDarkMode">
+                        <span class="toggle-thumb"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Primary Color -->
+            <div class="panel-section">
+                <label>Primary Color</label>
+                <div class="color-grid">
+                    @foreach (var c in ThemeColors)
+                    {
+                        <div class="color-swatch @(CurrentColor == c.Hex ? "active" : "")"
+                             style="background: @c.Hex"
+                             title="@c.Name"
+                             @onclick="() => SetTheme(c.Hex)">
+                            @if (CurrentColor == c.Hex)
+                            {
+                                <i class="bi bi-check-lg"></i>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Typography -->
+            <div class="panel-section">
+                <label>Font Style</label>
+                <div class="font-list">
+                    @foreach (var f in Fonts)
+                    {
+                        <button class="font-item @(CurrentFont == f.Value ? "active" : "")"
+                                style="font-family: @f.Value"
+                                @onclick="() => SetFont(f.Value)">
+                            @f.Name
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Font Size -->
+            <div class="panel-section">
+                <label>Font Size</label>
+                <div class="font-size-row">
+                    <button class="size-btn" @onclick="DecreaseFontSize" disabled="@(FontSizePx <= 12)">
+                        <i class="bi bi-dash-lg"></i>
+                    </button>
+                    <div class="size-display">
+                        <span class="size-value">@FontSizePx</span>
+                        <span class="size-unit">px</span>
+                    </div>
+                    <button class="size-btn" @onclick="IncreaseFontSize" disabled="@(FontSizePx >= 24)">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                    <button class="size-reset" @onclick="ResetFontSize" title="Reset to default">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                </div>
+                <input type="range" id="theme-size-slider" name="themeSizeSlider" class="size-slider" min="12" max="24"
+                       value="@FontSizePx" @oninput="OnSliderChange" />
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .theme-switcher-container { position: relative; }
+
+    .theme-panel {
+        position: absolute; top: calc(100% + 10px); right: 0; width: 292px;
+        background: var(--bg-card); border-radius: 18px; border: 1px solid var(--border-color);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.18); z-index: 9999; padding: 1.25rem;
+        max-height: calc(100vh - 80px); overflow-y: auto;
+    }
+
+    .panel-header {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 1.25rem; padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .panel-header h4 { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+    .panel-header button { background: none; border: none; font-size: 1.4rem; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0; }
+
+    .panel-section { margin-bottom: 1.25rem; }
+    .panel-section:last-child { margin-bottom: 0; }
+    .panel-section label {
+        display: block; font-size: 0.7rem; font-weight: 700;
+        text-transform: uppercase; color: var(--text-muted);
+        margin-bottom: 0.65rem; letter-spacing: 0.07em;
+    }
+
+    /* Dark Mode Toggle */
+    .mode-toggle-row { display: flex; align-items: center; justify-content: space-between; }
+    .mode-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); }
+    .toggle-switch {
+        width: 44px; height: 24px; border-radius: 12px; border: none;
+        background: var(--gray-300); cursor: pointer; position: relative;
+        transition: background 0.25s; padding: 0;
+    }
+    .toggle-switch.on { background: var(--primary-500); }
+    .toggle-thumb {
+        position: absolute; top: 3px; left: 3px;
+        width: 18px; height: 18px; border-radius: 50%; background: #fff;
+        transition: left 0.25s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .toggle-switch.on .toggle-thumb { left: calc(100% - 21px); }
+
+    /* Color Swatches */
+    .color-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.55rem; }
+    .color-swatch {
+        width: 38px; height: 38px; border-radius: 10px; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.18s, box-shadow 0.18s; color: #fff; font-size: 0.8rem;
+    }
+    .color-swatch:hover { transform: scale(1.12); box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+    .color-swatch.active { outline: 2.5px solid var(--text-primary); outline-offset: 2px; }
+
+    /* Font Buttons */
+    .font-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .font-item {
+        padding: 0.55rem 0.9rem; border: 1px solid var(--border-color);
+        border-radius: 10px; background: var(--bg-page); text-align: left;
+        cursor: pointer; font-size: 0.875rem; color: var(--text-secondary);
+        transition: all 0.2s;
+    }
+    .font-item:hover { background: var(--gray-100); border-color: var(--primary-500); color: var(--text-primary); }
+    .font-item.active { background: var(--primary-500); color: #fff; border-color: var(--primary-500); font-weight: 600; }
+
+    /* Font Size Controls */
+    .font-size-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.65rem; }
+    .size-btn {
+        width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+        border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-page);
+        color: var(--text-secondary); cursor: pointer; transition: all 0.2s; font-size: 0.85rem;
+    }
+    .size-btn:hover:not(:disabled) { background: var(--primary-500); color: #fff; border-color: var(--primary-500); }
+    .size-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .size-display { display: flex; align-items: baseline; gap: 2px; min-width: 42px; justify-content: center; }
+    .size-value { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+    .size-unit { font-size: 0.7rem; color: var(--text-muted); }
+    .size-reset {
+        margin-left: auto; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+        border-radius: 7px; border: 1px solid var(--border-color); background: none;
+        color: var(--text-muted); cursor: pointer; font-size: 0.8rem; transition: all 0.2s;
+    }
+    .size-reset:hover { color: var(--primary-500); border-color: var(--primary-500); }
+    .size-slider {
+        width: 100%; height: 4px; appearance: none; border-radius: 4px;
+        background: linear-gradient(to right, var(--primary-500) 0%, var(--primary-500) calc((var(--v, 50) / 24) * 100%), var(--gray-200) calc((var(--v, 50) / 24) * 100%), var(--gray-200) 100%);
+        outline: none; cursor: pointer;
+    }
+    .size-slider::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--primary-500); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+
+    .animate-in { animation: themeSlideIn 0.25s ease-out; }
+    @@keyframes themeSlideIn { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+</style>
+
+@code {
+    private bool ShowPanel = false;
+    private bool IsDark = false;
+    private string CurrentColor = "#6366f1";
+    private string CurrentFont = "'Inter', sans-serif";
+    private int FontSizePx = 16;
+    private bool _settingsLoaded = false;
+
+    private record ThemeColor(string Name, string Hex);
+
+    private ThemeColor[] ThemeColors =
+    {
+        new("Indigo",    "#6366f1"),
+        new("Sky Blue",  "#0ea5e9"),
+        new("Emerald",   "#10b981"),
+        new("Amber",     "#f59e0b"),
+        new("Rose",      "#ef4444"),
+        new("Violet",    "#8b5cf6"),
+        new("Pink",      "#ec4899"),
+        new("Teal",      "#14b8a6"),
+        new("Slate",     "#334155"),
+        new("Graphite",  "#1f2937"),
+    };
+
+    private List<(string Name, string Value)> Fonts = new()
+    {
+        ("Inter",        "'Inter', sans-serif"),
+        ("Outfit",       "'Outfit', sans-serif"),
+        ("Roboto",       "'Roboto', sans-serif"),
+        ("Montserrat",   "'Montserrat', sans-serif"),
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_settingsLoaded)
+        {
+            _settingsLoaded = true;
+            try
+            {
+                // Read persisted settings from localStorage via JS
+                var settings = await JS.InvokeAsync<ThemeSettings>("themeManager.getSettings");
+                CurrentColor = settings.Color;
+                CurrentFont  = settings.Font;
+                FontSizePx   = ParsePx(settings.FontSize);
+                IsDark       = settings.DarkMode;
+                StateHasChanged();
+            }
+            catch { /* ignore if JS not ready */ }
+        }
+    }
+
+    private void TogglePanel() => ShowPanel = !ShowPanel;
+
+    private async Task SetTheme(string color)
+    {
+        CurrentColor = color;
+        await JS.InvokeVoidAsync("themeManager.applyTheme", color);
+    }
+
+    private async Task SetFont(string font)
+    {
+        CurrentFont = font;
+        await JS.InvokeVoidAsync("themeManager.applyFont", font);
+    }
+
+    private async Task IncreaseFontSize()
+    {
+        if (FontSizePx < 24)
+        {
+            FontSizePx++;
+            await JS.InvokeVoidAsync("themeManager.applyFontSize", $"{FontSizePx}px");
+        }
+    }
+
+    private async Task DecreaseFontSize()
+    {
+        if (FontSizePx > 12)
+        {
+            FontSizePx--;
+            await JS.InvokeVoidAsync("themeManager.applyFontSize", $"{FontSizePx}px");
+        }
+    }
+
+    private async Task ResetFontSize()
+    {
+        FontSizePx = 16;
+        await JS.InvokeVoidAsync("themeManager.applyFontSize", "16px");
+    }
+
+    private async Task OnSliderChange(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var val))
+        {
+            FontSizePx = val;
+            await JS.InvokeVoidAsync("themeManager.applyFontSize", $"{FontSizePx}px");
+        }
+    }
+
+    private async Task ToggleDarkMode()
+    {
+        IsDark = await JS.InvokeAsync<bool>("themeManager.toggleDarkMode");
+    }
+
+    private static int ParsePx(string s) =>
+        int.TryParse(s.Replace("px", ""), out var v) ? Math.Clamp(v, 12, 24) : 16;
+
+    private class ThemeSettings
+    {
+        public string Color    { get; set; } = "#6366f1";
+        public string Font     { get; set; } = "'Inter', sans-serif";
+        public string FontSize { get; set; } = "16px";
+        public bool   DarkMode { get; set; } = false;
+    }
+}

@@ -1,0 +1,285 @@
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\appsettings.Development.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\appsettings.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.staticwebassets.runtime.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.staticwebassets.endpoints.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.exe
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.deps.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.runtimeconfig.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\AutoMapper.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Dapper.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\FluentValidation.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\MediatR.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\MediatR.Contracts.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\MySqlConnector.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Application.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Domain.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Infrastructure.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Application.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Infrastructure.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Domain.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\EmbeddedAttribute.cs
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\ValidatableTypeAttribute.cs
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.csproj.AssemblyReference.cache
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\rpswa.dswa.cache.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.GeneratedMSBuildEditorConfig.editorconfig
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.AssemblyInfoInputs.cache
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.AssemblyInfo.cs
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.csproj.CoreCompileInputs.cache
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.MvcApplicationPartsAssemblyInfo.cache
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\rjimswa.dswa.cache.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Layout\MainLayout.razor.rz.scp.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Layout\ReconnectModal.razor.rz.scp.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\bundle\SchoolErp.Web.styles.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\projectbundle\SchoolErp.Web.bundle.scp.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\oijfjos61g-{0}-bqjiyaj88i-bqjiyaj88i.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\btf6bcmnn8-{0}-c2jlpeoesf-c2jlpeoesf.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\20v44evexa-{0}-erw9l3u2r3-erw9l3u2r3.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\mbst5kpwof-{0}-aexeepp0ev-aexeepp0ev.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\6cxxtg12ak-{0}-d7shbmvgxk-d7shbmvgxk.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\fu76b6a8tt-{0}-ausgxo2sd3-ausgxo2sd3.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\9dra1u8ucc-{0}-k8d9w2qqmf-k8d9w2qqmf.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\touo0x6kkc-{0}-cosvhxvwiu-cosvhxvwiu.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\513om621vz-{0}-ub07r2b239-ub07r2b239.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\sokfde7gss-{0}-fvhpjtyr6v-fvhpjtyr6v.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\tkxixg89ms-{0}-b7pk76d08c-b7pk76d08c.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\nuwecfs9dj-{0}-fsbi9cje9m-fsbi9cje9m.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\kqsmabud1u-{0}-rzd6atqjts-rzd6atqjts.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\6xtnjnq87d-{0}-ee0r1s7dh0-ee0r1s7dh0.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\69gwp3ytra-{0}-dxx9fxp4il-dxx9fxp4il.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\o2ssi9fu3v-{0}-jd9uben2k1-jd9uben2k1.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\0wx1clbn4m-{0}-khv3u5hwcm-khv3u5hwcm.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\y9hh47ajyj-{0}-r4e9w2rdcm-r4e9w2rdcm.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\59s0flbzta-{0}-lcd1t2u6c8-lcd1t2u6c8.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\9xb96umqtu-{0}-c2oey78nd0-c2oey78nd0.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\wsyc32k2m4-{0}-tdbxkamptv-tdbxkamptv.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\niv1j58sgv-{0}-j5mq2jizvt-j5mq2jizvt.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\scs2e8r82v-{0}-06098lyss8-06098lyss8.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\84nuj5uc54-{0}-nvvlpmu67g-nvvlpmu67g.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\lytefw866w-{0}-s35ty4nyc5-s35ty4nyc5.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\w2ct8nvf0v-{0}-pj5nd1wqec-pj5nd1wqec.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\haj445jz71-{0}-46ein0sx1k-46ein0sx1k.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\cdzoopoakr-{0}-v0zj4ognzu-v0zj4ognzu.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\c9novgbthn-{0}-37tfw0ft22-37tfw0ft22.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\4dhndpznjj-{0}-hrwsygsryq-hrwsygsryq.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\ewjcl0473i-{0}-pk9g2wxc8p-pk9g2wxc8p.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\ay2rdpj7yu-{0}-ft3s53vfgj-ft3s53vfgj.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\w8oswbw3tx-{0}-6cfz1n2cew-6cfz1n2cew.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\b3lgnbl5x5-{0}-6pdc2jztkx-6pdc2jztkx.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\czuj151741-{0}-493y06b0oq-493y06b0oq.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\wmgibekc54-{0}-iovd86k7lj-iovd86k7lj.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\o8q13yvsc6-{0}-vr1egmr9el-vr1egmr9el.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\a9srlz7vnc-{0}-kbrnm935zg-kbrnm935zg.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\hld2ewdth9-{0}-jj8uyg4cgr-jj8uyg4cgr.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\l2pcj22y85-{0}-y7v9cxd14o-y7v9cxd14o.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\hnb095p1in-{0}-notf2xhcfb-notf2xhcfb.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\nvzma9ajd2-{0}-h1s4sie4z3-h1s4sie4z3.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\f5dqdcd60u-{0}-63fj8s7r0e-63fj8s7r0e.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\683t0zg66k-{0}-0j3bgjxly4-0j3bgjxly4.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\1b0z39lzz1-{0}-abdmv1u4y3-abdmv1u4y3.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\wurl07nnxg-{0}-hwaxidwiwj-hwaxidwiwj.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\siazj5x6sn-{0}-xbbil6v7co-xbbil6v7co.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\staticwebassets.build.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\staticwebassets.build.json.cache
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\staticwebassets.development.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\swae.build.ex.cache
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolEr.6726D51D.Up2Date
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\refint\SchoolErp.Web.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.genruntimeconfig.cache
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\ref\SchoolErp.Web.dll
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Auth\Login.razor.rz.scp.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Dashboard\Home.razor.rz.scp.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Students\Students.razor.rz.scp.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Users\Users.razor.rz.scp.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Academic\AcademicConfig.razor.rz.scp.css
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\4917dk6v42-{0}-pww1rg64ni-pww1rg64ni.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\xfeysgame8-{0}-awx50knaao-awx50knaao.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\r9qam5f5u6-{0}-pb0ot6jbzq-pb0ot6jbzq.gz
+E:\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\u5tral28ls-{0}-pb0ot6jbzq-pb0ot6jbzq.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\appsettings.Development.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\appsettings.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.staticwebassets.runtime.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.staticwebassets.endpoints.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.exe
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.deps.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.runtimeconfig.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Web.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\AutoMapper.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Dapper.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\FluentValidation.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\MySqlConnector.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Application.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Domain.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Infrastructure.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Application.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Infrastructure.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SchoolErp.Domain.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\EmbeddedAttribute.cs
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\ValidatableTypeAttribute.cs
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.csproj.AssemblyReference.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\rpswa.dswa.cache.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.GeneratedMSBuildEditorConfig.editorconfig
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.AssemblyInfoInputs.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.AssemblyInfo.cs
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.csproj.CoreCompileInputs.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.MvcApplicationPartsAssemblyInfo.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\rjimswa.dswa.cache.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Layout\MainLayout.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Layout\ReconnectModal.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Academic\AcademicConfig.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Auth\Login.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Dashboard\Home.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Students\Students.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Users\Users.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\bundle\SchoolErp.Web.styles.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\projectbundle\SchoolErp.Web.bundle.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\oijfjos61g-{0}-bqjiyaj88i-bqjiyaj88i.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\btf6bcmnn8-{0}-c2jlpeoesf-c2jlpeoesf.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\20v44evexa-{0}-erw9l3u2r3-erw9l3u2r3.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\mbst5kpwof-{0}-aexeepp0ev-aexeepp0ev.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\6cxxtg12ak-{0}-d7shbmvgxk-d7shbmvgxk.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\fu76b6a8tt-{0}-ausgxo2sd3-ausgxo2sd3.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\9dra1u8ucc-{0}-k8d9w2qqmf-k8d9w2qqmf.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\touo0x6kkc-{0}-cosvhxvwiu-cosvhxvwiu.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\513om621vz-{0}-ub07r2b239-ub07r2b239.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\sokfde7gss-{0}-fvhpjtyr6v-fvhpjtyr6v.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\tkxixg89ms-{0}-b7pk76d08c-b7pk76d08c.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\nuwecfs9dj-{0}-fsbi9cje9m-fsbi9cje9m.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\kqsmabud1u-{0}-rzd6atqjts-rzd6atqjts.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\6xtnjnq87d-{0}-ee0r1s7dh0-ee0r1s7dh0.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\69gwp3ytra-{0}-dxx9fxp4il-dxx9fxp4il.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\o2ssi9fu3v-{0}-jd9uben2k1-jd9uben2k1.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\0wx1clbn4m-{0}-khv3u5hwcm-khv3u5hwcm.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\y9hh47ajyj-{0}-r4e9w2rdcm-r4e9w2rdcm.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\59s0flbzta-{0}-lcd1t2u6c8-lcd1t2u6c8.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\9xb96umqtu-{0}-c2oey78nd0-c2oey78nd0.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\wsyc32k2m4-{0}-tdbxkamptv-tdbxkamptv.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\niv1j58sgv-{0}-j5mq2jizvt-j5mq2jizvt.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\scs2e8r82v-{0}-06098lyss8-06098lyss8.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\84nuj5uc54-{0}-nvvlpmu67g-nvvlpmu67g.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\lytefw866w-{0}-s35ty4nyc5-s35ty4nyc5.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\w2ct8nvf0v-{0}-pj5nd1wqec-pj5nd1wqec.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\haj445jz71-{0}-46ein0sx1k-46ein0sx1k.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\cdzoopoakr-{0}-v0zj4ognzu-v0zj4ognzu.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\c9novgbthn-{0}-37tfw0ft22-37tfw0ft22.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\4dhndpznjj-{0}-hrwsygsryq-hrwsygsryq.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\ewjcl0473i-{0}-pk9g2wxc8p-pk9g2wxc8p.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\ay2rdpj7yu-{0}-ft3s53vfgj-ft3s53vfgj.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\w8oswbw3tx-{0}-6cfz1n2cew-6cfz1n2cew.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\b3lgnbl5x5-{0}-6pdc2jztkx-6pdc2jztkx.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\czuj151741-{0}-493y06b0oq-493y06b0oq.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\wmgibekc54-{0}-iovd86k7lj-iovd86k7lj.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\o8q13yvsc6-{0}-vr1egmr9el-vr1egmr9el.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\a9srlz7vnc-{0}-kbrnm935zg-kbrnm935zg.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\hld2ewdth9-{0}-jj8uyg4cgr-jj8uyg4cgr.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\l2pcj22y85-{0}-y7v9cxd14o-y7v9cxd14o.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\hnb095p1in-{0}-notf2xhcfb-notf2xhcfb.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\nvzma9ajd2-{0}-h1s4sie4z3-h1s4sie4z3.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\f5dqdcd60u-{0}-63fj8s7r0e-63fj8s7r0e.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\683t0zg66k-{0}-0j3bgjxly4-0j3bgjxly4.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\1b0z39lzz1-{0}-abdmv1u4y3-abdmv1u4y3.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\wurl07nnxg-{0}-ax6tuj8tun-ax6tuj8tun.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\siazj5x6sn-{0}-zr4b1gdhaw-zr4b1gdhaw.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\staticwebassets.build.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\staticwebassets.build.json.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\staticwebassets.development.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\swae.build.ex.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolEr.6726D51D.Up2Date
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\refint\SchoolErp.Web.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\SchoolErp.Web.genruntimeconfig.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\ref\SchoolErp.Web.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Shared\SelectPicker.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\FluentValidation.DependencyInjectionExtensions.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\4917dk6v42-{0}-81ho9hz6tk-81ho9hz6tk.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\s8fqhcl31k-{0}-eh5f5s0ujj-eh5f5s0ujj.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\8pi6eqnrpb-{0}-ugu12vvhn5-ugu12vvhn5.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\qxy21smjl6-{0}-o8oo61wbgm-o8oo61wbgm.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\n9k7agt8aa-{0}-l83r02phkn-l83r02phkn.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Shared\DatePicker.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\ClosedXML.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\ClosedXML.Parser.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\DocumentFormat.OpenXml.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\DocumentFormat.OpenXml.Framework.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\ExcelNumberFormat.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\QuestPDF.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\RBush.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\SixLabors.Fonts.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\System.IO.Packaging.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\linux-arm64\native\libQuestPdfSkia.so
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\linux-arm64\native\libqpdf.so
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\linux-musl-x64\native\libQuestPdfSkia.so
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\linux-musl-x64\native\libqpdf.so
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\linux-x64\native\libQuestPdfSkia.so
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\linux-x64\native\libqpdf.so
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\osx-arm64\native\libQuestPdfSkia.dylib
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\osx-arm64\native\libqpdf.dylib
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\osx-x64\native\libQuestPdfSkia.dylib
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\osx-x64\native\libqpdf.dylib
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x64\native\QuestPdfSkia.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x64\native\libgcc_s_seh-1.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x64\native\libstdc++-6.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x64\native\libwinpthread-1.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x64\native\qpdf.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x64\native\zlib1.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x86\native\QuestPdfSkia.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x86\native\libgcc_s_dw2-1.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x86\native\libstdc++-6.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x86\native\libwinpthread-1.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x86\native\qpdf.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\runtimes\win-x86\native\zlib1.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\dexpune5wj-{0}-uz6varupch-uz6varupch.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-Black.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-BlackItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-Bold.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-BoldItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-ExtraBold.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-ExtraBoldItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-ExtraLight.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-ExtraLightItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-Italic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-Light.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-LightItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-Medium.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-MediumItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-Regular.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-SemiBold.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-SemiBoldItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-Thin.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\Lato-ThinItalic.ttf
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\bin\Debug\net10.0\LatoFont\OFL.txt
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Timetable\Timetable.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\scopedcss\Components\Modules\Timetable\TimetableConfig.razor.rz.scp.css
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\r9qam5f5u6-{0}-5b7aff6o3m-5b7aff6o3m.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\u5tral28ls-{0}-5b7aff6o3m-5b7aff6o3m.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\compressed\xfeysgame8-{0}-91iz6cdzot-91iz6cdzot.gz
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Web\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

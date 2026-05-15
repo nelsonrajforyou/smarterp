@@ -1,0 +1,227 @@
+@using SchoolErp.Application.Common.Models
+@using SchoolErp.Application.Features.Users
+@using SchoolErp.Application.Common.Mediator
+@using SchoolErp.Application.Features.Academic
+@using SchoolErp.Web.Components.Shared
+@inject IMediator Mediator
+
+<div class="page-header">
+    <h2 class="page-title">User Role Assignments</h2>
+    @if (!ShowUserRoleForm)
+    {
+        <button class="btn-add" @onclick="ShowCreateUserRoleForm">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Assign User Role</span>
+        </button>
+    }
+</div>
+
+@if (ShowUserRoleForm)
+{
+    <div class="form-card animate-fade-in-up">
+        <h3 class="form-title">@(IsUserRoleEditMode ? "Edit User Role" : "Assign Role to User")</h3>
+        <EditForm Model="UserRoleForm" OnValidSubmit="SaveUserRole">
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <label class="form-label">Select User</label>
+                    <SelectPicker Items="UsersPickerItems" Value="@UserRoleForm.UserId" ValueChanged="v => UserRoleForm.UserId = v ?? string.Empty" ValueField="Value" LabelField="Label" Placeholder="Select User" Disabled="@IsUserRoleEditMode" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Select Role</label>
+                    <SelectPicker Items="RolesPickerItems" Value="@UserRoleForm.RoleId" ValueChanged="v => UserRoleForm.RoleId = v ?? string.Empty" ValueField="Value" LabelField="Label" Placeholder="Select Role" Disabled="@IsUserRoleEditMode" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Academic Year</label>
+                    <SelectPicker Items="AcademicYearsPickerItems" Value="@UserRoleForm.AcademicYearId" ValueChanged="v => UserRoleForm.AcademicYearId = v ?? string.Empty" ValueField="Value" LabelField="Label" Placeholder="Select Year" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <SelectPicker Items="ActiveStatusPickerItems" Value="@UserRoleForm.IsActive.ToString()" ValueChanged="@(v => UserRoleForm.IsActive = int.Parse(v ?? "1"))" ValueField="Value" LabelField="Label" Placeholder="Select Status" Searchable="false" Clearable="false" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary-modern" @onclick="() => ShowUserRoleForm = false">Discard</button>
+                <button type="submit" class="btn-primary-modern">@(IsUserRoleEditMode ? "Update Assignment" : "Assign Role")</button>
+            </div>
+        </EditForm>
+    </div>
+}
+else
+{
+    <div class="table-card animate-fade-in-up">
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Role</th>
+                        <th>Year</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (UserRolesList == null)
+                    {
+                        <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                    }
+                    else if (!UserRolesList.Any())
+                    {
+                        <tr><td colspan="5" class="text-center">No assignments found.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var ur in UserRolesList)
+                        {
+                            <tr>
+                                <td><span style="font-weight: 600;">@ur.USER_NAME</span></td>
+                                <td>@ur.ROLE_NAME</td>
+                                <td>@ur.ACADEMIC_YEAR</td>
+                                <td>
+                                    <span class="badge-modern @(ur.IS_ACTIVE == 1 ? "badge-success" : "badge-danger")">
+                                        @(ur.IS_ACTIVE == 1 ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons" style="justify-content: flex-end;">
+                                        <button class="btn-icon-modern" @onclick="() => EditUserRole(ur)" title="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                        <button class="btn-icon-modern danger" @onclick="() => DeleteUserRole(ur.USER_ID, ur.ROLE_ID)" title="Delete"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    private bool ShowUserRoleForm = false;
+    private bool IsUserRoleEditMode = false;
+    private UserRoleFormModel UserRoleForm = new();
+
+    private IEnumerable<UserRoleDto>? UserRolesList;
+    private PaginatedList<UserDto>? UsersList;
+    private IEnumerable<RoleDto>? RolesList;
+    private IEnumerable<SchoolErp.Application.Features.Academic.AcademicYearDto>? AcademicYearsList;
+
+    private IEnumerable<object> RolesPickerItems => 
+        RolesList?.Select(r => (object)new { Value = r.ROLE_ID, Label = r.NAME }) ?? Enumerable.Empty<object>();
+
+    private IEnumerable<object> UsersPickerItems => 
+        UsersList?.Items?.Select(u => (object)new { Value = u.USER_INFO_ID, Label = $"{u.FIRST_NAME} {u.LAST_NAME} ({u.EMAIL})" }) ?? Enumerable.Empty<object>();
+
+    private IEnumerable<object> AcademicYearsPickerItems => 
+        AcademicYearsList?.Select(a => (object)new { Value = a.YearId, Label = a.YearName }) ?? Enumerable.Empty<object>();
+
+    private static readonly IEnumerable<object> ActiveStatusPickerItems = new object[]
+    {
+        new { Value = "1", Label = "Active" },
+        new { Value = "0", Label = "Inactive" }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAllData();
+    }
+
+    private async Task LoadAllData()
+    {
+        var tasks = new List<Task>
+        {
+            LoadUserRoles(),
+            LoadUsers(),
+            LoadRoles(),
+            LoadAcademicYears()
+        };
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task LoadAcademicYears()
+    {
+        // Notice: Use GetAcademicYearsQuery or similar command from AcademicService / Mediator
+        // Wait, the original code used GetAcademicYearsQuery but without namespace in the imports, 
+        // I'll assume it works if not I'll fix the namespace. Wait, let's use the actual namespace if needed.
+        // Actually Users.razor just had no explicit using for AcademicYearsQuery, maybe it's in Features.AcademicYear?
+        // Wait, it is SchoolErp.Application.Features.Users. I'll just use Mediator.Send(new GetAcademicYearsQuery());
+        // Since I'm not sure of the namespace, I won't use it, wait: I'll use it since it was compiling in Users.razor.
+        AcademicYearsList = await Mediator.Send(new SchoolErp.Application.Features.Academic.GetAcademicYearsQuery());
+    }
+
+    private async Task LoadUsers()
+    {
+        UsersList = await Mediator.Send(new GetUsersQuery { PageNumber = 1, PageSize = 1000 });
+    }
+
+    private async Task LoadRoles()
+    {
+        RolesList = await Mediator.Send(new GetRolesQuery());
+    }
+
+    private async Task LoadUserRoles()
+    {
+        UserRolesList = await Mediator.Send(new GetUserRoleAssignmentsQuery());
+    }
+
+    private void ShowCreateUserRoleForm()
+    {
+        IsUserRoleEditMode = false;
+        UserRoleForm = new UserRoleFormModel();
+        ShowUserRoleForm = true;
+    }
+
+    private void EditUserRole(UserRoleDto ur)
+    {
+        IsUserRoleEditMode = true;
+        UserRoleForm = new UserRoleFormModel
+        {
+            UserId = ur.USER_ID,
+            RoleId = ur.ROLE_ID,
+            AcademicYearId = ur.ACADEMIC_YEAR_ID,
+            IsActive = ur.IS_ACTIVE
+        };
+        ShowUserRoleForm = true;
+    }
+
+    private async Task SaveUserRole()
+    {
+        if (IsUserRoleEditMode)
+        {
+            await Mediator.Send(new UpdateUserRoleCommand 
+            { 
+                UserId = UserRoleForm.UserId, 
+                RoleId = UserRoleForm.RoleId, 
+                AcademicYearId = UserRoleForm.AcademicYearId,
+                IsActive = UserRoleForm.IsActive
+            });
+        }
+        else
+        {
+            await Mediator.Send(new AssignUserRoleCommand 
+            { 
+                UserId = UserRoleForm.UserId, 
+                RoleId = UserRoleForm.RoleId, 
+                AcademicYearId = UserRoleForm.AcademicYearId,
+                IsActive = UserRoleForm.IsActive
+            });
+        }
+        ShowUserRoleForm = false;
+        await LoadUserRoles();
+    }
+
+    private async Task DeleteUserRole(string userId, string roleId)
+    {
+        await Mediator.Send(new UnassignUserRoleCommand { UserId = userId, RoleId = roleId });
+        await LoadUserRoles();
+    }
+
+    public class UserRoleFormModel
+    {
+        public string UserId { get; set; } = string.Empty;
+        public string RoleId { get; set; } = string.Empty;
+        public string AcademicYearId { get; set; } = "AY2024";
+        public int IsActive { get; set; } = 1;
+    }
+}

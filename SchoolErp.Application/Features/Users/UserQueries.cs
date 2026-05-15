@@ -1,0 +1,68 @@
+namespace SchoolErp.Application.Features.Users;
+
+public static class UserQueries
+{
+    public const string GetUserByEmail = @"
+        SELECT USER_INFO_ID, EMAIL, PASSWORD_HASH, FIRST_NAME, LAST_NAME, ROLE_ID, USER_ID, STATUS, 
+               CAST(IS_ACTIVE AS CHAR) as IS_ACTIVE, CAST(IS_DELETED AS CHAR) as IS_DELETED, 
+               CAST(CREATED_AT AS CHAR) as CREATED_AT, CAST(UPDATED_AT AS CHAR) as UPDATED_AT
+        FROM USER_INFO WHERE EMAIL = @Email AND IS_DELETED = 0;";
+
+    public const string GetUserById = @"
+        SELECT USER_INFO_ID, EMAIL, PASSWORD_HASH, FIRST_NAME, LAST_NAME, ROLE_ID, USER_ID, STATUS, 
+               CAST(IS_ACTIVE AS CHAR) as IS_ACTIVE, CAST(IS_DELETED AS CHAR) as IS_DELETED, 
+               CAST(CREATED_AT AS CHAR) as CREATED_AT, CAST(UPDATED_AT AS CHAR) as UPDATED_AT
+        FROM USER_INFO WHERE USER_INFO_ID = @Id AND IS_DELETED = 0;";
+
+    public const string InsertUser = @"
+        INSERT INTO USER_INFO (USER_INFO_ID, EMAIL, PASSWORD_HASH, FIRST_NAME, LAST_NAME, ROLE_ID, USER_ID, STATUS, IS_ACTIVE, IS_DELETED, CREATED_AT)
+        VALUES (@USER_INFO_ID, @EMAIL, @PASSWORD_HASH, @FIRST_NAME, @LAST_NAME, @ROLE_ID, @USER_ID, @STATUS, @IS_ACTIVE, @IS_DELETED, @CREATED_AT);";
+
+    public const string UpdateUser = @"
+        UPDATE USER_INFO 
+        SET FIRST_NAME = @FIRST_NAME, LAST_NAME = @LAST_NAME, ROLE_ID = @ROLE_ID, USER_ID = @USER_ID, STATUS = @STATUS, UPDATED_AT = @UPDATED_AT
+        WHERE USER_INFO_ID = @USER_INFO_ID AND IS_DELETED = 0;";
+
+    public const string DeleteUser = @"
+        UPDATE USER_INFO SET IS_DELETED = 1, UPDATED_AT = @UPDATED_AT WHERE USER_INFO_ID = @USER_INFO_ID;";
+
+    public const string GetAllUsers = @"
+        SELECT u.USER_INFO_ID, u.EMAIL, u.FIRST_NAME, u.LAST_NAME, u.ROLE_ID, r.NAME as ROLE_NAME, u.USER_ID, u.STATUS, 
+               CAST(u.IS_ACTIVE AS CHAR) as IS_ACTIVE, CAST(u.IS_DELETED AS CHAR) as IS_DELETED, 
+               CAST(u.CREATED_AT AS CHAR) as CREATED_AT
+        FROM USER_INFO u
+        LEFT JOIN ROLES r ON u.ROLE_ID = r.ROLE_ID
+        WHERE u.IS_DELETED = 0
+        ORDER BY u.CREATED_AT DESC
+        LIMIT @Limit OFFSET @Offset;";
+
+    public const string GetTotalUsersCount = "SELECT COUNT(*) FROM USER_INFO WHERE IS_DELETED = 0;";
+    
+    public const string GetUserRoles = @"
+        SELECT DISTINCT r.NAME 
+        FROM ROLES r
+        INNER JOIN USER_ROLES ur ON r.ROLE_ID = ur.ROLE_ID
+        WHERE ur.USER_ID IN @UserIds AND r.IS_DELETED = 0 AND r.IS_ACTIVE = 1;";
+
+    public const string GetAllRoles = "SELECT ROLE_ID, NAME, IS_ACTIVE, CAST(CREATED_AT AS CHAR) as CREATED_AT FROM ROLES WHERE IS_DELETED = 0 ORDER BY NAME;";
+    
+    public const string InsertRole = "INSERT INTO ROLES (ROLE_ID, NAME, IS_ACTIVE, CREATED_AT) VALUES (@ROLE_ID, @NAME, @IS_ACTIVE, @CREATED_AT);";
+    
+    public const string UpdateRole = "UPDATE ROLES SET NAME = @NAME, IS_ACTIVE = @IS_ACTIVE WHERE ROLE_ID = @ROLE_ID;";
+    
+    public const string DeleteRole = "UPDATE ROLES SET IS_DELETED = 1 WHERE ROLE_ID = @ROLE_ID;";
+
+    public const string GetUserRoleAssignments = @"
+        SELECT ur.USER_ID, CONCAT(u.FIRST_NAME, ' ', u.LAST_NAME) as USER_NAME, ur.ROLE_ID, r.NAME as ROLE_NAME, ur.ACADEMIC_YEAR_ID, ay.ACADEMIC_YEAR, ur.IS_ACTIVE
+        FROM USER_ROLES ur
+        JOIN USER_INFO u ON ur.USER_ID = u.USER_INFO_ID
+        JOIN ROLES r ON ur.ROLE_ID = r.ROLE_ID
+        JOIN ACADEMIC_YEAR ay ON ur.ACADEMIC_YEAR_ID = ay.ACADEMIC_YEAR_ID
+        WHERE ur.IS_DELETED = 0;";
+
+    public const string AssignUserRole = "INSERT INTO USER_ROLES (USER_ID, ROLE_ID, ACADEMIC_YEAR_ID, IS_ACTIVE, IS_DELETED) VALUES (@USER_ID, @ROLE_ID, @ACADEMIC_YEAR_ID, @IS_ACTIVE, 0);";
+    
+    public const string UpdateUserRole = "UPDATE USER_ROLES SET ACADEMIC_YEAR_ID = @ACADEMIC_YEAR_ID, IS_ACTIVE = @IS_ACTIVE WHERE USER_ID = @USER_ID AND ROLE_ID = @ROLE_ID;";
+
+    public const string UnassignUserRole = "UPDATE USER_ROLES SET IS_DELETED = 1 WHERE USER_ID = @USER_ID AND ROLE_ID = @ROLE_ID;";
+}

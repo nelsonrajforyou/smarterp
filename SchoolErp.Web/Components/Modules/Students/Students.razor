@@ -1,0 +1,942 @@
+@page "/students"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@using Microsoft.AspNetCore.Authorization
+@using SchoolErp.Application.Common.Models
+@using SchoolErp.Application.Features.Students
+@using SchoolErp.Application.Features.Settings
+@using SchoolErp.Application.Common.Mediator
+@attribute [Authorize(Roles = "Admin,Teacher")]
+@inject IMediator Mediator
+@inject SchoolErp.Application.Common.Interfaces.ICommonDataService CommonData
+@inject SchoolErp.Application.Common.Interfaces.IAcademicYearService AcademicYearService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+
+<PageTitle>Students Management - School ERP</PageTitle>
+
+<div class="students-page">
+    <div class="page-header">
+        <h2 class="page-title">Students Management</h2>
+        <div class="header-actions" style="display: flex; gap: 10px;">
+            <button class="btn-secondary-modern" @onclick="ToggleSettings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Table Settings</span>
+            </button>
+            <button class="btn-secondary-modern" @onclick="ToggleReport">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span>Reports</span>
+            </button>
+            <button class="btn-add" @onclick="ShowCreateForm">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Add New Student</span>
+            </button>
+        </div>
+    </div>
+
+    @if (ShowSettingsModal)
+    {
+        <div class="settings-modal-overlay" @onclick="ToggleSettings">
+            <div class="settings-modal animate-fade-in-up" @onclick:stopPropagation>
+                <div class="settings-header">
+                    <h4 class="modal-title-modern">@(IsAddingColumn ? "Add New Column" : "Dynamic Column Selection")</h4>
+                    <button class="btn-close-square" @onclick="ToggleSettings">&times;</button>
+                </div>
+                
+                @if (IsAddingColumn)
+                {
+                    <div class="settings-body">
+                        <div class="form-group mb-3">
+                            <label class="form-label">Column Name (e.g., COMMUNITY_ID)</label>
+                            <input type="text" class="form-control-modern" @bind="NewColumnName" placeholder="Uppercase, no spaces" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Data Type</label>
+                            <select class="form-select-modern" @bind="NewColumnDataType">
+                                <option value="VARCHAR(255)">Text (VARCHAR)</option>
+                                <option value="INT">Number (INT)</option>
+                                <option value="DATE">Date (DATE)</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="column-checkbox">
+                                <input type="checkbox" @bind="IsNewColumnRef" />
+                                <span>Is this an ID linking to a sub-table?</span>
+                            </label>
+                        </div>
+                        @if(IsNewColumnRef)
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label">Reference Table Name (e.g. COMMUNITY)</label>
+                                <input type="text" class="form-control-modern" @bind="RefTableName" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="form-label">Reference Primary Key (e.g. COMMUNITY_ID)</label>
+                                <input type="text" class="form-control-modern" @bind="RefPrimaryKey" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="form-label">Reference Display Column (e.g. COMMUNITY_NAME)</label>
+                                <input type="text" class="form-control-modern" @bind="RefDisplayColumn" />
+                            </div>
+                        }
+                        
+                        @if (!string.IsNullOrEmpty(ColumnAddError))
+                        {
+                            <div class="text-danger mt-2" style="font-size:0.85rem;">@ColumnAddError</div>
+                        }
+                    </div>
+                    <div class="settings-footer" style="justify-content: space-between;">
+                        <button class="btn-secondary-modern" @onclick="() => IsAddingColumn = false">Back</button>
+                        <button class="btn-apply-modern" @onclick="AddNewColumn">Create Column</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="settings-body">
+                        <p class="settings-desc-modern">Select the fields you want to fetch and display dynamically. Required fields cannot be deselected.</p>
+                        <div class="column-selection-grid">
+                            @foreach (var col in AvailableColumns)
+                            {
+                                bool isSelected = SelectedColumns.Contains(col.ColumnName);
+                                bool isDisabled = col.ColumnName == "STUDENT_ID" || col.ColumnName == "NAME";
+                                
+                                <label class="column-pill @(isSelected ? "active" : "") @(isDisabled ? "disabled" : "")">
+                                    <input type="checkbox" checked="@isSelected" 
+                                           disabled="@isDisabled"
+                                           @onchange="(e) => OnColumnSelectionChanged(col.ColumnName, e.Value)" />
+                                    <div class="custom-checkbox">
+                                        @if (isSelected)
+                                        {
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>
+                                        }
+                                    </div>
+                                    <span class="column-name">@col.ColumnName</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                    <div class="settings-footer" style="justify-content: space-between;">
+                        <button class="btn-secondary-modern" style="border: 1px dashed var(--primary-color); color: var(--primary-color);" @onclick="() => IsAddingColumn = true">+ Add Field to DB</button>
+                        <button class="btn-apply-modern" @onclick="ApplySettings">Apply & Fetch</button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (ShowReportModal)
+    {
+        <div class="settings-modal-overlay" @onclick="ToggleReport">
+            <div class="settings-modal animate-fade-in-up" @onclick:stopPropagation>
+                <div class="settings-header">
+                    <h4 class="modal-title-modern">Generate Student Report</h4>
+                    <button class="btn-close-square" @onclick="ToggleReport">&times;</button>
+                </div>
+                <div class="settings-body">
+                    <div class="form-group mb-4">
+                        <label class="form-label" style="font-weight: 600; color: #475569;">Report Type</label>
+                        <select class="form-select-modern" @bind="ReportType">
+                            <option value="General">General Student List</option>
+                            <option value="Admission">Admission Register</option>
+                            <option value="Contact">Contact Information</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label" style="font-weight: 600; color: #475569;">Choose Columns to Include</label>
+                        <div class="column-selection-grid">
+                            @foreach (var col in AvailableColumns)
+                            {
+                                bool isSelected = SelectedReportColumns.Contains(col.ColumnName);
+                                <label class="column-pill @(isSelected ? "active" : "")" style="padding: 0.5rem 0.75rem;">
+                                    <input type="checkbox" checked="@isSelected" @onchange="(e) => OnReportColumnToggle(col.ColumnName, e.Value)" />
+                                    <div class="custom-checkbox" style="width: 16px; height: 16px;">
+                                        @if (isSelected)
+                                        {
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>
+                                        }
+                                    </div>
+                                    <span class="column-name" style="font-size: 0.8rem;">@col.ColumnName</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #475569;">Export Format</label>
+                        <div style="display: flex; gap: 1rem;">
+                            <label class="column-pill @(ReportExportType == "Excel" ? "active" : "")" style="flex: 1; justify-content: center; cursor: pointer;" @onclick='() => ReportExportType = "Excel"'>
+                                <input type="radio" name="exportType" checked='@(ReportExportType == "Excel")' style="display: none;" />
+                                <span class="column-name">Excel (.xlsx)</span>
+                            </label>
+                            <label class="column-pill @(ReportExportType == "PDF" ? "active" : "")" style="flex: 1; justify-content: center; cursor: pointer;" @onclick='() => ReportExportType = "PDF"'>
+                                <input type="radio" name="exportType" checked='@(ReportExportType == "PDF")' style="display: none;" />
+                                <span class="column-name">PDF (.pdf)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-footer">
+                    @if (IsGeneratingReport)
+                    {
+                        <button class="btn-apply-modern" disabled style="opacity: 0.8; cursor: wait;">
+                             Generating...
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn-apply-modern" @onclick="GenerateReport">Generate & Download</button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (IsLoading)
+    {
+        <div class="skeleton-container">
+            <div class="skeleton" style="height: 100px; margin-bottom: 1.5rem;"></div>
+            <div class="skeleton" style="height: 400px;"></div>
+        </div>
+    }
+    else if (ShowForm)
+    {
+        <!-- Form code kept mostly the same... -->
+        <div class="form-card animate-fade-in-up">
+            <h3 class="form-title">@(IsEditMode ? "Edit Student Details" : "Register New Student")</h3>
+            
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="login-error" style="background: rgba(239, 68, 68, 0.1); color: var(--danger-600); border: 1px solid var(--danger-100); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @ErrorMessage
+                </div>
+            }
+
+            <EditForm Model="StudentForm" OnValidSubmit="SaveStudent">
+                <DataAnnotationsValidator />
+                
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Full Name</label>
+                        <InputText @bind-Value="StudentForm.Name" class="form-control-modern" placeholder="e.g. John Doe" />
+                        <ValidationMessage For="@(() => StudentForm.Name)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Admission No</label>
+                        <InputText @bind-Value="StudentForm.AdmissionNo" class="form-control-modern" placeholder="e.g. ADM1001" />
+                        <ValidationMessage For="@(() => StudentForm.AdmissionNo)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Email Address</label>
+                        <InputText @bind-Value="StudentForm.EmailId" class="form-control-modern" placeholder="e.g. john@example.com" />
+                        <ValidationMessage For="@(() => StudentForm.EmailId)" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Mobile No</label>
+                        <InputText @bind-Value="StudentForm.MobileNo" class="form-control-modern" placeholder="e.g. 9876543210" />
+                        <ValidationMessage For="@(() => StudentForm.MobileNo)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Gender</label>
+                        <InputSelect @bind-Value="StudentForm.GenderId" class="form-control-modern">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => StudentForm.GenderId)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Date of Birth</label>
+                        <InputDate @bind-Value="StudentForm.DateOfBirth" class="form-control-modern" />
+                        <ValidationMessage For="@(() => StudentForm.DateOfBirth)" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Father's Name</label>
+                        <InputText @bind-Value="StudentForm.FatherName" class="form-control-modern" placeholder="Father's full name" />
+                        <ValidationMessage For="@(() => StudentForm.FatherName)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Mother's Name</label>
+                        <InputText @bind-Value="StudentForm.MotherName" class="form-control-modern" placeholder="Mother's full name" />
+                        <ValidationMessage For="@(() => StudentForm.MotherName)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Address</label>
+                        <InputText @bind-Value="StudentForm.Address" class="form-control-modern" placeholder="Home address" />
+                        <ValidationMessage For="@(() => StudentForm.Address)" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Class</label>
+                        <InputSelect @bind-Value="StudentForm.ClassId" class="form-select-modern">
+                            <option value="">Select Class</option>
+                            @if (Classes != null)
+                            {
+                                @foreach (var c in Classes)
+                                {
+                                    <option value="@c.Value">@c.Text</option>
+                                }
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => StudentForm.ClassId)" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Register No</label>
+                        <InputText @bind-Value="StudentForm.RegisterNo" class="form-control-modern" placeholder="e.g. REG1001" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Roll No</label>
+                        <InputText @bind-Value="StudentForm.RollNo" class="form-control-modern" placeholder="e.g. 01" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">User ID (Optional)</label>
+                        <InputText @bind-Value="StudentForm.UserId" class="form-control-modern" placeholder="Link to user account" />
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary-modern" @onclick="CancelForm">Discard</button>
+                    <button type="submit" class="btn-primary-modern">@(IsEditMode ? "Update Student" : "Save Student")</button>
+                </div>
+            </EditForm>
+        </div>
+    }
+
+    @if (StudentsList != null && !ShowForm)
+    {
+        <div class="list-toolbar animate-fade-in-up">
+            <div class="list-toolbar-left">
+                <div class="toolbar-search">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <input type="text" placeholder="Search by name..." @bind="SearchTerm" @bind:event="oninput" @onkeyup="HandleSearch" />
+                </div>
+                <button class="btn-icon-modern" title="Search" @onclick="() => LoadPage(1)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                </button>
+                <span class="result-count">@(StudentsList.TotalCount) student(s)</span>
+            </div>
+            <div class="list-toolbar-right">
+                <div class="view-toggle">
+                    <button class="view-btn @(ViewMode == "grid" ? "active" : "")" title="Grid View" @onclick='() => ViewMode = "grid"'>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                    </button>
+                    <button class="view-btn @(ViewMode == "list" ? "active" : "")" title="List View" @onclick='() => ViewMode = "list"'>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if (!StudentsList.Items.Any())
+        {
+            <div class="empty-state">
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
+                <p>No students matching your criteria were found.</p>
+            </div>
+        }
+        else if (ViewMode == "list")
+        {
+            <div class="table-card animate-fade-in-up">
+                <div class="table-responsive">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                @foreach(var col in SelectedColumns)
+                                {
+                                    if(col == "STUDENT_ID") continue; // Hide internal ID from UI
+                                    <th>@(col.Replace("_", " "))</th>
+                                }
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in StudentsList.Items)
+                            {
+                                <tr>
+                                    @foreach(var col in SelectedColumns)
+                                    {
+                                        if(col == "STUDENT_ID") continue;
+
+                                        var val = GetColumnValue(student, col);
+                                        var displayVal = GetDisplayValue(student, col, val);
+
+                                        <td>
+                                            @if(col == "NAME")
+                                            {
+                                                <div class="student-name">@displayVal</div>
+                                            }
+                                            else if(col.Contains("ID") || col.Contains("NO"))
+                                            {
+                                                <span class="badge-modern badge-info">@displayVal</span>
+                                            }
+                                            else
+                                            {
+                                                @displayVal
+                                            }
+                                        </td>
+                                    }
+                                    <td>
+                                        <div class="action-buttons" style="justify-content: flex-end;">
+                                            <button class="btn-icon-modern" @onclick='() => EditStudent(GetStringValue(student, "STUDENT_ID"))' title="Edit">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                            </button>
+                                            <button class="btn-icon-modern danger" @onclick='() => DeleteStudent(GetStringValue(student, "STUDENT_ID"))' title="Delete">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- GRID VIEW -->
+            <div class="data-grid animate-fade-in">
+                @foreach (var student in StudentsList.Items)
+                {
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <div class="data-card-avatar">@(GetStringValue(student, "NAME")?.FirstOrDefault() ?? '?')</div>
+                            <div>
+                                <div class="data-card-title">@GetStringValue(student, "NAME")</div>
+                                <div class="data-card-subtitle">@GetDisplayValue(student, "EMAIL_ID", GetColumnValue(student, "EMAIL_ID"))</div>
+                            </div>
+                        </div>
+                        <div class="data-card-body">
+                            @foreach(var col in SelectedColumns.Where(c => c != "NAME" && c != "STUDENT_ID" && c != "EMAIL_ID").Take(4))
+                            {
+                                <div class="data-card-row">
+                                    <span class="data-card-label">@(col.Replace("_", " "))</span>
+                                    <span class="data-card-value">@GetDisplayValue(student, col, GetColumnValue(student, col))</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="data-card-actions">
+                            <button class="btn-icon-modern" @onclick='() => EditStudent(GetStringValue(student, "STUDENT_ID"))' title="Edit">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
+                            <button class="btn-icon-modern danger" @onclick='() => DeleteStudent(GetStringValue(student, "STUDENT_ID"))' title="Delete">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (StudentsList.TotalPages > 1)
+        {
+            <div class="pagination-bar">
+                <span class="pagination-info">Page @PageNumber of @StudentsList.TotalPages (@StudentsList.TotalCount total)</span>
+                <div class="pagination-controls">
+                    <button class="page-btn-modern" disabled="@(!StudentsList.HasPreviousPage)" @onclick="() => LoadPage(PageNumber - 1)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <button class="page-btn-modern" disabled="@(!StudentsList.HasNextPage)" @onclick="() => LoadPage(PageNumber + 1)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .settings-modal-overlay {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(15, 23, 42, 0.4);
+        z-index: 1000;
+        display: flex; justify-content: center; align-items: center;
+        backdrop-filter: blur(8px);
+    }
+    .settings-modal {
+        background: #ffffff;
+        width: 100%; max-width: 540px;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+    }
+    .settings-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex; justify-content: space-between; align-items: center;
+        background: #ffffff;
+    }
+    .modal-title-modern { margin: 0; font-weight: 700; font-size: 1.15rem; color: #1e293b; }
+    .btn-close-square {
+        background: #f1f5f9;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-close-square:hover { background: #e2e8f0; color: #1e293b; }
+
+    .settings-body { padding: 1.5rem; max-height: 65vh; overflow-y: auto; }
+    .settings-desc-modern { font-size: 0.9rem; color: #94a3b8; margin-bottom: 1.5rem; line-height: 1.5; }
+    
+    .column-selection-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
+    }
+    
+    .column-pill {
+        display: flex; align-items: center; gap: 0.75rem;
+        padding: 0.7rem 1rem; border: 1.5px solid #e2e8f0;
+        border-radius: 12px; cursor: pointer;
+        background: #ffffff;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        user-select: none;
+    }
+    .column-pill:hover { border-color: #cbd5e1; background: #f8fafc; }
+    .column-pill.active { border-color: #94a3b8; background: #f1f5f9; }
+    .column-pill.disabled { opacity: 0.6; cursor: not-allowed; background: #f8fafc; }
+    
+    .column-pill input { display: none; }
+    
+    .custom-checkbox {
+        width: 18px; height: 18px;
+        border: 2px solid #cbd5e1;
+        border-radius: 4px;
+        background: #ffffff;
+        display: flex; align-items: center; justify-content: center;
+        color: #ffffff;
+        transition: all 0.2s;
+    }
+    .column-pill.active .custom-checkbox {
+        background: #10b981;
+        border-color: #10b981;
+    }
+    .column-pill.disabled .custom-checkbox {
+        background: #94a3b8;
+        border-color: #94a3b8;
+    }
+    
+    .column-name { font-size: 0.875rem; font-weight: 600; color: #475569; }
+    .column-pill.active .column-name { color: #1e293b; }
+
+    .settings-footer {
+        padding: 1.25rem 1.5rem;
+        border-top: 1px solid #f1f5f9;
+        display: flex; justify-content: flex-end;
+        background: #ffffff;
+    }
+    .btn-apply-modern {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: #ffffff;
+        padding: 0.7rem 1.5rem;
+        border-radius: 10px;
+        border: none;
+        font-weight: 700;
+        font-size: 0.95rem;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-apply-modern:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+    }
+    .btn-apply-modern:active { transform: translateY(0); }
+</style>
+
+@code {
+    private bool IsLoading = true;
+    private bool ShowForm = false;
+    private bool IsEditMode = false;
+    private bool ShowSettingsModal = false;
+    private bool ShowReportModal = false;
+    private string? ErrorMessage;
+    private string ViewMode = "list";
+    
+    private string? SearchTerm;
+    private int PageNumber = 1;
+    private const int PageSize = 10;
+    
+    private PaginatedList<IDictionary<string, object>>? StudentsList;
+    private List<DropdownItem>? Classes;
+    private StudentFormModel StudentForm = new();
+
+    private List<ColumnDto> AvailableColumns = new();
+    private List<string> SelectedColumns = new();
+    private List<string> SelectedReportColumns = new();
+    private string ReportType = "General";
+    private string ReportExportType = "Excel";
+    private bool IsGeneratingReport = false;
+    // Cache for sub-table lookups (e.g. Community, Gender) if needed.
+    private Dictionary<string, string> SubTableMap = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Classes = await CommonData.GetClassListAsync();
+        
+        // Load available columns from DB schema
+        AvailableColumns = await Mediator.Send(new GetTableColumnsQuery { TableName = "STUDENTS_INFO" });
+        
+        // Set default selected columns
+        var defaults = new[] { "STUDENT_ID", "NAME", "ADMISSION_NO", "MOBILE_NO", "GENDER_ID", "CLASS_ID" };
+        SelectedColumns = AvailableColumns
+            .Where(c => defaults.Contains(c.ColumnName))
+            .Select(c => c.ColumnName)
+            .ToList();
+            
+        // Make sure we always include NAME and STUDENT_ID
+        if (!SelectedColumns.Contains("NAME")) SelectedColumns.Insert(0, "NAME");
+        if (!SelectedColumns.Contains("STUDENT_ID")) SelectedColumns.Insert(0, "STUDENT_ID");
+
+        await LoadStudents();
+    }
+
+    private void ToggleSettings()
+    {
+        ShowSettingsModal = !ShowSettingsModal;
+        if (ShowSettingsModal) ShowReportModal = false;
+    }
+
+    private void ToggleReport()
+    {
+        ShowReportModal = !ShowReportModal;
+        if (ShowReportModal)
+        {
+            ShowSettingsModal = false;
+            SelectedReportColumns = new List<string>(SelectedColumns);
+        }
+    }
+
+    private void OnReportColumnToggle(string columnName, object? isChecked)
+    {
+        bool isSelected = (bool)(isChecked ?? false);
+        if (isSelected && !SelectedReportColumns.Contains(columnName))
+            SelectedReportColumns.Add(columnName);
+        else if (!isSelected && SelectedReportColumns.Contains(columnName))
+            SelectedReportColumns.Remove(columnName);
+    }
+
+    private async Task GenerateReport()
+    {
+        if (!SelectedReportColumns.Any()) return;
+        
+        IsGeneratingReport = true;
+        try
+        {
+            var response = await Mediator.Send(new GenerateStudentReportQuery
+            {
+                SearchTerm = SearchTerm,
+                SelectedColumns = SelectedReportColumns,
+                ExportType = ReportExportType
+            });
+
+            using var stream = new MemoryStream(response.Content);
+            using var streamRef = new DotNetStreamReference(stream);
+            await JS.InvokeVoidAsync("downloadFileFromStream", response.FileName, streamRef);
+            
+            ShowReportModal = false;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Error generating report: " + ex.Message;
+        }
+        finally
+        {
+            IsGeneratingReport = false;
+        }
+    }
+
+    private void OnColumnSelectionChanged(string columnName, object? isChecked)
+    {
+        if (columnName == "STUDENT_ID" || columnName == "NAME") return; // Prevent toggling required columns
+        
+        bool isSelected = (bool)(isChecked ?? false);
+        if (isSelected && !SelectedColumns.Contains(columnName))
+        {
+            SelectedColumns.Add(columnName);
+        }
+        else if (!isSelected && SelectedColumns.Contains(columnName))
+        {
+            SelectedColumns.Remove(columnName);
+        }
+    }
+
+    private async Task ApplySettings()
+    {
+        ShowSettingsModal = false;
+        await LoadPage(1); // Re-fetch with new columns
+    }
+
+    private object? GetColumnValue(IDictionary<string, object> dict, string key)
+    {
+        // Dictionary keys from DB might be case-sensitive, but typically Dapper dynamic uses exact or uppercase
+        // We'll do a case-insensitive check to be safe
+        var matchedKey = dict.Keys.FirstOrDefault(k => string.Equals(k, key, StringComparison.OrdinalIgnoreCase));
+        if (matchedKey != null && dict.TryGetValue(matchedKey, out var value))
+        {
+            return value;
+        }
+        return null;
+    }
+
+    private string GetStringValue(IDictionary<string, object> dict, string key)
+    {
+        return GetColumnValue(dict, key)?.ToString() ?? string.Empty;
+    }
+
+    // This method handles sub table ids to display readable values
+    private string GetDisplayValue(IDictionary<string, object> row, string columnName, object? rawValue)
+    {
+        // First check if the backend dynamically joined a display column for this
+        var mappedDisplay = GetColumnValue(row, $"{columnName}_DISPLAY");
+        if (mappedDisplay != null && !string.IsNullOrEmpty(mappedDisplay.ToString()))
+        {
+            return mappedDisplay.ToString()!;
+        }
+
+        if (rawValue == null) return "—";
+        var strValue = rawValue.ToString();
+        if (string.IsNullOrEmpty(strValue)) return "—";
+
+        // Handle sub table mapping fallback
+        if (columnName.EndsWith("_ID", StringComparison.OrdinalIgnoreCase))
+        {
+            // For GENDER_ID, it is already "Male" / "Female" based on our standard DB inserts
+            if (columnName.Equals("CLASS_ID", StringComparison.OrdinalIgnoreCase) && Classes != null)
+            {
+                var classItem = Classes.FirstOrDefault(c => c.Value == strValue);
+                if (classItem != null) return classItem.Text;
+            }
+        }
+        
+        return strValue!;
+    }
+
+    private async Task LoadStudents()
+    {
+        IsLoading = true;
+        try
+        {
+            StudentsList = await Mediator.Send(new GetDynamicStudentsQuery 
+            { 
+                SearchTerm = SearchTerm,
+                PageNumber = PageNumber, 
+                PageSize = PageSize,
+                SelectedColumns = SelectedColumns
+            });
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task LoadPage(int pageNumber)
+    {
+        PageNumber = pageNumber;
+        await LoadStudents();
+    }
+    
+    private async Task HandleSearch(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await LoadPage(1);
+        }
+    }
+
+    private void ShowCreateForm()
+    {
+        IsEditMode = false;
+        StudentForm = new StudentFormModel { DateOfBirth = DateTime.Today.AddYears(-10) };
+        ErrorMessage = null;
+        ShowForm = true;
+    }
+
+    private async Task EditStudent(string id)
+    {
+        if(string.IsNullOrEmpty(id)) return;
+        
+        // Fetch full details for edit form using new query
+        var student = await Mediator.Send(new GetStudentByIdQuery { Id = id });
+        if (student == null) return;
+
+        IsEditMode = true;
+        StudentForm = new StudentFormModel
+        {
+            Id = student.STUDENT_ID,
+            Name = student.NAME,
+            MobileNo = student.MOBILE_NO,
+            FatherName = student.FATHER_NAME,
+            MotherName = student.MOTHER_NAME,
+            Address = student.ADDRESS,
+            AdmissionNo = student.ADMISSION_NO,
+            EmailId = student.EMAIL_ID,
+            GenderId = student.GENDER_ID,
+            DateOfBirth = DateTime.TryParse(student.DATE_OF_BIRTH, out var d) ? d : DateTime.Today,
+            StateId = student.STATE_ID,
+            NationalityId = student.NATIONALITY_ID,
+            UserId = student.USER_ID,
+            ClassId = student.CLASS_ID,
+            RegisterNo = student.REGISTER_NO,
+            RollNo = student.ROLL_NO
+        };
+        ErrorMessage = null;
+        ShowForm = true;
+    }
+
+    private void CancelForm()
+    {
+        ShowForm = false;
+    }
+
+    private async Task SaveStudent()
+    {
+        try
+        {
+            if (IsEditMode)
+            {
+                var command = new UpdateStudentCommand
+                {
+                    Id = StudentForm.Id!,
+                    Name = StudentForm.Name,
+                    MobileNo = StudentForm.MobileNo,
+                    FatherName = StudentForm.FatherName,
+                    MotherName = StudentForm.MotherName,
+                    Address = StudentForm.Address,
+                    AdmissionNo = StudentForm.AdmissionNo,
+                    EmailId = StudentForm.EmailId,
+                    GenderId = StudentForm.GenderId,
+                    DateOfBirth = StudentForm.DateOfBirth.ToString("yyyy-MM-dd"),
+                    StateId = StudentForm.StateId,
+                    NationalityId = StudentForm.NationalityId,
+                    ClassId = StudentForm.ClassId,
+                    RegisterNo = StudentForm.RegisterNo,
+                    RollNo = StudentForm.RollNo
+                };
+                await Mediator.Send(command);
+            }
+            else
+            {
+                var command = new CreateStudentCommand
+                {
+                    Name = StudentForm.Name,
+                    MobileNo = StudentForm.MobileNo,
+                    FatherName = StudentForm.FatherName,
+                    MotherName = StudentForm.MotherName,
+                    Address = StudentForm.Address,
+                    AdmissionNo = StudentForm.AdmissionNo,
+                    EmailId = StudentForm.EmailId,
+                    GenderId = StudentForm.GenderId,
+                    DateOfBirth = StudentForm.DateOfBirth.ToString("yyyy-MM-dd"),
+                    StateId = StudentForm.StateId,
+                    NationalityId = StudentForm.NationalityId,
+                    UserId = StudentForm.UserId,
+                    ClassId = StudentForm.ClassId,
+                    AcademicYearId = (await AuthStateProvider.GetAuthenticationStateAsync())
+                                        .User.FindFirst("academicyearid")?.Value ?? await AcademicYearService.GetCurrentYearIdAsync(),
+                    RegisterNo = StudentForm.RegisterNo,
+                    RollNo = StudentForm.RollNo
+                };
+                await Mediator.Send(command);
+            }
+
+            ShowForm = false;
+            await LoadStudents();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "An error occurred while saving the student: " + ex.Message;
+        }
+    }
+
+    private async Task DeleteStudent(string id)
+    {
+        if(string.IsNullOrEmpty(id)) return;
+        await Mediator.Send(new DeleteStudentCommand { Id = id });
+        await LoadStudents();
+    }
+
+    public class StudentFormModel
+    {
+        public string? Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string MobileNo { get; set; } = string.Empty;
+        public string FatherName { get; set; } = string.Empty;
+        public string MotherName { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public string AdmissionNo { get; set; } = string.Empty;
+        public string EmailId { get; set; } = string.Empty;
+        public string GenderId { get; set; } = string.Empty;
+        public DateTime DateOfBirth { get; set; }
+        public string? StateId { get; set; }
+        public string? NationalityId { get; set; }
+        public string? UserId { get; set; }
+        
+        public string ClassId { get; set; } = string.Empty;
+        public string RegisterNo { get; set; } = string.Empty;
+        public string RollNo { get; set; } = string.Empty;
+    }
+
+    // New column form fields
+    private bool IsAddingColumn = false;
+    private string NewColumnName = string.Empty;
+    private string NewColumnDataType = "VARCHAR(255)";
+    private bool IsNewColumnRef = false;
+    private string RefTableName = string.Empty;
+    private string RefPrimaryKey = string.Empty;
+    private string RefDisplayColumn = string.Empty;
+    private string? ColumnAddError;
+
+    private async Task AddNewColumn()
+    {
+        try
+        {
+            ColumnAddError = null;
+            if (string.IsNullOrWhiteSpace(NewColumnName))
+            {
+                ColumnAddError = "Column name cannot be empty.";
+                return;
+            }
+
+            var cmd = new AddTableColumnCommand
+            {
+                TableName = "STUDENTS_INFO",
+                ColumnName = NewColumnName.ToUpper(),
+                DataType = NewColumnDataType,
+                IsReference = IsNewColumnRef,
+                RefTableName = RefTableName?.ToUpper(),
+                RefPrimaryKey = RefPrimaryKey?.ToUpper(),
+                RefDisplayColumn = RefDisplayColumn?.ToUpper()
+            };
+
+            await Mediator.Send(cmd);
+            
+            // Reload available columns
+            AvailableColumns = await Mediator.Send(new GetTableColumnsQuery { TableName = "STUDENTS_INFO" });
+            SelectedColumns.Add(NewColumnName.ToUpper());
+            
+            // Reset state
+            IsAddingColumn = false;
+            NewColumnName = "";
+            IsNewColumnRef = false;
+            RefTableName = "";
+            RefPrimaryKey = "";
+            RefDisplayColumn = "";
+            
+            await LoadStudents();
+        }
+        catch (Exception ex)
+        {
+            ColumnAddError = ex.Message;
+        }
+    }
+}

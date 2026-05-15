@@ -1,0 +1,165 @@
+@using SchoolErp.Application.Common.Models
+@using SchoolErp.Application.Features.Users
+@using SchoolErp.Application.Common.Mediator
+@using SchoolErp.Web.Components.Shared
+@inject IMediator Mediator
+
+<div class="page-header">
+    <h2 class="page-title">Roles Management</h2>
+    @if (!ShowRoleForm)
+    {
+        <button class="btn-add" @onclick="ShowCreateRoleForm">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Add New Role</span>
+        </button>
+    }
+</div>
+
+@if (ShowRoleForm)
+{
+    <div class="form-card animate-fade-in-up">
+        <h3 class="form-title">@(IsRoleEditMode ? "Edit Role" : "Create New Role")</h3>
+        <EditForm Model="RoleForm" OnValidSubmit="SaveRole">
+            <div class="row g-4 mb-4">
+                <div class="col-md-8">
+                    <label class="form-label">Role Name</label>
+                    <InputText @bind-Value="RoleForm.Name" class="form-control-modern" placeholder="e.g. Teacher, Accountant" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <SelectPicker Items="ActiveStatusPickerItems" Value="@RoleForm.IsActive.ToString()" ValueChanged="@(v => RoleForm.IsActive = int.Parse(v ?? "1"))" ValueField="Value" LabelField="Label" Placeholder="Select Status" Searchable="false" Clearable="false" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary-modern" @onclick="() => ShowRoleForm = false">Discard</button>
+                <button type="submit" class="btn-primary-modern">@(IsRoleEditMode ? "Update Role" : "Save Role")</button>
+            </div>
+        </EditForm>
+    </div>
+}
+else
+{
+    <div class="table-card animate-fade-in-up">
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Role Name</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (RolesList == null)
+                    {
+                        <tr><td colspan="4" class="text-center">Loading...</td></tr>
+                    }
+                    else if (!RolesList.Any())
+                    {
+                        <tr><td colspan="4" class="text-center">No roles found.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var role in RolesList)
+                        {
+                            <tr>
+                                <td><span style="font-weight: 600;">@role.NAME</span></td>
+                                <td>
+                                    <span class="badge-modern @(role.IS_ACTIVE == 1 ? "badge-success" : "badge-danger")">
+                                        @(role.IS_ACTIVE == 1 ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>@(DateTime.TryParse(role.CREATED_AT, out var rdt) ? rdt.ToString("MMM dd, yyyy") : role.CREATED_AT)</td>
+                                <td>
+                                    <div class="action-buttons" style="justify-content: flex-end;">
+                                        <button class="btn-icon-modern" @onclick="() => EditRole(role)" title="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                        <button class="btn-icon-modern danger" @onclick="() => DeleteRole(role.ROLE_ID)" title="Delete"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    private bool ShowRoleForm = false;
+    private bool IsRoleEditMode = false;
+    private RoleFormModel RoleForm = new();
+    private IEnumerable<RoleDto>? RolesList;
+
+    private static readonly IEnumerable<object> ActiveStatusPickerItems = new object[]
+    {
+        new { Value = "1", Label = "Active" },
+        new { Value = "0", Label = "Inactive" }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRoles();
+    }
+
+    private async Task LoadRoles()
+    {
+        RolesList = await Mediator.Send(new GetRolesQuery());
+    }
+
+    private void ShowCreateRoleForm()
+    {
+        IsRoleEditMode = false;
+        RoleForm = new RoleFormModel();
+        ShowRoleForm = true;
+    }
+
+    private void EditRole(RoleDto role)
+    {
+        IsRoleEditMode = true;
+        RoleForm = new RoleFormModel
+        {
+            RoleId = role.ROLE_ID,
+            Name = role.NAME,
+            IsActive = role.IS_ACTIVE
+        };
+        ShowRoleForm = true;
+    }
+
+    private async Task SaveRole()
+    {
+        if (IsRoleEditMode)
+        {
+            await Mediator.Send(new UpdateRoleCommand 
+            { 
+                RoleId = RoleForm.RoleId!, 
+                Name = RoleForm.Name, 
+                IsActive = RoleForm.IsActive 
+            });
+        }
+        else
+        {
+            await Mediator.Send(new CreateRoleCommand 
+            { 
+                Name = RoleForm.Name, 
+                IsActive = RoleForm.IsActive 
+            });
+        }
+        ShowRoleForm = false;
+        await LoadRoles();
+    }
+
+    private async Task DeleteRole(string id)
+    {
+        await Mediator.Send(new DeleteRoleCommand { RoleId = id });
+        await LoadRoles();
+    }
+
+    public class RoleFormModel
+    {
+        public string? RoleId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public int IsActive { get; set; } = 1;
+    }
+}

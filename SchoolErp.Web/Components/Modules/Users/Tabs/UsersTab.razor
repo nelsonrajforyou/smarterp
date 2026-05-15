@@ -1,0 +1,349 @@
+@using SchoolErp.Application.Common.Models
+@using SchoolErp.Application.Features.Users
+@using SchoolErp.Application.Common.Mediator
+@using SchoolErp.Web.Components.Shared
+@using System.ComponentModel.DataAnnotations
+@inject IMediator Mediator
+
+<div class="page-header">
+    <h2 class="page-title">Users Management</h2>
+    <button class="btn-add" @onclick="ShowCreateForm">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Add New User</span>
+    </button>
+</div>
+
+@if (IsLoading)
+{
+    <div class="skeleton-container">
+        <div class="skeleton" style="height: 100px; margin-bottom: 1.5rem;"></div>
+        <div class="skeleton" style="height: 400px;"></div>
+    </div>
+}
+else if (ShowForm)
+{
+    <SchoolErp.Web.Components.Modules.Users.Shared.UserForm 
+        Model="UserForm" 
+        IsEditMode="IsEditMode" 
+        ErrorMessage="@ErrorMessage" 
+        Roles="RolesPickerItems" 
+        Statuses="StatusPickerItems" 
+        OnSubmit="SaveUser" 
+        OnCancel="CancelForm" />
+}
+
+@if (UsersList != null && !ShowForm)
+{
+    <!-- Unified Toolbar -->
+    <div class="list-toolbar animate-fade-in-up">
+        <div class="list-toolbar-left">
+            <span class="result-count">@(UsersList.TotalCount) user(s)</span>
+        </div>
+        <div class="list-toolbar-right">
+            <div class="view-toggle">
+                <button class="view-btn @(ViewMode == "grid" ? "active" : "")" title="Grid View" @onclick='() => ViewMode = "grid"'>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                </button>
+                <button class="view-btn @(ViewMode == "list" ? "active" : "")" title="List View" @onclick='() => ViewMode = "list"'>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (!UsersList.Items.Any())
+    {
+        <div class="empty-state">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <p>No users found.</p>
+        </div>
+    }
+    else if (ViewMode == "list")
+    {
+        <!-- LIST VIEW -->
+        <div class="table-card animate-fade-in-up">
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>User Details</th>
+                            <th>Linked ID</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Joined Date</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in UsersList.Items)
+                        {
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 700;">@user.FIRST_NAME @user.LAST_NAME</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted);">@user.EMAIL</div>
+                                </td>
+                                <td><span style="font-weight: 500; color: var(--text-primary);">@user.USER_ID</span></td>
+                                <td>
+                                    <span class="badge-modern badge-info">
+                                        @user.ROLE_NAME
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge-modern @(user.STATUS == "Active" ? "badge-success" : user.STATUS == "Inactive" ? "badge-danger" : "badge-warning")">
+                                        <span class="status-dot @(user.STATUS == "Active" ? "bg-success" : "bg-danger")"></span>
+                                        @user.STATUS
+                                    </span>
+                                </td>
+                                <td>@(DateTime.TryParse(user.CREATED_AT, out var dt) ? dt.ToString("MMM dd, yyyy") : user.CREATED_AT)</td>
+                                <td>
+                                    <div class="action-buttons" style="justify-content: flex-end;">
+                                        <button class="btn-icon-modern" @onclick="() => EditUser(user)" title="Edit">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        </button>
+                                        <button class="btn-icon-modern danger" @onclick="() => DeleteUser(user.USER_INFO_ID)" title="Delete">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- GRID VIEW -->
+        <div class="data-grid animate-fade-in">
+            @foreach (var user in UsersList.Items)
+            {
+                <div class="data-card">
+                    <div class="data-card-header">
+                        <div class="data-card-avatar">@((user.FIRST_NAME ?? "?")[0])</div>
+                        <div>
+                            <div class="data-card-title">@user.FIRST_NAME @user.LAST_NAME</div>
+                            <div class="data-card-subtitle">@user.EMAIL</div>
+                        </div>
+                    </div>
+                    <div class="data-card-body">
+                        <div class="data-card-row">
+                            <span class="data-card-label">Role</span>
+                            <span class="badge-modern badge-info" style="font-size: 0.72rem; padding: 0.2rem 0.6rem;">
+                                @user.ROLE_NAME
+                            </span>
+                        </div>
+                        <div class="data-card-row">
+                            <span class="data-card-label">Status</span>
+                            <span class="badge-modern @(user.STATUS == "Active" ? "badge-success" : user.STATUS == "Inactive" ? "badge-danger" : "badge-warning")" style="font-size: 0.72rem; padding: 0.2rem 0.6rem;">
+                                <span class="status-dot @(user.STATUS == "Active" ? "bg-success" : "bg-danger")"></span>
+                                @user.STATUS
+                            </span>
+                        </div>
+                        <div class="data-card-row">
+                            <span class="data-card-label">Linked ID</span>
+                            <span class="data-card-value">@(string.IsNullOrEmpty(user.USER_ID) ? "—" : user.USER_ID)</span>
+                        </div>
+                        <div class="data-card-row">
+                            <span class="data-card-label">Joined</span>
+                            <span class="data-card-value">@(DateTime.TryParse(user.CREATED_AT, out var dt2) ? dt2.ToString("MMM dd, yyyy") : "—")</span>
+                        </div>
+                    </div>
+                    <div class="data-card-actions">
+                        <button class="btn-icon-modern" @onclick="() => EditUser(user)" title="Edit">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        <button class="btn-icon-modern danger" @onclick="() => DeleteUser(user.USER_INFO_ID)" title="Delete">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (UsersList.TotalPages > 1)
+    {
+        <div class="pagination-bar">
+            <span class="pagination-info">Page @PageNumber of @UsersList.TotalPages (@UsersList.TotalCount total)</span>
+            <div class="pagination-controls">
+                <button class="page-btn-modern" disabled="@(!UsersList.HasPreviousPage)" @onclick="() => LoadPage(PageNumber - 1)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="page-btn-modern" disabled="@(!UsersList.HasNextPage)" @onclick="() => LoadPage(PageNumber + 1)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    private bool IsLoading = true;
+    private bool ShowForm = false;
+    private bool IsEditMode = false;
+    private string? ErrorMessage;
+    private string ViewMode = "list";
+    
+    private int PageNumber = 1;
+    private const int PageSize = 10;
+    
+    private PaginatedList<UserDto>? UsersList;
+    private IEnumerable<RoleDto>? RolesList;
+    private UserFormModel UserForm = new();
+
+    private IEnumerable<object> RolesPickerItems => 
+        RolesList?.Select(r => (object)new { Value = r.ROLE_ID, Label = r.NAME }) ?? Enumerable.Empty<object>();
+
+    private static readonly IEnumerable<object> StatusPickerItems = new object[]
+    {
+        new { Value = "Active", Label = "Active" },
+        new { Value = "Inactive", Label = "Inactive" },
+        new { Value = "Suspended", Label = "Suspended" }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAllData();
+    }
+
+    private async Task LoadAllData()
+    {
+        IsLoading = true;
+        try
+        {
+            var tasks = new List<Task>
+            {
+                LoadUsers(),
+                LoadRoles()
+            };
+            await Task.WhenAll(tasks);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task LoadRoles()
+    {
+        RolesList = await Mediator.Send(new GetRolesQuery());
+    }
+
+    private async Task LoadUsers()
+    {
+        UsersList = await Mediator.Send(new GetUsersQuery { PageNumber = PageNumber, PageSize = PageSize });
+    }
+
+    private async Task LoadPage(int pageNumber)
+    {
+        PageNumber = pageNumber;
+        await LoadUsers();
+    }
+
+    private void ShowCreateForm()
+    {
+        IsEditMode = false;
+        UserForm = new UserFormModel();
+        ErrorMessage = null;
+        ShowForm = true;
+    }
+
+    private void EditUser(UserDto user)
+    {
+        IsEditMode = true;
+        UserForm = new UserFormModel
+        {
+            Id = user.USER_INFO_ID,
+            FirstName = user.FIRST_NAME,
+            LastName = user.LAST_NAME,
+            RoleId = user.ROLE_ID,
+            UserId = user.USER_ID,
+            Status = user.STATUS,
+            Email = user.EMAIL
+        };
+        ErrorMessage = null;
+        ShowForm = true;
+    }
+
+    private void CancelForm()
+    {
+        ShowForm = false;
+    }
+
+    private async Task SaveUser()
+    {
+        try
+        {
+            if (IsEditMode)
+            {
+                var command = new UpdateUserCommand
+                {
+                    Id = UserForm.Id!,
+                    FirstName = UserForm.FirstName,
+                    LastName = UserForm.LastName,
+                    RoleId = UserForm.RoleId,
+                    UserId = UserForm.UserId,
+                    Status = UserForm.Status
+                };
+                await Mediator.Send(command);
+            }
+            else
+            {
+                var command = new CreateUserCommand
+                {
+                    Email = UserForm.Email,
+                    Password = UserForm.Password!,
+                    FirstName = UserForm.FirstName,
+                    LastName = UserForm.LastName,
+                    RoleId = UserForm.RoleId,
+                    UserId = UserForm.UserId,
+                    Status = UserForm.Status
+                };
+                await Mediator.Send(command);
+            }
+
+            ShowForm = false;
+            await LoadUsers();
+        }
+        catch (FluentValidation.ValidationException vex)
+        {
+            ErrorMessage = "Validation Error: " + string.Join(", ", vex.Errors.Select(e => e.ErrorMessage));
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "An error occurred while saving the user: " + ex.Message;
+        }
+    }
+
+    private async Task DeleteUser(string id)
+    {
+        await Mediator.Send(new DeleteUserCommand { Id = id });
+        await LoadUsers();
+    }
+
+    public class UserFormModel
+    {
+        public string? Id { get; set; }
+        
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        public string Email { get; set; } = string.Empty;
+        
+        public string? Password { get; set; }
+        
+        [Required(ErrorMessage = "First Name is required")]
+        public string FirstName { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Last Name is required")]
+        public string LastName { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Role is required")]
+        public string RoleId { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Linked ID is required")]
+        public string UserId { get; set; } = string.Empty;
+        
+        public string Status { get; set; } = "Active";
+    }
+}

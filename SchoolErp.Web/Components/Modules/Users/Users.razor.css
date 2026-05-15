@@ -1,0 +1,45 @@
+/* Users module — scoped styles only (globals live in app.css) */
+
+.users-page {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Tabs Styling */
+.tabs-container {
+    display: flex;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 1rem;
+    gap: 1rem;
+    overflow-x: auto;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+::deep .tab-btn:hover {
+    color: var(--primary-600);
+}
+
+::deep .tab-btn.active {
+    color: var(--primary-600);
+    border-bottom-color: var(--primary-600);
+}
+
+.skeleton-container { padding: 0.5rem; }
+
+@media (max-width: 768px) {
+    .page-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .page-header .btn-add { width: 100%; justify-content: center; }
+    .form-card { padding: 1rem; }
+    .form-actions { flex-direction: column; }
+}

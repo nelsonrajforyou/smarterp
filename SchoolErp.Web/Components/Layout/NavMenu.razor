@@ -1,0 +1,144 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using SchoolErp.Application.Features.Menu.GetMenuForUser
+@using SchoolErp.Application.Common.Models
+@using SchoolErp.Application.Common.Mediator
+@inject IMediator Mediator
+
+<!-- Brand -->
+<div class="sidebar-brand">
+    <div class="brand-logo">
+        <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="11" fill="var(--primary-500)"/>
+            <path d="M12 28V16L20 11L28 16V28" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M17 28V22H23V28" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="20" cy="17" r="2" fill="white"/>
+        </svg>
+    </div>
+    <div class="brand-text">
+        <span class="brand-name">SchoolERP</span>
+        <span class="brand-tagline">Admin Console</span>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav class="sidebar-nav">
+    @if (Modules != null && Modules.Count > 0)
+    {
+        @foreach (var module in Modules)
+        {
+            <div class="nav-section-label">@module.MODULE_NAME.ToUpper()</div>
+            @foreach (var menu in module.Menus)
+            {
+                <div class="nav-item-modern">
+                    <NavLink class="nav-link-modern"
+                             href="@menu.MENU_URL"
+                             Match="@(menu.MENU_URL == "/" ? NavLinkMatch.All : NavLinkMatch.Prefix)"
+                             id="@($"nav-{menu.MENU_URL?.TrimStart('/') ?? "home"}")">
+                        <span class="nav-icon">@((MarkupString)GetIconSvg(menu.ICON))</span>
+                        <span class="nav-label">@menu.MENU_NAME</span>
+                        <span class="nav-arrow">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                        </span>
+                    </NavLink>
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <!-- Default Menu -->
+        <div class="nav-section-label">MAIN MENU</div>
+        <div class="nav-item-modern">
+            <NavLink class="nav-link-modern" href="/" Match="NavLinkMatch.All" id="nav-dashboard">
+                <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+                <span class="nav-label">Dashboard</span>
+                <span class="nav-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </NavLink>
+        </div>
+
+        <div class="nav-section-label">MANAGEMENT</div>
+        <div class="nav-item-modern">
+            <NavLink class="nav-link-modern" href="/student-management" Match="NavLinkMatch.Prefix" id="nav-students">
+                <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg></span>
+                <span class="nav-label">Students</span>
+                <span class="nav-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </NavLink>
+        </div>
+        <div class="nav-item-modern">
+            <NavLink class="nav-link-modern" href="/staff-management" Match="NavLinkMatch.Prefix" id="nav-teachers">
+                <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+                <span class="nav-label">Staff</span>
+                <span class="nav-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </NavLink>
+        </div>
+
+        <div class="nav-section-label">SYSTEM</div>
+        <div class="nav-item-modern">
+            <NavLink class="nav-link-modern" href="/users" Match="NavLinkMatch.Prefix" id="nav-users">
+                <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
+                <span class="nav-label">Users</span>
+                <span class="nav-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </NavLink>
+        </div>
+        <div class="nav-item-modern">
+            <NavLink class="nav-link-modern" href="/roles" Match="NavLinkMatch.Prefix" id="nav-roles">
+                <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                <span class="nav-label">Roles</span>
+                <span class="nav-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </NavLink>
+        </div>
+        <div class="nav-item-modern">
+            <NavLink class="nav-link-modern" href="/academic-config" Match="NavLinkMatch.Prefix" id="nav-academic-config">
+                <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+                <span class="nav-label">Academic Config</span>
+                <span class="nav-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </NavLink>
+        </div>
+    }
+</nav>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+    private List<ModuleDto> Modules { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState == null) return;
+        var authState = await AuthState;
+        var user = authState.User;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var staffStudentId = user.FindFirst("StaffStudentId")?.Value;
+            
+            var userIds = new List<string>();
+            if (!string.IsNullOrEmpty(userId)) userIds.Add(userId);
+            if (!string.IsNullOrEmpty(staffStudentId)) userIds.Add(staffStudentId);
+
+            if (userIds.Count > 0)
+                Modules = await Mediator.Send(new GetMenuForUserQuery { UserIds = userIds.Distinct().ToArray() });
+        }
+    }
+
+    private static string GetIconSvg(string? icon) => icon?.ToLower() switch
+    {
+        "bi-house-door" or "dashboard" =>
+            "<svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1.5'/><rect x='14' y='3' width='7' height='7' rx='1.5'/><rect x='3' y='14' width='7' height='7' rx='1.5'/><rect x='14' y='14' width='7' height='7' rx='1.5'/></svg>",
+        "bi-mortarboard" or "students" =>
+            "<svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M22 10v6M2 10l10-5 10 5-10 5z'/><path d='M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5'/></svg>",
+        "bi-person-workspace" or "teachers" =>
+            "<svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='3' width='20' height='14' rx='2'/><path d='M8 21h8M12 17v4'/></svg>",
+        "bi-people" or "users" =>
+            "<svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75'/></svg>",
+        "bi-shield-lock" or "roles" =>
+            "<svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>",
+        "bi-book" or "courses" =>
+            "<svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 19.5A2.5 2.5 0 016.5 17H20'/><path d='M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z'/></svg>",
+        "bi-gear" or "academic" =>
+            "<svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'/></svg>",
+        _ =>
+            "<svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2'/></svg>"
+    };
+}

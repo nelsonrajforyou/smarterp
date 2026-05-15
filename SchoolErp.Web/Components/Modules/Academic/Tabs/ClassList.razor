@@ -1,0 +1,286 @@
+@using SchoolErp.Application.Common.Interfaces
+@using SchoolErp.Application.Common.Queries
+@using SchoolErp.Application.Common.Models
+@using Dapper
+@inject ICommonDataService CommonData
+@inject IAcademicService AcademicService
+@inject SchoolErp.Application.Common.Mediator.IMediator Mediator
+@using SchoolErp.Application.Features.Academic
+@using System.ComponentModel.DataAnnotations
+
+<div class="animate-fade-in">
+    <!-- Unified Toolbar -->
+    <div class="list-toolbar" style="margin-bottom: 1.5rem;">
+        <div class="list-toolbar-left">
+            <div class="toolbar-search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Search classes..." @bind-value="SearchTerm" @bind-value:event="oninput" />
+            </div>
+            <span class="result-count">@FilteredClasses.Count() class(es)</span>
+        </div>
+        <div class="list-toolbar-right">
+            <div class="view-toggle">
+                <button class="view-btn @(ViewMode == "grid" ? "active" : "")" title="Grid View" @onclick='() => ViewMode = "grid"'>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                </button>
+                <button class="view-btn @(ViewMode == "list" ? "active" : "")" title="List View" @onclick='() => ViewMode = "list"'>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+            </div>
+            <button class="btn-primary-modern" @onclick="OpenAddModal" style="height: 36px; padding: 0 1rem; font-size: 0.85rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                New Class
+            </button>
+        </div>
+    </div>
+
+    @if (IsLoading)
+    {
+        <div class="empty-state"><p>Loading classes...</p></div>
+    }
+    else if (!FilteredClasses.Any())
+    {
+        <div class="empty-state">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            <p>No classes found matching your criteria.</p>
+        </div>
+    }
+    else if (ViewMode == "list")
+    {
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Class Name</th>
+                            <th>Section</th>
+                            <th>Class Teacher</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cls in FilteredClasses)
+                        {
+                            <tr>
+                                <td><span class="badge-modern badge-info">@cls.ClassName</span></td>
+                                <td><div style="font-weight: 600;">@cls.Section</div></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(cls.TeacherName))
+                                    {
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div class="avatar-xs">@cls.TeacherName[0]</div>
+                                            <span>@cls.TeacherName</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: var(--text-muted); font-style: italic;">Not Assigned</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge-modern @(cls.IsActive == "1" ? "badge-success" : "badge-danger")">
+                                        <span class="status-dot @(cls.IsActive == "1" ? "bg-success" : "bg-danger")"></span>
+                                        @(cls.IsActive == "1" ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons" style="justify-content: flex-end;">
+                                        <button class="btn-icon-modern" title="Edit" @onclick="() => EditClass(cls)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                        <button class="btn-icon-modern danger" title="Delete" @onclick="() => DeleteClass(cls.ClassId)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="data-grid">
+            @foreach (var cls in FilteredClasses)
+            {
+                <div class="data-card">
+                    <div class="data-card-header">
+                        <div class="data-card-avatar" style="background: var(--primary-50); color: var(--primary-600); font-size: 1.3rem;">@cls.ClassName[0]</div>
+                        <div>
+                            <div class="data-card-title">@cls.ClassName</div>
+                            <div class="data-card-subtitle">Section: @cls.Section</div>
+                        </div>
+                    </div>
+                    <div class="data-card-body">
+                        <div class="data-card-row">
+                            <span class="data-card-label">Teacher</span>
+                            <span class="data-card-value">@(string.IsNullOrEmpty(cls.TeacherName) ? "Not Assigned" : cls.TeacherName)</span>
+                        </div>
+                        <div class="data-card-row">
+                            <span class="data-card-label">Status</span>
+                            <span class="badge-modern @(cls.IsActive == "1" ? "badge-success" : "badge-danger")" style="font-size: 0.72rem; padding: 0.2rem 0.6rem;">
+                                <span class="status-dot @(cls.IsActive == "1" ? "bg-success" : "bg-danger")"></span>
+                                @(cls.IsActive == "1" ? "Active" : "Inactive")
+                            </span>
+                        </div>
+                    </div>
+                    <div class="data-card-actions">
+                        <button class="btn-icon-modern" title="Edit" @onclick="() => EditClass(cls)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                        <button class="btn-icon-modern danger" title="Delete" @onclick="() => DeleteClass(cls.ClassId)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@if (ShowModal)
+{
+    <div class="modal-backdrop">
+        <div class="form-card animate-fade-in-up" style="max-width: 500px; width: 100%; margin: 1.5rem;">
+            <div class="form-title">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <span>@(IsEditMode ? "Edit Class" : "Create New Class")</span>
+                    <button @onclick="CloseModal" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.5rem;">&times;</button>
+                </div>
+            </div>
+            
+            <EditForm Model="ClassModel" OnValidSubmit="SaveClass">
+                <DataAnnotationsValidator />
+                <div class="row g-4">
+                    <div class="col-md-8">
+                        <label class="form-label">Class Name</label>
+                        <InputText class="form-control-modern" @bind-Value="ClassModel.ClassName" placeholder="e.g. Grade 10" />
+                        <ValidationMessage For="@(() => ClassModel.ClassName)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Section</label>
+                        <InputText class="form-control-modern" @bind-Value="ClassModel.Section" placeholder="e.g. A" />
+                        <ValidationMessage For="@(() => ClassModel.Section)" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Class Teacher</label>
+                        <InputSelect class="form-select-modern" @bind-Value="ClassModel.TeacherId">
+                            <option value="">-- Assign Teacher --</option>
+                            @foreach (var teacher in StaffList)
+                            {
+                                <option value="@teacher.Value">@teacher.Text</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Status</label>
+                        <InputSelect class="form-select-modern" @bind-Value="ClassModel.IsActive">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </InputSelect>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary-modern" @onclick="CloseModal">Cancel</button>
+                    <button type="submit" class="btn-primary-modern">
+                        @(IsEditMode ? "Update Class" : "Save Class")
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<style>
+    .avatar-xs { width: 22px; height: 22px; border-radius: 4px; background: var(--primary-100); color: var(--primary-700); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; }
+</style>
+
+@code {
+    private string SearchTerm { get; set; } = "";
+    private string ViewMode { get; set; } = "list";
+    private List<ClassDto> Classes { get; set; } = new();
+    private List<DropdownItem> StaffList { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+    
+    private bool ShowModal = false;
+    private bool IsEditMode = false;
+    private ClassViewModel ClassModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        StaffList = await CommonData.GetStaffListAsync();
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        IsLoading = true;
+        Classes = await Mediator.Send(new GetClassesWithStaffQuery());
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+    private IEnumerable<ClassDto> FilteredClasses => string.IsNullOrWhiteSpace(SearchTerm) 
+        ? Classes 
+        : Classes.Where(c => c.ClassName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) || c.Section.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) || c.TeacherName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
+
+    private void OpenAddModal()
+    {
+        IsEditMode = false;
+        ClassModel = new ClassViewModel { IsActive = "1" };
+        ShowModal = true;
+    }
+
+    private void EditClass(ClassDto cls)
+    {
+        IsEditMode = true;
+        ClassModel = new ClassViewModel
+        {
+            ClassId = cls.ClassId,
+            ClassName = cls.ClassName,
+            Section = cls.Section,
+            TeacherId = cls.TeacherId,
+            IsActive = cls.IsActive
+        };
+        ShowModal = true;
+    }
+
+    private async Task SaveClass()
+    {
+        bool success;
+        if (IsEditMode)
+        {
+            success = await AcademicService.UpdateClassAsync(ClassModel.ClassId, ClassModel.ClassName, ClassModel.Section, ClassModel.TeacherId, ClassModel.IsActive);
+        }
+        else
+        {
+            success = await AcademicService.CreateClassAsync(ClassModel.ClassName, ClassModel.Section, ClassModel.TeacherId, ClassModel.IsActive);
+        }
+
+        if (success)
+        {
+            await LoadData();
+            CloseModal();
+        }
+    }
+
+    private void CloseModal() => ShowModal = false;
+
+    private async Task DeleteClass(string id)
+    {
+        if (await AcademicService.DeleteClassAsync(id))
+        {
+            await LoadData();
+        }
+    }
+
+    public class ClassViewModel
+    {
+        public string ClassId { get; set; } = "";
+        
+        [Required(ErrorMessage = "Class Name is required")]
+        public string ClassName { get; set; } = "";
+        
+        [Required(ErrorMessage = "Section is required")]
+        public string Section { get; set; } = "";
+        
+        public string TeacherId { get; set; } = "";
+        public string IsActive { get; set; } = "1";
+    }
+}

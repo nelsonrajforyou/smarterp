@@ -1,0 +1,209 @@
+@using Microsoft.AspNetCore.Components.Web
+
+<div class="select-picker @(IsOpen ? "open" : "") @(Disabled ? "disabled" : "") @SizeClass" @ref="pickerRef">
+    <div class="select-picker__control" @onclick="ToggleDropdown" tabindex="0">
+        <div class="select-picker__value-container">
+            @if (IsMultiple && SelectedValues?.Any() == true)
+            {
+                <div class="select-picker__tags">
+                    @foreach (var val in SelectedValues.Take(MaxTags))
+                    {
+                        var item = Items?.FirstOrDefault(i => GetItemValue(i) == val);
+                        if (item != null)
+                        {
+                            <span class="select-picker__tag">
+                                <span class="select-picker__tag-text">@GetItemLabel(item)</span>
+                                @if (!Disabled)
+                                {
+                                    <button type="button" class="select-picker__tag-remove" @onclick:stopPropagation="true" @onclick="() => RemoveValue(val)">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    </button>
+                                }
+                            </span>
+                        }
+                    }
+                    @if (SelectedValues.Count() > MaxTags)
+                    {
+                        <span class="select-picker__tag select-picker__tag--more">+@(SelectedValues.Count() - MaxTags) more</span>
+                    }
+                </div>
+            }
+            else if (!IsMultiple && !string.IsNullOrEmpty(Value))
+            {
+                var selectedItem = Items?.FirstOrDefault(i => GetItemValue(i) == Value);
+                <span class="select-picker__single-value">@(selectedItem != null ? GetItemLabel(selectedItem) : Placeholder)</span>
+            }
+            else
+            {
+                <span class="select-picker__placeholder">@Placeholder</span>
+            }
+        </div>
+        <div class="select-picker__indicators">
+            @if (Clearable && HasValue && !Disabled)
+            {
+                <button type="button" class="select-picker__clear" @onclick:stopPropagation="true" @onclick="ClearAll" title="Clear">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            }
+            <span class="select-picker__separator"></span>
+            <span class="select-picker__arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+        </div>
+    </div>
+
+    @if (IsOpen)
+    {
+        <div class="select-picker__backdrop" @onclick="CloseDropdown"></div>
+        <div class="select-picker__menu">
+            @if (Searchable)
+            {
+                <div class="select-picker__search-box">
+                    <svg class="select-picker__search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="@($"picker-search-{GetHashCode()}")" name="pickerSearch" class="select-picker__search-input" placeholder="Search..." @bind="SearchTerm" @bind:event="oninput" @ref="searchInputRef" />
+                </div>
+            }
+            <div class="select-picker__options">
+                @if (FilteredItems?.Any() == true)
+                {
+                    @foreach (var item in FilteredItems)
+                    {
+                        var val = GetItemValue(item);
+                        var isSelected = IsItemSelected(val);
+                        <div class="select-picker__option @(isSelected ? "selected" : "")" @onclick="() => SelectItem(val)">
+                            @if (IsMultiple)
+                            {
+                                <span class="select-picker__checkbox @(isSelected ? "checked" : "")">
+                                    @if (isSelected)
+                                    {
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                    }
+                                </span>
+                            }
+                            <span class="select-picker__option-label">@GetItemLabel(item)</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="select-picker__no-results">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                        <span>No results found</span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public IEnumerable<object>? Items { get; set; }
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public IEnumerable<string>? SelectedValues { get; set; }
+    [Parameter] public EventCallback<IEnumerable<string>> SelectedValuesChanged { get; set; }
+    [Parameter] public bool IsMultiple { get; set; } = false;
+    [Parameter] public bool Searchable { get; set; } = true;
+    [Parameter] public bool Clearable { get; set; } = true;
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public string Placeholder { get; set; } = "Select...";
+    [Parameter] public string ValueField { get; set; } = "Value";
+    [Parameter] public string LabelField { get; set; } = "Label";
+    [Parameter] public string Size { get; set; } = "md"; // sm, md, lg
+    [Parameter] public int MaxTags { get; set; } = 3;
+
+    private ElementReference pickerRef;
+    private ElementReference searchInputRef;
+    private bool IsOpen = false;
+    private string SearchTerm = string.Empty;
+
+    private string SizeClass => $"select-picker--{Size}";
+    private bool HasValue => IsMultiple ? SelectedValues?.Any() == true : !string.IsNullOrEmpty(Value);
+
+    private IEnumerable<object> FilteredItems
+    {
+        get
+        {
+            if (Items == null) return Enumerable.Empty<object>();
+            if (string.IsNullOrWhiteSpace(SearchTerm)) return Items;
+            return Items.Where(i => GetItemLabel(i).Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+    private string GetItemValue(object item)
+    {
+        var prop = item.GetType().GetProperty(ValueField);
+        return prop?.GetValue(item)?.ToString() ?? string.Empty;
+    }
+
+    private string GetItemLabel(object item)
+    {
+        var prop = item.GetType().GetProperty(LabelField);
+        return prop?.GetValue(item)?.ToString() ?? string.Empty;
+    }
+
+    private bool IsItemSelected(string val)
+    {
+        if (IsMultiple)
+            return SelectedValues?.Contains(val) == true;
+        return Value == val;
+    }
+
+    private async Task ToggleDropdown()
+    {
+        if (Disabled) return;
+        IsOpen = !IsOpen;
+        SearchTerm = string.Empty;
+    }
+
+    private void CloseDropdown()
+    {
+        IsOpen = false;
+        SearchTerm = string.Empty;
+    }
+
+    private async Task SelectItem(string val)
+    {
+        if (IsMultiple)
+        {
+            var list = SelectedValues?.ToList() ?? new List<string>();
+            if (list.Contains(val))
+                list.Remove(val);
+            else
+                list.Add(val);
+            SelectedValues = list;
+            await SelectedValuesChanged.InvokeAsync(list);
+        }
+        else
+        {
+            Value = val;
+            await ValueChanged.InvokeAsync(val);
+            IsOpen = false;
+        }
+        SearchTerm = string.Empty;
+    }
+
+    private async Task RemoveValue(string val)
+    {
+        if (Disabled) return;
+        var list = SelectedValues?.ToList() ?? new List<string>();
+        list.Remove(val);
+        SelectedValues = list;
+        await SelectedValuesChanged.InvokeAsync(list);
+    }
+
+    private async Task ClearAll()
+    {
+        if (IsMultiple)
+        {
+            SelectedValues = Enumerable.Empty<string>();
+            await SelectedValuesChanged.InvokeAsync(SelectedValues);
+        }
+        else
+        {
+            Value = null;
+            await ValueChanged.InvokeAsync(Value);
+        }
+        SearchTerm = string.Empty;
+    }
+}

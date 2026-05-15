@@ -1,0 +1,282 @@
+@page "/timetable"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@using SchoolErp.Application.Common.Mediator
+@using SchoolErp.Application.Features.Timetable
+@using System.Data
+@using Dapper
+@using SchoolErp.Application.Common.Interfaces
+@using SchoolErp.Domain.Entities
+@inject IMediator Mediator
+@inject IDbConnectionFactory DbFactory
+@inject IJSRuntime JS
+
+<PageTitle>Timetable Management</PageTitle>
+
+<div class="page-header animate-fade-in-up">
+    <div>
+        <h1>Timetable Management</h1>
+        <p>Automated scheduling and workload balancing for your school.</p>
+    </div>
+    <div class="action-buttons">
+        <button class="btn-secondary-modern" @onclick="LoadData">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+        <button class="btn-primary-modern" @onclick="GenerateTimetable" disabled="@_isGenerating">
+            @if (_isGenerating)
+            {
+                <span class="spinner-border spinner-border-sm" style="width: 1rem; height: 1rem;"></span>
+                <span>Optimizing...</span>
+            }
+            else
+            {
+                <i class="bi bi-magic"></i> <span>Auto Generate</span>
+            }
+        </button>
+    </div>
+</div>
+
+@if (_message != null)
+{
+    <div style="background: var(--info-50, #eff6ff); color: var(--info-700, #1d4ed8); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <div><i class="bi bi-info-circle-fill me-2"></i> @_message</div>
+        <button type="button" style="background: none; border: none; cursor: pointer; color: inherit; font-size: 1.2rem;" @onclick="() => _message = null">&times;</button>
+    </div>
+}
+
+
+
+<div class="list-toolbar">
+    <div class="list-toolbar-left">
+        <div style="display: flex; gap: 1rem; width: 100%; max-width: 800px;">
+            <div style="flex: 1;">
+                <label class="form-label">View Mode</label>
+                <div style="position: relative;">
+                    <i class="bi bi-eye" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    <select class="form-select-modern" style="padding-left: 2.5rem;" @bind="_viewMode">
+                        <option value="class">Class View</option>
+                        <option value="teacher">Teacher View</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="flex: 1;">
+                @if (_viewMode == "class")
+                {
+                    <label class="form-label">Select Class</label>
+                    <div style="position: relative;">
+                        <i class="bi bi-mortarboard" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                        <select class="form-select-modern" style="padding-left: 2.5rem;" @bind="SelectedClassId">
+                            <option value="">-- All Classes --</option>
+                            @foreach (var c in _classes)
+                            {
+                                <option value="@c.CLASS_ID">@c.CLASS_NAME - @c.SECTION</option>
+                            }
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <label class="form-label">Select Teacher</label>
+                    <div style="position: relative;">
+                        <i class="bi bi-person-workspace" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                        <select class="form-select-modern" style="padding-left: 2.5rem;" @bind="SelectedTeacherId">
+                            <option value="">-- All Teachers --</option>
+                            @foreach (var t in _teachers)
+                            {
+                                <option value="@t.STAFF_ID">@t.NAME</option>
+                            }
+                        </select>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (_config != null && _periods.Any())
+{
+    <div class="table-card animate-fade-in-up" style="animation-delay: 0.2s;">
+        <div class="table-responsive">
+            <table class="modern-table" style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th style="min-width: 140px; text-align: center;">Period / Day Order</th>
+                        @foreach (var d in _dayOrders)
+                        {
+                            <th style="min-width: 150px; text-align: center;">@d.DAY_ORDER_NAME</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var period in _periods)
+                    {
+                        <tr>
+                            <td style="background: var(--gray-50); border-right: 1px solid var(--border-color);">
+                                <div style="font-weight: 700; color: var(--text-primary); font-size: 0.9rem;">@(string.IsNullOrEmpty(period.LABEL) ? $"Period {period.PERIOD_NUMBER}" : period.LABEL)</div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px;">@period.START_TIME.ToString("HH:mm") - @period.END_TIME.ToString("HH:mm")</div>
+                            </td>
+                            @if (period.IS_BREAK == 1)
+                            {
+                                <td colspan="@_dayOrders.Count" style="background: var(--gray-50); color: var(--text-muted); font-style: italic; font-weight: 600; letter-spacing: 0.05em;">
+                                    <i class="bi bi-cup-hot me-2"></i> @period.LABEL
+                                </td>
+                            }
+                            else
+                            {
+                                @foreach (var d in _dayOrders)
+                                {
+                                    var entries = GetEntriesForCell(d.DAY_ORDER, period.PERIOD_ID);
+                                    <td style="vertical-align: top; padding: 0.5rem;">
+                                        @if (entries.Any())
+                                        {
+                                            foreach (var entry in entries)
+                                            {
+                                                <div style="background: var(--bg-header); border: 1px solid var(--border-color); border-left: 4px solid var(--primary-500); border-radius: var(--radius-md); padding: 0.75rem; margin-bottom: 0.5rem; text-align: left; box-shadow: var(--shadow-sm); transition: transform 0.2s;">
+                                                    <div style="font-weight: 700; color: var(--primary-600); font-size: 0.85rem; margin-bottom: 0.4rem;">@entry.SUBJECT_NAME</div>
+                                                    @if (_viewMode == "class")
+                                                    {
+                                                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 6px;">
+                                                            <i class="bi bi-person text-primary"></i> @entry.TEACHER_NAME
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 6px;">
+                                                            <i class="bi bi-people text-success"></i> @entry.CLASS_NAME - @entry.SECTION
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: var(--gray-300); font-style: italic; font-size: 0.85rem;">
+                                                Free
+                                            </div>
+                                        }
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div style="text-align: center; padding: 4rem 1rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
+        <i class="bi bi-calendar-x" style="font-size: 3.5rem; color: var(--gray-300); margin-bottom: 1rem; display: block;"></i>
+        <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Timetable Not Configured</h4>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto;">You need to set up school days, periods, and subject allocations before generating a timetable.</p>
+        <a href="/timetable/config" class="btn-primary-modern" style="text-decoration: none;">
+            <i class="bi bi-gear-fill"></i> Configure Now
+        </a>
+    </div>
+}
+
+@code {
+    private IEnumerable<dynamic> _classes = Array.Empty<dynamic>();
+    private IEnumerable<dynamic> _teachers = Array.Empty<dynamic>();
+    private SchoolErp.Domain.Entities.TimetableConfig? _config;
+    private IEnumerable<dynamic> _periods = Array.Empty<dynamic>();
+    private IEnumerable<dynamic> _entries = Array.Empty<dynamic>();
+
+    private string _viewMode = "class"; // "class" or "teacher"
+    private string _selectedClassId = "";
+    private string _selectedTeacherId = "";
+    private bool _isGenerating = false;
+    private string? _message;
+    private List<DayOrder> _dayOrders = new();
+
+    private string SelectedClassId
+    {
+        get => _selectedClassId;
+        set { _selectedClassId = value; StateHasChanged(); }
+    }
+
+    private string SelectedTeacherId
+    {
+        get => _selectedTeacherId;
+        set { _selectedTeacherId = value; StateHasChanged(); }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        using var conn = DbFactory.CreateConnection();
+        _classes = await conn.QueryAsync("SELECT CLASS_ID, CLASS_NAME, SECTION FROM CLASSES WHERE IS_DELETED = 0 AND IS_ACTIVE = 1 ORDER BY CLASS_NAME, SECTION");
+        _teachers = await conn.QueryAsync("SELECT STAFF_ID, NAME FROM STAFF_INFO WHERE IS_DELETED = 0 AND IS_ACTIVE = 1 ORDER BY NAME");
+        
+        _config = await conn.QueryFirstOrDefaultAsync<SchoolErp.Domain.Entities.TimetableConfig>(TimetableQueries.GetConfig);
+        
+        _dayOrders = (await conn.QueryAsync<DayOrder>("SELECT * FROM SUP_DAY_ORDER ORDER BY DAY_ORDER")).ToList();
+
+        if (_config != null)
+        {
+            _periods = await conn.QueryAsync<Period>(TimetableQueries.GetPeriods, new { ConfigId = _config.CONFIG_ID });
+        }
+        
+        _entries = await Mediator.Send(new GetTimetableEntriesQuery());
+    }
+
+    private async Task GenerateTimetable()
+    {
+        _isGenerating = true;
+        _message = null;
+        StateHasChanged();
+
+        try
+        {
+            // Simulate processing time
+            await Task.Delay(1000);
+            var result = await Mediator.Send(new GenerateTimetableCommand { AcademicYearId = _config?.ACADEMIC_YEAR_ID ?? "" });
+            
+            if (result)
+            {
+                _message = "Timetable successfully generated!";
+                await LoadData();
+            }
+            else
+            {
+                _message = "Failed to generate timetable. Ensure configuration is complete.";
+            }
+        }
+        catch (Exception ex)
+        {
+            _message = $"Error generating timetable: {ex.Message}";
+        }
+        finally
+        {
+            _isGenerating = false;
+            StateHasChanged();
+        }
+    }
+
+    private IEnumerable<dynamic> GetEntriesForCell(int day, string periodId)
+    {
+        var filter = _entries.Where(e => e.DAY_OF_WEEK == day && e.PERIOD_ID == periodId);
+        
+        if (_viewMode == "class" && !string.IsNullOrEmpty(SelectedClassId))
+        {
+            return filter.Where(e => e.CLASS_ID == SelectedClassId);
+        }
+        else if (_viewMode == "teacher" && !string.IsNullOrEmpty(SelectedTeacherId))
+        {
+            return filter.Where(e => e.TEACHER_ID == SelectedTeacherId);
+        }
+        
+        return Array.Empty<dynamic>();
+    }
+
+    private string[] GetDays(int count)
+    {
+        string[] allDays = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+        return allDays.Take(count).ToArray();
+    }
+}

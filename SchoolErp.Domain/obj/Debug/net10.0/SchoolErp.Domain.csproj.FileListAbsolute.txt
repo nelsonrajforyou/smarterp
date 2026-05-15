@@ -1,0 +1,22 @@
+E:\EKLUS\SchoolErp\SchoolErp.Domain\bin\Debug\net10.0\SchoolErp.Domain.deps.json
+E:\EKLUS\SchoolErp\SchoolErp.Domain\bin\Debug\net10.0\SchoolErp.Domain.dll
+E:\EKLUS\SchoolErp\SchoolErp.Domain\bin\Debug\net10.0\SchoolErp.Domain.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.AssemblyInfoInputs.cache
+E:\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.AssemblyInfo.cs
+E:\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.csproj.CoreCompileInputs.cache
+E:\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.dll
+E:\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\refint\SchoolErp.Domain.dll
+E:\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.pdb
+E:\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\ref\SchoolErp.Domain.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\bin\Debug\net10.0\SchoolErp.Domain.deps.json
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\bin\Debug\net10.0\SchoolErp.Domain.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\bin\Debug\net10.0\SchoolErp.Domain.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.AssemblyInfoInputs.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.AssemblyInfo.cs
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.csproj.CoreCompileInputs.cache
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\refint\SchoolErp.Domain.dll
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\SchoolErp.Domain.pdb
+E:\New folder\EKLUS\SchoolErp\SchoolErp.Domain\obj\Debug\net10.0\ref\SchoolErp.Domain.dll

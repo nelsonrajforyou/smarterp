@@ -1,0 +1,814 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\New folder\\EKLUS\\SchoolErp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\students\\studentcommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\students\\studentcommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\students\\studentqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\students\\studentqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\students\\getstudentsquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\students\\getstudentsquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\dashboard\\dashboardqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\dashboard\\dashboardqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\auth\\login\\logincommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\auth\\login\\logincommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\auth\\login\\logincommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\auth\\login\\logincommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\common\\security\\securepasswordhasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\common\\security\\securepasswordhasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\academic\\academicqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\academic\\academicqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.infrastructure\\logging\\dberrorlogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|solutionrelative:schoolerp.infrastructure\\logging\\dberrorlogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\middleware\\globalexceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\middleware\\globalexceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|solutionrelative:schoolerp.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.infrastructure\\services\\commondataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|solutionrelative:schoolerp.infrastructure\\services\\commondataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.infrastructure\\services\\academicyearservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|solutionrelative:schoolerp.infrastructure\\services\\academicyearservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.infrastructure\\services\\academicservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|solutionrelative:schoolerp.infrastructure\\services\\academicservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.infrastructure\\auth\\jwttokengenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|solutionrelative:schoolerp.infrastructure\\auth\\jwttokengenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.infrastructure\\auth\\jwtsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D9184C2E-A1E5-AD27-A06B-54566C6E683F}|SchoolErp.Infrastructure\\SchoolErp.Infrastructure.csproj|solutionrelative:schoolerp.infrastructure\\auth\\jwtsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\middleware\\healthcheckmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\middleware\\healthcheckmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\academic\\academicconfig.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\academic\\academicconfig.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\academic\\tabs\\bulkedit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\academic\\tabs\\bulkedit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\academic\\tabs\\academicyearlist.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\academic\\tabs\\academicyearlist.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\users\\tabs\\rolestab.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\users\\tabs\\rolestab.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\users\\users.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\users\\users.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\academic\\tabs\\supporttables.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\academic\\tabs\\supporttables.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\layout\\reconnectmodal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\layout\\reconnectmodal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\students\\attendance.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\students\\attendance.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\shared\\datepicker.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\shared\\datepicker.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\users\\tabs\\userrolestab.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\users\\tabs\\userrolestab.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\users\\tabs\\userstab.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\users\\tabs\\userstab.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\academic\\academicconfig.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\academic\\academicconfig.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\menu\\getmenuforuser\\getmenuforuserquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\menu\\getmenuforuser\\getmenuforuserquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\menu\\getmenusquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\menu\\getmenusquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\wwwroot\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\wwwroot\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\common\\queries\\academicqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\common\\queries\\academicqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\academic\\tabs\\subjectstaffmapping.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\academic\\tabs\\subjectstaffmapping.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\students\\studentmanagement.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\students\\studentmanagement.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\staff\\staffmanagement.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\staff\\staffmanagement.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\academic\\tabs\\classlist.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\academic\\tabs\\classlist.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\modules\\auth\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\modules\\auth\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\layout\\loginlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\layout\\loginlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\features\\users\\userqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\features\\users\\userqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.web\\components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEDDF8A8-B3CE-1170-00AC-BEB310628FF4}|SchoolErp.Web\\SchoolErp.Web.csproj|solutionrelative:schoolerp.web\\components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|e:\\new folder\\eklus\\schoolerp\\schoolerp.application\\common\\models\\paginatedlist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC25C143-A423-476E-4A5A-12B5A2C7D6F4}|SchoolErp.Application\\SchoolErp.Application.csproj|solutionrelative:schoolerp.application\\common\\models\\paginatedlist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DashboardQueries.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Dashboard\\DashboardQueries.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Dashboard\\DashboardQueries.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Dashboard\\DashboardQueries.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Dashboard\\DashboardQueries.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T13:03:13.775Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GetStudentsQuery.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Students\\GetStudentsQuery.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Students\\GetStudentsQuery.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Students\\GetStudentsQuery.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Students\\GetStudentsQuery.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T12:31:46.347Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "StudentQueries.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Students\\StudentQueries.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Students\\StudentQueries.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Students\\StudentQueries.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Students\\StudentQueries.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T12:34:58.443Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StudentCommands.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Students\\StudentCommands.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Students\\StudentCommands.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Students\\StudentCommands.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Students\\StudentCommands.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAAEAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T12:34:54.888Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Program.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Program.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Program.cs",
+              "RelativeToolTip": "SchoolErp.Web\\Program.cs",
+              "ViewState": "AgIAAFcAAAAAAAAAAAApwGIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T06:45:54.074Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "LoginCommandHandler.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Auth\\Login\\LoginCommandHandler.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Auth\\Login\\LoginCommandHandler.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Auth\\Login\\LoginCommandHandler.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Auth\\Login\\LoginCommandHandler.cs",
+              "ViewState": "AgIAADkAAAAAAAAAAAAYwEMAAABvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T12:48:39.874Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LoginCommand.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Auth\\Login\\LoginCommand.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Auth\\Login\\LoginCommand.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Auth\\Login\\LoginCommand.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Auth\\Login\\LoginCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T12:46:03.648Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SecurePasswordHasher.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Common\\Security\\SecurePasswordHasher.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Common\\Security\\SecurePasswordHasher.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Common\\Security\\SecurePasswordHasher.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Common\\Security\\SecurePasswordHasher.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T13:46:04.636Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AcademicQueries.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Academic\\AcademicQueries.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Academic\\AcademicQueries.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Academic\\AcademicQueries.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Academic\\AcademicQueries.cs",
+              "ViewState": "AgIAADkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T13:45:34.971Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "App.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\App.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\App.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\App.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\App.razor",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABcAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T13:32:31.684Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\_Imports.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\_Imports.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\_Imports.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\_Imports.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T13:44:57.811Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AcademicYearService.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Services\\AcademicYearService.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Infrastructure\\Services\\AcademicYearService.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Services\\AcademicYearService.cs",
+              "RelativeToolTip": "SchoolErp.Infrastructure\\Services\\AcademicYearService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T13:21:17.645Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DbErrorLogger.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Logging\\DbErrorLogger.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Infrastructure\\Logging\\DbErrorLogger.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Logging\\DbErrorLogger.cs",
+              "RelativeToolTip": "SchoolErp.Infrastructure\\Logging\\DbErrorLogger.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T13:21:12.972Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "JwtTokenGenerator.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Auth\\JwtTokenGenerator.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Infrastructure\\Auth\\JwtTokenGenerator.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Auth\\JwtTokenGenerator.cs",
+              "RelativeToolTip": "SchoolErp.Infrastructure\\Auth\\JwtTokenGenerator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T13:21:00.247Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "GlobalExceptionMiddleware.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Middleware\\GlobalExceptionMiddleware.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Middleware\\GlobalExceptionMiddleware.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Middleware\\GlobalExceptionMiddleware.cs",
+              "RelativeToolTip": "SchoolErp.Web\\Middleware\\GlobalExceptionMiddleware.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T06:46:35.97Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "CommonDataService.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Services\\CommonDataService.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Infrastructure\\Services\\CommonDataService.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Services\\CommonDataService.cs",
+              "RelativeToolTip": "SchoolErp.Infrastructure\\Services\\CommonDataService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T13:15:41.082Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "DependencyInjection.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\DependencyInjection.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Infrastructure\\DependencyInjection.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\DependencyInjection.cs",
+              "RelativeToolTip": "SchoolErp.Infrastructure\\DependencyInjection.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABQAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T06:45:26.482Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "JwtSettings.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Auth\\JwtSettings.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Infrastructure\\Auth\\JwtSettings.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Auth\\JwtSettings.cs",
+              "RelativeToolTip": "SchoolErp.Infrastructure\\Auth\\JwtSettings.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T13:20:59.014Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "HealthCheckMiddleware.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Middleware\\HealthCheckMiddleware.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Middleware\\HealthCheckMiddleware.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Middleware\\HealthCheckMiddleware.cs",
+              "RelativeToolTip": "SchoolErp.Web\\Middleware\\HealthCheckMiddleware.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABAAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T13:16:36.592Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "AcademicService.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Services\\AcademicService.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Infrastructure\\Services\\AcademicService.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Infrastructure\\Services\\AcademicService.cs",
+              "RelativeToolTip": "SchoolErp.Infrastructure\\Services\\AcademicService.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAYwGEAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T12:43:47.266Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "BulkEdit.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\BulkEdit.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\BulkEdit.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\BulkEdit.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\BulkEdit.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T13:14:34.184Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "AcademicConfig.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\AcademicConfig.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Academic\\AcademicConfig.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\AcademicConfig.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Academic\\AcademicConfig.razor",
+              "ViewState": "AgIAAHUAAAAAAAAAAAAAAJAAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T13:14:18.269Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "RolesTab.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\RolesTab.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\RolesTab.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\RolesTab.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\RolesTab.razor",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAGQAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T13:09:48.888Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "SupportTables.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\SupportTables.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\SupportTables.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\SupportTables.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\SupportTables.razor",
+              "ViewState": "AgIAALoAAAAAAAAAAAAAAMQAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T13:09:21.314Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "ReconnectModal.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Layout\\ReconnectModal.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Layout\\ReconnectModal.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Layout\\ReconnectModal.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Layout\\ReconnectModal.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T13:07:16.068Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "Attendance.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Students\\Attendance.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Students\\Attendance.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Students\\Attendance.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Students\\Attendance.razor",
+              "ViewState": "AgIAAFACAAAAAAAAAAAYwFoCAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T10:04:23.953Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "Users.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Users\\Users.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Users\\Users.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Users\\Users.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Users\\Users.razor",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAACIAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-13T15:01:50.777Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "AcademicYearList.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\AcademicYearList.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\AcademicYearList.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\AcademicYearList.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\AcademicYearList.razor",
+              "ViewState": "AgIAACgAAAAAAAAAAAAYwDIAAAB9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-07T03:21:58.88Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "DependencyInjection.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\DependencyInjection.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\DependencyInjection.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\DependencyInjection.cs",
+              "RelativeToolTip": "SchoolErp.Application\\DependencyInjection.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAABUAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T14:54:32.495Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Layout\\NavMenu.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAAAB4AAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-06T02:59:40.028Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Layout\\MainLayout.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAGkAAAAAAAAAAAAAAAYAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-06T02:59:39.311Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "UsersTab.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\UsersTab.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\UsersTab.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\UsersTab.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\UsersTab.razor",
+              "ViewState": "AgIAAPsAAAAAAAAAAAAYwFcBAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T07:18:48.566Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "UserRolesTab.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\UserRolesTab.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\UserRolesTab.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\UserRolesTab.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Users\\Tabs\\UserRolesTab.razor",
+              "ViewState": "AgIAAGoAAAAAAAAAAAAYwHQAAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T07:21:46.873Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "DatePicker.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Shared\\DatePicker.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Shared\\DatePicker.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Shared\\DatePicker.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Shared\\DatePicker.razor",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAYwGQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-14T09:29:54.347Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "GetMenuForUserQuery.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Menu\\GetMenuForUser\\GetMenuForUserQuery.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Menu\\GetMenuForUser\\GetMenuForUserQuery.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Menu\\GetMenuForUser\\GetMenuForUserQuery.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Menu\\GetMenuForUser\\GetMenuForUserQuery.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T12:41:10.028Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "AcademicConfig.razor.css",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\AcademicConfig.razor.css",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Academic\\AcademicConfig.razor.css",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\AcademicConfig.razor.css",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Academic\\AcademicConfig.razor.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-05-13T09:43:17.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "GetMenusQuery.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Menu\\GetMenusQuery.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Menu\\GetMenusQuery.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Menu\\GetMenusQuery.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Menu\\GetMenusQuery.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T15:02:42.427Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "app.css",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\wwwroot\\app.css",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\wwwroot\\app.css",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\wwwroot\\app.css",
+              "RelativeToolTip": "SchoolErp.Web\\wwwroot\\app.css",
+              "ViewState": "AgIAAOQAAAAAAAAAAAAEwD8BAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-05-13T09:45:21.787Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\appsettings.json",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\appsettings.json",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\appsettings.json",
+              "RelativeToolTip": "SchoolErp.Web\\appsettings.json",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-05T12:17:25.541Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "AcademicQueries.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Common\\Queries\\AcademicQueries.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Common\\Queries\\AcademicQueries.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Common\\Queries\\AcademicQueries.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Common\\Queries\\AcademicQueries.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAAAGgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T03:40:52.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "SubjectStaffMapping.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\SubjectStaffMapping.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\SubjectStaffMapping.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\SubjectStaffMapping.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\SubjectStaffMapping.razor",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAEwKsAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-07T03:23:56.642Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "StaffManagement.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Staff\\StaffManagement.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Staff\\StaffManagement.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Staff\\StaffManagement.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Staff\\StaffManagement.razor",
+              "ViewState": "AgIAAPkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-07T03:22:16.892Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "ClassList.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\ClassList.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\ClassList.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\ClassList.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Academic\\Tabs\\ClassList.razor",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAhwI0AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-07T03:19:43.112Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "StudentManagement.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Students\\StudentManagement.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Students\\StudentManagement.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Students\\StudentManagement.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Students\\StudentManagement.razor",
+              "ViewState": "AgIAANIAAAAAAAAAAAAAAN0AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-06T13:30:48.664Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "Login.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Auth\\Login.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Modules\\Auth\\Login.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Modules\\Auth\\Login.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Modules\\Auth\\Login.razor",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAkwIoAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-06T03:44:59.031Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "LoginLayout.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Layout\\LoginLayout.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Layout\\LoginLayout.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Layout\\LoginLayout.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Layout\\LoginLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-06T02:59:38.35Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "PaginatedList.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Common\\Models\\PaginatedList.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Common\\Models\\PaginatedList.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Common\\Models\\PaginatedList.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Common\\Models\\PaginatedList.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T12:28:57.044Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "UserQueries.cs",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Users\\UserQueries.cs",
+              "RelativeDocumentMoniker": "SchoolErp.Application\\Features\\Users\\UserQueries.cs",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Application\\Features\\Users\\UserQueries.cs",
+              "RelativeToolTip": "SchoolErp.Application\\Features\\Users\\UserQueries.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAUwCkAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T12:28:13.747Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "Routes.razor",
+              "DocumentMoniker": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Routes.razor",
+              "RelativeDocumentMoniker": "SchoolErp.Web\\Components\\Routes.razor",
+              "ToolTip": "E:\\New folder\\EKLUS\\SchoolErp\\SchoolErp.Web\\Components\\Routes.razor",
+              "RelativeToolTip": "SchoolErp.Web\\Components\\Routes.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-05T12:48:04.734Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

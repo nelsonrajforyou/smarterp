@@ -1,0 +1,786 @@
+@page "/student-attendance"
+@using SchoolErp.Application.Features.Attendance
+@using SchoolErp.Application.Common.Interfaces
+@using SchoolErp.Application.Common.Mediator
+@using SchoolErp.Web.Components.Shared
+@using Microsoft.AspNetCore.Authorization
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = "Admin,Teacher")]
+@inject IMediator Mediator
+@inject IAcademicService AcademicService
+@inject SchoolErp.Application.Common.Interfaces.ICommonDataService CommonData
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
+
+<PageTitle>Student Attendance - School ERP</PageTitle>
+
+<div class="management-container animate-fade-in-up">
+    <header class="page-header">
+        <div class="header-main">
+            <h1>Student Attendance</h1>
+            <p>Record and manage daily student attendance.</p>
+        </div>
+    </header>
+
+    <div class="list-toolbar">
+        <div class="list-toolbar-left">
+            <div class="toolbar-item" style="min-width: 200px;">
+                <label class="form-label">Select Class</label>
+                <SelectPicker Items="ClassPickerItems"
+                              Value="@SelectedClassId"
+                              ValueChanged="OnClassChanged"
+                              ValueField="Value"
+                              LabelField="Label"
+                              Placeholder="Select Class"
+                              Searchable="true" />
+            </div>
+            <div class="toolbar-item" style="min-width: 180px;">
+                <label class="form-label">Date</label>
+                <DatePicker Value="@SelectedDate" ValueChanged="OnDateChanged" />
+            </div>
+        </div>
+        <div class="list-toolbar-right">
+            @if (Students != null && Students.Any())
+            {
+                <button class="btn-primary-modern" @onclick="SaveAttendance" disabled="@IsSaving">
+                    @if (IsSaving)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span>Saving...</span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-check-circle me-2"></i>
+                        <span>Save Attendance</span>
+                    }
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="attendance-main-grid">
+        <div class="attendance-table-container">
+            @if (IsLoading)
+            {
+                <div class="skeleton-container">
+                    <div class="skeleton" style="height: 60px; margin-bottom: 1rem;"></div>
+                    <div class="skeleton" style="height: 300px;"></div>
+                </div>
+            }
+            else if (Students == null)
+            {
+                <div class="empty-state">
+                    <i class="bi bi-mortarboard-fill mb-3" style="font-size: 3rem; color: var(--primary-200);"></i>
+                    <p>Please select a class and date to record attendance.</p>
+                </div>
+            }
+            else if (!Students.Any())
+            {
+                <div class="empty-state">
+                    <i class="bi bi-exclamation-circle mb-3" style="font-size: 3rem; color: var(--warning-400);"></i>
+                    <p>No students found in this class.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-card">
+                    <div class="table-responsive">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>Student Name</th>
+                                    <th>Admission No</th>
+                                    <th style="text-align: center;">Attendance Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int index = 0; }
+                                @foreach (var student in Students)
+                                {
+                                    index++;
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-modern me-2">@student.NAME[0]</div>
+                                                <span class="fw-bold">@student.NAME</span>
+                                            </div>
+                                        </td>
+                                        <td>@student.ADMISSION_NO</td>
+                                        <td style="text-align: center;">
+                                            <div class="attendance-options">
+                                                @foreach (var type in AttendanceTypes)
+                                                {
+                                                    <div class="attendance-option">
+                                                        <input type="radio" 
+                                                               id="@($"att_{student.STUDENT_ID}_{type.ATTENDANCE_TYPE_ID}")" 
+                                                               name="@($"status_{student.STUDENT_ID}")"
+                                                               value="@type.ATTENDANCE_TYPE_ID"
+                                                               checked="@(student.ATTENDANCE_TYPE_ID == type.ATTENDANCE_TYPE_ID)"
+                                                               @onchange="@(e => OnStatusChanged(student, type.ATTENDANCE_TYPE_ID))" />
+                                                        <label for="@($"att_{student.STUDENT_ID}_{type.ATTENDANCE_TYPE_ID}")" 
+                                                               class="@($"attendance-label status-{type.ATTENDANCE_TYPE_CODE.ToLower()}")">
+                                                            @type.ATTENDANCE_TYPE_NAME
+                                                        </label>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="attendance-cards-mobile">
+                    @foreach (var student in Students)
+                    {
+                        <div class="student-mobile-card">
+                            <div class="card-header">
+                                <div class="avatar-modern">@student.NAME[0]</div>
+                                <div class="student-info">
+                                    <span class="student-name">@student.NAME</span>
+                                    <span class="admission-no">ID: @student.ADMISSION_NO</span>
+                                </div>
+                            </div>
+                            <div class="attendance-options mobile-layout">
+                                @foreach (var type in AttendanceTypes)
+                                {
+                                    <div class="attendance-option">
+                                        <input type="radio" 
+                                               id="@($"att_mob_{student.STUDENT_ID}_{type.ATTENDANCE_TYPE_ID}")" 
+                                               name="@($"status_mob_{student.STUDENT_ID}")"
+                                               value="@type.ATTENDANCE_TYPE_ID"
+                                               checked="@(student.ATTENDANCE_TYPE_ID == type.ATTENDANCE_TYPE_ID)"
+                                               @onchange="@(e => OnStatusChanged(student, type.ATTENDANCE_TYPE_ID))" />
+                                        <label for="@($"att_mob_{student.STUDENT_ID}_{type.ATTENDANCE_TYPE_ID}")" 
+                                               class="@($"attendance-label status-{type.ATTENDANCE_TYPE_CODE.ToLower()}")">
+                                            @type.ATTENDANCE_TYPE_NAME
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            }
+        </div>
+
+        @if (Students != null && Students.Any() && !IsLoading)
+        {
+            <aside class="attendance-analytics-sidebar">
+                <div class="analytics-panel">
+                    <div class="analytics-header">
+                        <div class="icon-box">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <h3>Live Analytics</h3>
+                    </div>
+
+                    <div class="percentage-container">
+                        <svg class="percentage-circle" viewBox="0 0 100 100">
+                            <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                            <circle class="circle-progress" cx="50" cy="50" r="45" 
+                                    style="stroke-dasharray: 283; stroke-dashoffset: @(283 - (283 * AttendancePercentage / 100))"></circle>
+                        </svg>
+                        <div class="percentage-text">
+                            <span class="value">@AttendancePercentage%</span>
+                            <span class="label">Attendance</span>
+                        </div>
+                    </div>
+
+                    <div class="total-students-card">
+                        <div class="info">
+                            <h4>Total Students</h4>
+                            <p>@TotalStudents</p>
+                        </div>
+                        <div class="icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                    </div>
+
+                    <div class="stats-summary">
+                        <div class="stat-card present">
+                            <span class="count">@PresentCount</span>
+                            <span class="label">Present</span>
+                        </div>
+                        <div class="stat-card absent">
+                            <span class="count">@AbsentCount</span>
+                            <span class="label">Absent</span>
+                        </div>
+                        <div class="stat-card late">
+                            <span class="count">@LateCount</span>
+                            <span class="label">Late</span>
+                        </div>
+                        <div class="stat-card half-day">
+                            <span class="count">@HalfDayCount</span>
+                            <span class="label">Half Day</span>
+                        </div>
+                    </div>
+
+                    <div class="analytics-footer mt-2">
+                        <div class="info-alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <span>Stats update in real-time.</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        }
+    </div>
+
+
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <div class="status-toast @(MessageIsError ? "error" : "success")">
+            <i class="bi @(MessageIsError ? "bi-x-circle" : "bi-check-circle") me-2"></i>
+            @Message
+        </div>
+    }
+</div>
+
+<style>
+    .attendance-main-grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    @@media (max-width: 1200px) {
+        .attendance-main-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .attendance-cards-mobile {
+        display: none;
+    }
+
+    @@media (max-width: 768px) {
+        .attendance-main-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .list-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1.25rem;
+            padding: 1.25rem;
+        }
+
+        .list-toolbar-left {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .toolbar-item {
+            min-width: 100% !important;
+        }
+
+        .list-toolbar-right {
+            width: 100%;
+        }
+
+        .btn-primary-modern {
+            width: 100%;
+            justify-content: center;
+            padding: 0.8rem;
+        }
+
+        /* Toggle visibility on mobile */
+        .table-card {
+            display: none !important;
+        }
+
+        .attendance-cards-mobile {
+            display: grid !important;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .student-mobile-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--gray-100);
+        }
+
+        .student-mobile-card .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 0.75rem;
+        }
+
+        .student-mobile-card .student-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-mobile-card .student-name {
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .student-mobile-card .admission-no {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .attendance-options.mobile-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .attendance-options.mobile-layout .attendance-label {
+            width: 100%;
+            text-align: center;
+            padding: 0.6rem;
+            font-size: 0.8rem;
+        }
+    }
+
+
+    .analytics-panel {
+        background: white;
+        border-radius: 20px;
+        padding: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 1.5rem;
+        border: 1px solid var(--gray-200);
+        animation: slide-in-right 0.4s ease-out;
+    }
+
+    .analytics-header {
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .icon-box {
+        width: 36px;
+        height: 36px;
+        background: var(--primary-50);
+        color: var(--primary-600);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .analytics-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--gray-800);
+    }
+
+    .percentage-container {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0.5rem auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .percentage-circle {
+        transform: rotate(-90deg);
+        width: 100%;
+        height: 100%;
+    }
+
+    .circle-bg {
+        fill: none;
+        stroke: var(--gray-100);
+        stroke-width: 8;
+    }
+
+    .circle-progress {
+        fill: none;
+        stroke: var(--primary-500);
+        stroke-width: 8;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .percentage-text {
+        position: absolute;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .percentage-text .value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary-700);
+        line-height: 1;
+    }
+
+    .percentage-text .label {
+        font-size: 0.7rem;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+
+    .stats-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .stat-card {
+        padding: 0.6rem;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .stat-card.present { background: #ecfdf5; border-color: #d1fae5; }
+    .stat-card.absent { background: #fef2f2; border-color: #fee2e2; }
+    .stat-card.late { background: #fffbeb; border-color: #fef3c7; }
+    .stat-card.half-day { background: #eff6ff; border-color: #dbeafe; }
+
+    .stat-card .count {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .stat-card.present .count { color: #059669; }
+    .stat-card.absent .count { color: #dc2626; }
+    .stat-card.late .count { color: #d97706; }
+    .stat-card.half-day .count { color: #2563eb; }
+
+    .stat-card .label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--gray-600);
+    }
+
+    .total-students-card {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        padding: 0.75rem 1rem;
+        border-radius: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        color: white;
+        box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.15);
+    }
+
+    .total-students-card .info h4 { margin: 0; font-size: 0.75rem; opacity: 0.9; font-weight: 500; }
+    .total-students-card .info p { margin: 0; font-size: 1.25rem; font-weight: 800; }
+    .total-students-card .icon {
+        width: 36px;
+        height: 36px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(4px);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .info-alert {
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        padding: 0.5rem 0.75rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        color: var(--gray-600);
+        display: flex;
+        align-items: center;
+    }
+
+    .attendance-options {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .attendance-option {
+        position: relative;
+    }
+
+    .attendance-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .attendance-label {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+        background: var(--gray-100);
+        color: var(--gray-600);
+    }
+
+    .attendance-option input[type="radio"]:checked + .attendance-label {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Present */
+    .status-p { color: var(--success-600); }
+    .attendance-option input[type="radio"]:checked + .status-p {
+        background: var(--success-100);
+        border-color: var(--success-500);
+        color: var(--success-700);
+    }
+
+    /* Absent */
+    .status-a { color: var(--danger-600); }
+    .attendance-option input[type="radio"]:checked + .status-a {
+        background: var(--danger-100);
+        border-color: var(--danger-500);
+        color: var(--danger-700);
+    }
+
+    /* Late */
+    .status-l { color: var(--warning-600); }
+    .attendance-option input[type="radio"]:checked + .status-l {
+        background: var(--warning-100);
+        border-color: var(--warning-500);
+        color: var(--warning-700);
+    }
+
+    /* Half Day */
+    .status-hd { color: var(--info-600); }
+    .attendance-option input[type="radio"]:checked + .status-hd {
+        background: var(--info-100);
+        border-color: var(--info-500);
+        color: var(--info-700);
+    }
+
+    .status-toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        z-index: 1000;
+        animation: slide-in-right 0.3s ease-out;
+    }
+
+    .status-toast.success { background: var(--success-600); }
+    .status-toast.error { background: var(--danger-600); }
+
+    @@keyframes slide-in-right {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+</style>
+
+@code {
+    private string? SelectedClassId;
+    private DateTime? SelectedDate = DateTime.Today;
+    private List<StudentAttendanceDto>? Students;
+    private List<AttendanceTypeDto> AttendanceTypes = new();
+    private IEnumerable<object> ClassPickerItems = Enumerable.Empty<object>();
+    private bool IsLoading = false;
+    private bool IsSaving = false;
+    private string? Message;
+    private bool MessageIsError = false;
+
+    // Analytics Properties
+    private int TotalStudents => Students?.Count ?? 0;
+    private int PresentCount => Students?.Count(s => GetAttendanceCode(s.ATTENDANCE_TYPE_ID) == "P") ?? 0;
+    private int AbsentCount => Students?.Count(s => GetAttendanceCode(s.ATTENDANCE_TYPE_ID) == "A") ?? 0;
+    private int LateCount => Students?.Count(s => GetAttendanceCode(s.ATTENDANCE_TYPE_ID) == "L") ?? 0;
+    private int HalfDayCount => Students?.Count(s => GetAttendanceCode(s.ATTENDANCE_TYPE_ID) == "HD") ?? 0;
+    private double AttendancePercentage => TotalStudents > 0 ? Math.Round((double)PresentCount / TotalStudents * 100, 1) : 0;
+
+    private string GetAttendanceCode(string? typeId)
+    {
+        if (string.IsNullOrEmpty(typeId)) return "";
+        return AttendanceTypes.FirstOrDefault(t => t.ATTENDANCE_TYPE_ID == typeId)?.ATTENDANCE_TYPE_CODE ?? "";
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var role = user.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+        var staffId = user.FindFirst("StaffStudentId")?.Value;
+
+        await LoadClasses(role, staffId);
+    }
+
+    private async Task LoadClasses(string? role, string? staffId)
+    {
+        try
+        {
+            List<SchoolErp.Application.Common.Models.DropdownItem> classes;
+            if (role == "Admin")
+            {
+                classes = await AcademicService.GetDynamicListAsync("CLASSES", "CLASS_ID", "CLASS_NAME");
+            }
+            else
+            {
+                // Filter by TeacherId for non-admin users
+                string sql = "SELECT CLASS_ID as Value, CLASS_NAME as Text FROM CLASSES WHERE TEACHER_ID = @StaffId AND IS_DELETED <> 1 ORDER BY CLASS_NAME";
+                classes = await CommonData.GetDropdownListAsync(sql, new { StaffId = staffId });
+            }
+            ClassPickerItems = classes.Select(c => (object)new { Value = c.Value, Label = c.Text });
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"Error loading classes: {ex.Message}", true);
+        }
+    }
+
+    private async Task OnClassChanged(string value)
+    {
+        SelectedClassId = value;
+        await LoadAttendanceData();
+    }
+
+    private async Task OnDateChanged(DateTime? value)
+    {
+        SelectedDate = value ?? DateTime.Today;
+        await LoadAttendanceData();
+    }
+
+    private async Task LoadAttendanceData()
+    {
+        if (string.IsNullOrEmpty(SelectedClassId)) return;
+
+        IsLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var query = new GetAttendanceDataQuery 
+            { 
+                ClassId = SelectedClassId, 
+                AttendanceDate = SelectedDate?.ToString("yyyy-MM-dd") ?? DateTime.Today.ToString("yyyy-MM-dd") 
+            };
+            var result = await Mediator.Send(query);
+            
+            Students = result.Students;
+            AttendanceTypes = result.AttendanceTypes;
+
+            // Default empty attendance to 'Present' (P)
+            var presentType = AttendanceTypes.FirstOrDefault(t => t.ATTENDANCE_TYPE_CODE == "P");
+            if (presentType != null)
+            {
+                foreach (var student in Students)
+                {
+                    if (string.IsNullOrEmpty(student.ATTENDANCE_TYPE_ID))
+                    {
+                        student.ATTENDANCE_TYPE_ID = presentType.ATTENDANCE_TYPE_ID;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"Error loading attendance data: {ex.Message}", true);
+        }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void OnStatusChanged(StudentAttendanceDto student, string typeId)
+    {
+        student.ATTENDANCE_TYPE_ID = typeId;
+    }
+
+    private async Task SaveAttendance()
+    {
+        if (Students == null || !Students.Any() || string.IsNullOrEmpty(SelectedClassId)) return;
+
+        IsSaving = true;
+        StateHasChanged();
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        try
+        {
+            var command = new SaveAttendanceCommand
+            {
+                ClassId = SelectedClassId,
+                AttendanceDate = SelectedDate?.ToString("yyyy-MM-dd") ?? DateTime.Today.ToString("yyyy-MM-dd"),
+                EntryId = userId ?? "system-admin",
+                Students = Students.Select(s => new StudentAttendanceUpdateDto
+                {
+                    STUDENT_ID = s.STUDENT_ID,
+                    ATTENDANCE_TYPE_ID = s.ATTENDANCE_TYPE_ID
+                }).ToList()
+            };
+
+            var success = await Mediator.Send(command);
+            if (success)
+            {
+                ShowMessage("Attendance saved successfully!");
+            }
+            else
+            {
+                ShowMessage("Failed to save attendance.", true);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"Error saving attendance: {ex.Message}", true);
+        }
+        finally
+        {
+            IsSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ShowMessage(string msg, bool isError = false)
+    {
+        Message = msg;
+        MessageIsError = isError;
+        StateHasChanged();
+
+        Task.Delay(3000).ContinueWith(_ =>
+        {
+            Message = null;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+}

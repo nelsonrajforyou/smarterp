@@ -1,0 +1,126 @@
+@using SchoolErp.Application.Common.Models
+@using System.ComponentModel.DataAnnotations
+
+<div class="form-card animate-fade-in-up" style="max-width: 900px; margin: 0 auto;">
+    <div class="form-title">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="avatar-modern" style="background: var(--primary-100); color: var(--primary-700);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            </div>
+            <span>New Admission Entry</span>
+        </div>
+    </div>
+    
+    <EditForm Model="Model" OnValidSubmit="OnSubmit">
+        <DataAnnotationsValidator />
+        
+        <div class="row g-4">
+            <div class="col-12"><h4 class="section-subtitle">Student Details</h4></div>
+            
+            <div class="col-md-6">
+                <label class="form-label">Full Name</label>
+                <InputText class="form-control-modern" @bind-Value="Model.NAME" placeholder="Enter student full name" />
+                <ValidationMessage For="@(() => Model.NAME)" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Admission Number</label>
+                <InputText class="form-control-modern" @bind-Value="Model.ADMISSION_NO" placeholder="ADM-2024-XXX" />
+                <ValidationMessage For="@(() => Model.ADMISSION_NO)" />
+            </div>
+            
+            <div class="col-md-4">
+                <label class="form-label">Class</label>
+                <InputSelect class="form-select-modern" @bind-Value="Model.CLASS_NAME">
+                    <option value="">Select Class</option>
+                    @foreach (var cls in Classes)
+                    {
+                        <option value="@cls.Text">@cls.Text</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => Model.CLASS_NAME)" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Gender</label>
+                <InputSelect class="form-select-modern" @bind-Value="Model.GENDER_NAME">
+                    <option value="">Select Gender</option>
+                    @foreach (var g in Genders)
+                    {
+                        <option value="@g.Text">@g.Text</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Religion</label>
+                <InputSelect class="form-select-modern" @bind-Value="Model.RELIGION_NAME">
+                    <option value="">Select Religion</option>
+                    @foreach (var r in Religions)
+                    {
+                        <option value="@r.Text">@r.Text</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="col-12 mt-4"><h4 class="section-subtitle">Guardian Information</h4></div>
+            <div class="col-md-6">
+                <label class="form-label">Father's Name</label>
+                <InputText class="form-control-modern" @bind-Value="Model.FATHER_NAME" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Mother's Name</label>
+                <InputText class="form-control-modern" @bind-Value="Model.MOTHER_NAME" />
+            </div>
+            <div class="col-12">
+                <label class="form-label">Address</label>
+                <InputTextArea class="form-control-modern" rows="2" @bind-Value="Model.ADDRESS" placeholder="Residential Address" />
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-secondary-modern" @onclick="OnCancel">Discard & Return</button>
+            <button type="submit" class="btn-primary-modern">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                Complete Admission
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+<style>
+    .section-subtitle {
+        font-size: 0.85rem;
+        color: var(--primary-500);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+        margin: 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--primary-50);
+    }
+</style>
+
+@code {
+    [Parameter] public StudentFormModel Model { get; set; } = new();
+    [Parameter] public List<DropdownItem> Genders { get; set; } = new();
+    [Parameter] public List<DropdownItem> Religions { get; set; } = new();
+    [Parameter] public List<DropdownItem> Classes { get; set; } = new();
+    [Parameter] public EventCallback OnSubmit { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    public class StudentFormModel
+    {
+        [Required(ErrorMessage = "Student Name is required")]
+        public string NAME { get; set; } = "";
+
+        [Required(ErrorMessage = "Admission Number is required")]
+        public string ADMISSION_NO { get; set; } = "";
+
+        [Required(ErrorMessage = "Class is required")]
+        public string CLASS_NAME { get; set; } = "";
+
+        public string GENDER_NAME { get; set; } = "";
+        public string RELIGION_NAME { get; set; } = "";
+        public string FATHER_NAME { get; set; } = "";
+        public string MOTHER_NAME { get; set; } = "";
+        public string ADDRESS { get; set; } = "";
+    }
+}

@@ -1,0 +1,196 @@
+@using SchoolErp.Application.Common.Interfaces
+@using SchoolErp.Application.Common.Models
+@inject IAcademicService AcademicService
+@inject ICommonDataService CommonData
+
+<div class="tab-pane animate-fade-in">
+    <div class="tab-content-header">
+        <div class="header-title">
+            <h3>Subject-Staff Assignment</h3>
+            <p>Map subjects to specific classes and assign teaching staff</p>
+        </div>
+        <button class="btn-primary-modern" @onclick="OpenAddForm">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Assignment
+        </button>
+    </div>
+
+    @if (ShowForm)
+    {
+        <div class="form-card animate-fade-in-up" style="margin-bottom: 2rem;">
+            <div class="form-title">
+                <h4>Assignment Configuration</h4>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label">Class</label>
+                    <select class="form-select-modern" @bind="EditingMapping.CLASS_ID">
+                        <option value="">Select Class</option>
+                        @foreach (var cls in Classes)
+                        {
+                            <option value="@cls.Value">@cls.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Subject</label>
+                    <select class="form-select-modern" @bind="EditingMapping.SUBJECT_ID">
+                        <option value="">Select Subject</option>
+                        @foreach (var sub in Subjects)
+                        {
+                            <option value="@sub.SUBJECT_ID">@sub.SUBJECT_NAME</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Staff / Teacher</label>
+                    <select class="form-select-modern" @bind="EditingMapping.STAFF_ID">
+                        <option value="">Select Teacher</option>
+                        @foreach (var stf in Staff)
+                        {
+                            <option value="@stf.Value">@stf.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; padding-top: 1rem;">
+                        <input type="checkbox" id="isIncharge" @bind="EditingMapping.IS_CLASS_INCHARGE" style="width: 18px; height: 18px;" />
+                        <label for="isIncharge" style="font-weight: 600; cursor: pointer;">Mark as Class In-charge</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-secondary-modern" @onclick="CloseForm">Cancel</button>
+                <button class="btn-primary-modern" @onclick="SaveMapping">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                    Confirm Mapping
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>In-charge</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var map in Mappings)
+                    {
+                        <tr>
+                            <td style="font-weight: 700; color: var(--primary-600);">@map.CLASS_NAME</td>
+                            <td style="font-weight: 600;">@map.SUBJECT_NAME</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div class="avatar-sm">@map.STAFF_NAME[0]</div>
+                                    @map.STAFF_NAME
+                                </div>
+                            </td>
+                            <td>
+                                @if (map.IS_CLASS_INCHARGE == 1)
+                                {
+                                    <span class="badge-modern badge-success">Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-modern badge-secondary">No</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge-modern @(map.IS_ACTIVE == "1" ? "badge-success" : "badge-danger")">
+                                    @(map.IS_ACTIVE == "1" ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons" style="justify-content: flex-end;">
+                                    <button class="btn-icon-modern" title="Edit" @onclick="() => EditMapping(map)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                    <button class="btn-icon-modern danger" title="Delete" @onclick="() => DeleteMapping(map.CLASS_SUBJECT_STAFF_ID)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-sm { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-100); color: var(--primary-700); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+    .badge-secondary { background: var(--gray-100); color: var(--gray-600); }
+</style>
+
+@code {
+    private List<ClassSubjectStaffModel> Mappings = new();
+    private List<SubjectModel> Subjects = new();
+    private List<DropdownItem> Classes = new();
+    private List<DropdownItem> Staff = new();
+    private ClassSubjectStaffModel EditingMapping = new();
+    private string ActiveYearId = "";
+    private bool ShowForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var years = await CommonData.GetAcademicYearListAsync();
+        ActiveYearId = years.FirstOrDefault()?.Value ?? "";
+        
+        Classes = await CommonData.GetClassListAsync();
+        Subjects = await AcademicService.GetSubjectsAsync();
+        
+        Staff = await CommonData.GetStaffListAsync();
+
+        if (Classes.Any())
+        {
+            await LoadMappings(Classes.First().Value);
+        }
+    }
+
+    private async Task LoadMappings(string classId)
+    {
+        Mappings = await AcademicService.GetSubjectStaffMappingsAsync(classId, ActiveYearId);
+    }
+
+    private void OpenAddForm() { EditingMapping = new ClassSubjectStaffModel { ACADEMIC_YEAR_ID = ActiveYearId }; ShowForm = true; }
+    private void CloseForm() { ShowForm = false; }
+
+    private void EditMapping(ClassSubjectStaffModel map)
+    {
+        EditingMapping = new ClassSubjectStaffModel
+        {
+            CLASS_SUBJECT_STAFF_ID = map.CLASS_SUBJECT_STAFF_ID,
+            CLASS_ID = map.CLASS_ID,
+            SUBJECT_ID = map.SUBJECT_ID,
+            STAFF_ID = map.STAFF_ID,
+            ACADEMIC_YEAR_ID = map.ACADEMIC_YEAR_ID,
+            IS_CLASS_INCHARGE = map.IS_CLASS_INCHARGE,
+            IS_ACTIVE = map.IS_ACTIVE
+        };
+        ShowForm = true;
+    }
+
+    private async Task SaveMapping()
+    {
+        if (await AcademicService.SaveSubjectStaffMappingAsync(EditingMapping))
+        {
+            await LoadMappings(EditingMapping.CLASS_ID);
+            CloseForm();
+        }
+    }
+
+    private async Task DeleteMapping(string id)
+    {
+        var map = Mappings.FirstOrDefault(m => m.CLASS_SUBJECT_STAFF_ID == id);
+        if (await AcademicService.DeleteSubjectStaffMappingAsync(id))
+        {
+            if (map != null) await LoadMappings(map.CLASS_ID);
+        }
+    }
+}

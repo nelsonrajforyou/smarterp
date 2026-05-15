@@ -1,0 +1,44 @@
+@page "/users"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@using Microsoft.AspNetCore.Authorization
+@using SchoolErp.Web.Components.Modules.Users.Tabs
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Users Management - School ERP</PageTitle>
+
+<div class="users-page">
+    <div class="tabs-container">
+        <button class="tab-btn @(ActiveTab == "Users" ? "active" : "")" @onclick="@(() => ActiveTab = "Users")">Users</button>
+        <button class="tab-btn @(ActiveTab == "Roles" ? "active" : "")" @onclick="@(() => ActiveTab = "Roles")">Roles</button>
+        <button class="tab-btn @(ActiveTab == "Menus" ? "active" : "")" @onclick="@(() => ActiveTab = "Menus")">Menus</button>
+        <button class="tab-btn @(ActiveTab == "RoleMenus" ? "active" : "")" @onclick="@(() => ActiveTab = "RoleMenus")">Role Permissions</button>
+        <button class="tab-btn @(ActiveTab == "UserRoles" ? "active" : "")" @onclick="@(() => ActiveTab = "UserRoles")">User Roles</button>
+    </div>
+
+    <div class="tab-content">
+        @if (ActiveTab == "Users")
+        {
+            <UsersTab />
+        }
+        else if (ActiveTab == "Roles")
+        {
+            <RolesTab />
+        }
+        else if (ActiveTab == "Menus")
+        {
+            <MenusTab />
+        }
+        else if (ActiveTab == "RoleMenus")
+        {
+            <RoleMenusTab />
+        }
+        else if (ActiveTab == "UserRoles")
+        {
+            <UserRolesTab />
+        }
+    </div>
+</div>
+
+@code {
+    private string ActiveTab = "Users";
+}

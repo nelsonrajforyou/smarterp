@@ -1,0 +1,176 @@
+@page "/"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@using SchoolErp.Application.Features.Dashboard
+@using SchoolErp.Application.Common.Mediator
+@attribute [Authorize]
+@inject IMediator Mediator
+
+<PageTitle>Dashboard - School ERP</PageTitle>
+
+<!-- Dashboard Header -->
+<div class="dash-header">
+    <div>
+        <h2 class="dash-title">Dashboard</h2>
+        <p class="dash-subtitle">Welcome back! Here's what's happening with your school today.</p>
+    </div>
+</div>
+
+@if (Stats == null)
+{
+    <!-- Loading Skeleton -->
+    <div class="stats-grid">
+        @for (int i = 0; i < 3; i++)
+        {
+            <div class="stat-card">
+                <div class="skeleton skeleton-text" style="width:60%;height:14px;"></div>
+                <div class="skeleton skeleton-text" style="width:40%;height:32px;margin-top:12px;"></div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <!-- Stat Cards -->
+    <div class="stats-grid">
+        <!-- Total Students -->
+        <div class="stat-card" style="animation-delay: 0.1s">
+            <div class="stat-content">
+                <p class="stat-label">Total Students</p>
+                <p class="stat-value">@Stats.TOTAL_STUDENTS</p>
+                <div class="stat-trend trend-up">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    <span>Active</span>
+                </div>
+            </div>
+            <div class="stat-icon-wrap stat-icon-blue">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+            </div>
+        </div>
+
+        <!-- Total Teachers -->
+        <div class="stat-card" style="animation-delay: 0.2s">
+            <div class="stat-content">
+                <p class="stat-label">Total Teachers</p>
+                <p class="stat-value">@Stats.TOTAL_TEACHERS</p>
+                <div class="stat-trend trend-up">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    <span>Active</span>
+                </div>
+            </div>
+            <div class="stat-icon-wrap stat-icon-green">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+        </div>
+
+        <!-- Total Classes -->
+        <div class="stat-card" style="animation-delay: 0.3s">
+            <div class="stat-content">
+                <p class="stat-label">Total Classes</p>
+                <p class="stat-value">@Stats.TOTAL_CLASSES</p>
+                <div class="stat-trend trend-neutral">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                    <span>Sections</span>
+                </div>
+            </div>
+            <div class="stat-icon-wrap stat-icon-purple">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+        <!-- Attendance Overview -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 class="chart-title">Attendance Overview</h3>
+                <span class="chart-badge">This Month</span>
+            </div>
+            <div class="chart-bars">
+                @{ var months = new[] { ("Mon", 92), ("Tue", 85), ("Wed", 94), ("Thu", 88), ("Fri", 78) }; }
+                @foreach (var (day, val) in months)
+                {
+                    <div class="bar-group">
+                        <div class="bar-track">
+                            <div class="bar-fill bar-fill-blue" style="height: @(val)%"></div>
+                        </div>
+                        <span class="bar-label">@day</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 class="chart-title">Quick Actions</h3>
+            </div>
+            <div class="actions-grid">
+                <a href="students" class="action-item action-blue">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                    <span>Add Student</span>
+                </a>
+                <a href="users" class="action-item action-green">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    <span>Manage Users</span>
+                </a>
+                <div class="action-item action-purple">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span>Calendar</span>
+                </div>
+                <div class="action-item action-orange">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <span>Reports</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-card">
+        <div class="chart-header">
+            <h3 class="chart-title">Recent Activity</h3>
+            <a href="#" class="view-all-link">View All →</a>
+        </div>
+        <div class="activity-list">
+            <div class="activity-item">
+                <div class="activity-dot dot-blue"></div>
+                <div class="activity-info">
+                    <p class="activity-text">New student enrollment completed</p>
+                    <span class="activity-time">2 minutes ago</span>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-dot dot-green"></div>
+                <div class="activity-info">
+                    <p class="activity-text">Attendance reports generated for Class 10</p>
+                    <span class="activity-time">15 minutes ago</span>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-dot dot-purple"></div>
+                <div class="activity-info">
+                    <p class="activity-text">New teacher profile added to the system</p>
+                    <span class="activity-time">1 hour ago</span>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-dot dot-orange"></div>
+                <div class="activity-info">
+                    <p class="activity-text">Fee collection updated for current semester</p>
+                    <span class="activity-time">3 hours ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private DashboardStats? Stats;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Stats = await Mediator.Send(new GetDashboardStatsQuery());
+    }
+}

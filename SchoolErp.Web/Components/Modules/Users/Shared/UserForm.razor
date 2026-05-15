@@ -1,0 +1,88 @@
+@using SchoolErp.Application.Features.Users
+@using SchoolErp.Web.Components.Shared
+@using System.ComponentModel.DataAnnotations
+
+<div class="form-card animate-fade-in-up">
+    <h3 class="form-title">@(IsEditMode ? "Edit User Profile" : "Register New User")</h3>
+    
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="login-error" style="background: rgba(239, 68, 68, 0.1); color: var(--danger-600); border: 1px solid var(--danger-100); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ErrorMessage
+        </div>
+    }
+
+    <EditForm Model="Model" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <label class="form-label">Email Address</label>
+                <InputText @bind-Value="Model.Email" class="form-control-modern" placeholder="user@school.edu" disabled="@IsEditMode" />
+                <ValidationMessage For="@(() => Model.Email)" />
+            </div>
+            @if (!IsEditMode)
+            {
+                <div class="col-md-6">
+                    <label class="form-label">Password</label>
+                    <InputText @bind-Value="Model.Password" type="password" class="form-control-modern" placeholder="••••••••" />
+                    <ValidationMessage For="@(() => Model.Password)" />
+                </div>
+            }
+            else
+            {
+                <div class="col-md-6">
+                    <label class="form-label">Password</label>
+                    <input type="text" class="form-control-modern" placeholder="Leave blank to keep current" disabled />
+                </div>
+            }
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <label class="form-label">First Name</label>
+                <InputText @bind-Value="Model.FirstName" class="form-control-modern" placeholder="e.g. John" />
+                <ValidationMessage For="@(() => Model.FirstName)" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Last Name</label>
+                <InputText @bind-Value="Model.LastName" class="form-control-modern" placeholder="e.g. Doe" />
+                <ValidationMessage For="@(() => Model.LastName)" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Linked Student/Staff ID</label>
+                <InputText @bind-Value="Model.UserId" class="form-control-modern" placeholder="e.g. STU1001" />
+                <ValidationMessage For="@(() => Model.UserId)" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">User Role</label>
+                <SelectPicker Items="Roles" Value="@Model.RoleId" ValueChanged="v => Model.RoleId = v ?? string.Empty" ValueField="Value" LabelField="Label" Placeholder="Select Role" Searchable="true" />
+                <ValidationMessage For="@(() => Model.RoleId)" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Account Status</label>
+                <SelectPicker Items="Statuses" Value="@Model.Status" ValueChanged="@(v => Model.Status = v ?? "Active")" ValueField="Value" LabelField="Label" Placeholder="Select Status" Searchable="false" />
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-secondary-modern" @onclick="OnCancel">Discard</button>
+            <button type="submit" class="btn-primary-modern">@(IsEditMode ? "Update User" : "Save User")</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public SchoolErp.Web.Components.Modules.Users.Tabs.UsersTab.UserFormModel Model { get; set; } = new();
+    [Parameter] public bool IsEditMode { get; set; }
+    [Parameter] public string? ErrorMessage { get; set; }
+    [Parameter] public IEnumerable<object> Roles { get; set; } = Enumerable.Empty<object>();
+    [Parameter] public IEnumerable<object> Statuses { get; set; } = Enumerable.Empty<object>();
+    [Parameter] public EventCallback OnSubmit { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    private async Task HandleSubmit()
+    {
+        await OnSubmit.InvokeAsync();
+    }
+}

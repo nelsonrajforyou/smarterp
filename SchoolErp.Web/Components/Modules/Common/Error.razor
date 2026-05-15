@@ -1,0 +1,240 @@
+@page "/Error"
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Http
+@layout SchoolErp.Web.Components.Layout.LoginLayout
+@inject NavigationManager NavigationManager
+
+<PageTitle>System Error - SchoolERP</PageTitle>
+
+<div class="status-page error-theme">
+    <div class="status-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <div class="status-card animate-fade-in-up">
+        <div class="status-icon-wrapper">
+            <div class="status-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+            </div>
+        </div>
+
+        <h1 class="status-title">System Error</h1>
+        <p class="status-message">
+            Something went wrong on our end. We've logged the issue and our team has been notified.
+        </p>
+
+        @if (ShowRequestId)
+        {
+            <div class="request-id">
+                <span>Reference ID:</span>
+                <code>@RequestId</code>
+            </div>
+        }
+
+        <div class="status-actions">
+            <button class="btn-status-primary" @onclick='() => NavigationManager.NavigateTo("/")'>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Back to Dashboard
+            </button>
+            <button class="btn-status-secondary" @onclick='() => NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true)'>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Retry Request
+            </button>
+        </div>
+
+        <div class="status-footer">
+            <p>Need help? Contact <a href="mailto:support@schoolerp.edu">System Administrator</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .status-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: #f8fafc;
+        position: relative;
+        overflow: hidden;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .status-bg-shapes .shape {
+        position: absolute;
+        filter: blur(80px);
+        opacity: 0.4;
+        z-index: 0;
+    }
+
+    .shape-1 {
+        width: 400px;
+        height: 400px;
+        background: #ef4444;
+        top: -100px;
+        left: -100px;
+    }
+
+    .shape-2 {
+        width: 300px;
+        height: 300px;
+        background: #f59e0b;
+        bottom: -50px;
+        right: -50px;
+    }
+
+    .status-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 24px;
+        padding: 3rem;
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+    }
+
+    .status-icon-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .status-icon {
+        width: 100px;
+        height: 100px;
+        background: #fee2e2;
+        color: #ef4444;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse-error 2s infinite;
+    }
+
+    @@keyframes pulse-error {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .status-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+    }
+
+    .status-message {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    .request-id {
+        background: #f1f5f9;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        color: #475569;
+        margin-bottom: 2rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .request-id code {
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .status-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-status-primary {
+        background: #1e293b;
+        color: white;
+        border: none;
+        padding: 0.875rem;
+        border-radius: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-status-primary:hover {
+        background: #0f172a;
+        transform: translateY(-2px);
+    }
+
+    .btn-status-secondary {
+        background: white;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        padding: 0.875rem;
+        border-radius: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-status-secondary:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+    }
+
+    .status-footer {
+        font-size: 0.875rem;
+        color: #94a3b8;
+    }
+
+    .status-footer a {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+@code {
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    private string? RequestId { get; set; }
+    private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+
+    protected override void OnInitialized()
+    {
+        RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+    }
+}

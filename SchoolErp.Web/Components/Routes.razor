@@ -1,0 +1,41 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@using SchoolErp.Web.Components.Modules.Common
+@inject NavigationManager NavigationManager
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(Program).Assembly">
+        <Found Context="routeData">
+            <ErrorBoundary>
+                <ChildContent>
+                    <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+                        <NotAuthorized Context="authState">
+                            @if (authState.User.Identity?.IsAuthenticated == true)
+                            {
+                                <div class="status-page warning-theme" style="min-height: auto; padding: 2rem;">
+                                    <div class="status-card" style="max-width: 100%;">
+                                        <h3 class="status-title" style="font-size: 1.5rem;">Access Denied</h3>
+                                        <p class="status-message">You are not authorized to access this resource.</p>
+                                        <button class="btn-status-primary" @onclick='() => NavigationManager.NavigateTo("/")'>Return to Home</button>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <SchoolErp.Web.Components.Modules.Auth.Login />
+                            }
+                        </NotAuthorized>
+                    </AuthorizeRouteView>
+                </ChildContent>
+                <ErrorContent>
+                    @{
+                        NavigationManager.NavigateTo("/Error", forceLoad: true);
+                    }
+                </ErrorContent>
+            </ErrorBoundary>
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <NotFound />
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

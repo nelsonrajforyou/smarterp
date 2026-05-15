@@ -1,0 +1,25 @@
+@page "/logout"
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@inject NavigationManager NavigationManager
+
+@code {
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpContext != null)
+        {
+            // Clear all cookies
+            foreach (var cookie in HttpContext.Request.Cookies.Keys)
+            {
+                HttpContext.Response.Cookies.Delete(cookie);
+            }
+
+            // Explicitly sign out from authentication scheme
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+        NavigationManager.NavigateTo("/login", forceLoad: true);
+    }
+}

@@ -1,0 +1,589 @@
+@page "/timetable/config"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@using SchoolErp.Application.Common.Interfaces
+@using SchoolErp.Domain.Entities
+@using System.Data
+@using Dapper
+@inject IDbConnectionFactory DbFactory
+@inject IJSRuntime JS
+
+<PageTitle>Timetable Configuration</PageTitle>
+
+<div class="page-header animate-fade-in-up">
+    <div>
+        <h1>Timetable Configuration</h1>
+        <p>Define your school's structural constraints, time slots, and resources.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Left Column: Base Configuration -->
+    <div class="col-md-4">
+        <div class="card-modern animate-fade-in-up" style="animation-delay: 0.1s;">
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="alert alert-danger animate-fade-in" style="border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.85rem;">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @_errorMessage
+                    <button type="button" class="btn-close float-end" @onclick="() => _errorMessage = null"></button>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(_statusMessage))
+            {
+                <div class="alert alert-success animate-fade-in" style="border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.85rem;">
+                    <i class="bi bi-check-circle-fill me-2"></i> @_statusMessage
+                    <button type="button" class="btn-close float-end" @onclick="() => _statusMessage = null"></button>
+                </div>
+            }
+
+            <h5 class="form-title"><i class="bi bi-clock-history me-2"></i> Global Settings</h5>
+            
+            @if (_config != null)
+            {
+                <EditForm Model="@_config" OnValidSubmit="SaveConfig">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Day Cycle</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control-modern text-center" @bind-value="_config.DAYS_PER_WEEK" min="1" max="10" />
+                                    <span class="input-group-text bg-light" style="font-size: 0.7rem; font-weight: 600;">Days</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Periods / Day</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control-modern text-center" @bind-value="_config.PERIODS_PER_DAY" min="1" max="15" />
+                                    <span class="input-group-text bg-light" style="font-size: 0.7rem; font-weight: 600;">Slots</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label">Period Duration</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control-modern" @bind-value="_config.PERIOD_DURATION_MINS" min="10" max="120" />
+                                    <span class="input-group-text bg-light" style="font-size: 0.8rem; font-weight: 600;">Minutes</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label">Cycle Start Reference</label>
+                                <input type="date" class="form-control-modern" @bind-value="_config.DAY_ORDER_START_DATE" />
+                                <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; line-height: 1.3;">Used to map current dates to the Day Order rotation.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary-modern w-100 mt-3" style="border-radius: 10px; height: 42px;">
+                        <i class="bi bi-save2 me-2"></i> Save Changes
+                    </button>
+                </EditForm>
+
+                <div class="mt-4 pt-4 border-top">
+                    <button class="btn-secondary-modern w-100" @onclick="RegeneratePeriods">
+                        <i class="bi bi-arrow-repeat"></i> Reset & Regenerate Periods
+                    </button>
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; text-align: center;">
+                        Warning: This will recreate all time slots based on the above settings.
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div style="text-align: center; padding: 3rem 1.5rem;">
+                    <div style="width: 80px; height: 80px; background: var(--gray-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                        <i class="bi bi-gear-wide-connected" style="font-size: 2.5rem; color: var(--gray-400);"></i>
+                    </div>
+                    <h6 style="font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Ready to Start?</h6>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem; line-height: 1.5;">No active timetable configuration found. Initialize the system with standard defaults to get started quickly.</p>
+                    <button class="btn-primary-modern w-100" @onclick="CreateDefaultConfig">
+                        <i class="bi bi-magic me-2"></i> Initialize Defaults
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Right Column: Tabs for Rooms, Periods, Subjects -->
+    <div class="col-md-8">
+        <div class="card-modern animate-fade-in-up" style="padding: 0; animation-delay: 0.2s; overflow: hidden;">
+            <div class="list-toolbar" style="border: none; border-bottom: 1px solid var(--border-color); border-radius: 0; margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem;">
+                <div class="view-toggle" style="flex-shrink: 0;">
+                    <button class="view-btn @(_activeTab == "rooms" ? "active" : "")" @onclick='() => _activeTab = "rooms"'>
+                        <i class="bi bi-door-closed"></i> <span class="ms-1 d-none d-sm-inline">Rooms</span>
+                    </button>
+                    <button class="view-btn @(_activeTab == "periods" ? "active" : "")" @onclick='() => _activeTab = "periods"'>
+                        <i class="bi bi-clock"></i> <span class="ms-1 d-none d-sm-inline">Periods</span>
+                    </button>
+                    <button class="view-btn @(_activeTab == "dayorders" ? "active" : "")" @onclick='() => _activeTab = "dayorders"'>
+                        <i class="bi bi-calendar-check"></i> <span class="ms-1 d-none d-sm-inline">Day Orders</span>
+                    </button>
+                    <button class="view-btn @(_activeTab == "subjects" ? "active" : "")" @onclick='() => _activeTab = "subjects"'>
+                        <i class="bi bi-journal-bookmark"></i> <span class="ms-1 d-none d-sm-inline">Subjects</span>
+                    </button>
+                </div>
+                
+                <div class="list-toolbar-right" style="margin-left: auto;">
+                    @if (_activeTab == "rooms")
+                    {
+                        <button class="btn-add" @onclick="ShowAddRoomModal" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                            <i class="bi bi-plus-lg"></i> Add Room
+                        </button>
+                    }
+                    else if (_activeTab == "dayorders")
+                    {
+                        <button class="btn-add" @onclick="ShowAddDayOrderModal" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                            <i class="bi bi-plus-lg"></i> Add Day Order
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <div style="max-height: 500px; overflow-y: auto;">
+                @if (_activeTab == "rooms")
+                {
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Room Name</th>
+                                <th>Type</th>
+                                <th>Capacity</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in _rooms)
+                            {
+                                <tr>
+                                    <td style="font-weight: 600;">@r.ROOM_NAME</td>
+                                    <td><span class="badge-modern bg-light border text-dark">@r.ROOM_TYPE</span></td>
+                                    <td>@r.CAPACITY</td>
+                                    <td style="text-align: right;">
+                                        <button class="btn-icon-modern danger" @onclick="() => DeleteRoom(r.ROOM_ID)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else if (_activeTab == "periods")
+                {
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">Slot</th>
+                                <th>Label / Name</th>
+                                <th>Time Range</th>
+                                <th style="text-align: center;">Is Break</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in _periods)
+                            {
+                                <tr>
+                                    <td><span class="badge-modern bg-light border text-dark">#@p.PERIOD_NUMBER</span></td>
+                                    <td>
+                                        <input type="text" class="form-control-modern" style="padding: 4px 8px; font-size: 0.85rem;" @bind="p.LABEL" />
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 4px; align-items: center;">
+                                            <input type="time" class="form-control-modern" style="padding: 4px; font-size: 0.8rem;" @bind="p.START_TIME" />
+                                            <span style="color: var(--text-muted);">→</span>
+                                            <input type="time" class="form-control-modern" style="padding: 4px; font-size: 0.8rem;" @bind="p.END_TIME" />
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <input type="checkbox" checked="@(p.IS_BREAK == 1)" @onchange='(e) => p.IS_BREAK = (bool)e.Value! ? 1 : 0' />
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <button class="btn-icon-modern" title="Save Slot" @onclick="() => SavePeriod(p)">
+                                            <i class="bi bi-save"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else if (_activeTab == "dayorders")
+                {
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Order</th>
+                                <th>Day Name</th>
+                                <th>Remarks</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var d in _dayOrders)
+                            {
+                                <tr>
+                                    <td><span class="badge-modern badge-primary">Day @d.DAY_ORDER</span></td>
+                                    <td style="font-weight: 600;">@d.DAY_ORDER_NAME</td>
+                                    <td style="color: var(--text-muted); font-size: 0.85rem;">@d.REMARK</td>
+                                    <td style="text-align: right;">
+                                        <button class="btn-icon-modern danger" @onclick="() => DeleteDayOrder(d.DAY_ID)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else if (_activeTab == "subjects")
+                {
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Subject Name</th>
+                                <th style="text-align: right;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var sub in _subjects)
+                            {
+                                <tr>
+                                    <td><span class="badge-modern bg-light border text-dark" style="background: var(--gray-100); border: 1px solid var(--gray-200);">@sub.SUBJECT_CODE</span></td>
+                                    <td style="font-weight: 600;">@sub.SUBJECT_NAME</td>
+                                    <td style="text-align: right;">
+                                        <span class="badge-modern badge-success">Active</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (_showAddDayOrderModal)
+{
+    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1050; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div class="card-modern animate-fade-in-up" style="width: 100%; max-width: 400px;">
+            <h5 class="form-title"><i class="bi bi-plus-circle me-2"></i> Add Day Order</h5>
+            <div class="form-group">
+                <label class="form-label">Day Order Number</label>
+                <input type="number" class="form-control-modern" @bind="_newDayOrder.DAY_ORDER" placeholder="e.g. 1" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Day Name</label>
+                <input type="text" class="form-control-modern" @bind="_newDayOrder.DAY_ORDER_NAME" placeholder="e.g. Monday" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Remark</label>
+                <input type="text" class="form-control-modern" @bind="_newDayOrder.REMARK" />
+            </div>
+            <div class="form-actions">
+                <button class="btn-secondary-modern" @onclick="() => _showAddDayOrderModal = false">Cancel</button>
+                <button class="btn-primary-modern" @onclick="SaveNewDayOrder">Add Day Order</button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (_showAddRoomModal)
+{
+    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1050; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div class="card-modern animate-fade-in-up" style="width: 100%; max-width: 400px;">
+            <h5 class="form-title"><i class="bi bi-plus-circle me-2"></i> Add New Room</h5>
+            <div class="form-group">
+                <label class="form-label">Room Name</label>
+                <input type="text" class="form-control-modern" @bind="_newRoom.ROOM_NAME" placeholder="e.g. Lab 1" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Room Type</label>
+                <select class="form-select-modern" @bind="_newRoom.ROOM_TYPE">
+                    <option value="Classroom">Classroom</option>
+                    <option value="Laboratory">Laboratory</option>
+                    <option value="Hall">Hall</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Capacity</label>
+                <input type="number" class="form-control-modern" @bind="_newRoom.CAPACITY" />
+            </div>
+            <div class="form-actions">
+                <button class="btn-secondary-modern" @onclick="() => _showAddRoomModal = false">Cancel</button>
+                <button class="btn-primary-modern" @onclick="SaveNewRoom">Add Room</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private SchoolErp.Domain.Entities.TimetableConfig? _config;
+    private List<Subject> _subjects = new();
+    private List<Period> _periods = new();
+    private List<DayOrder> _dayOrders = new();
+    private List<Room> _rooms = new();
+    
+    private string _activeTab = "rooms";
+    private bool _showAddDayOrderModal = false;
+    private bool _showAddRoomModal = false;
+    private DayOrder _newDayOrder = new();
+    private Room _newRoom = new();
+    
+    private bool _isBusy = false;
+    private string? _errorMessage;
+    private string? _statusMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        if (_isBusy) return;
+        _isBusy = true;
+        try 
+        {
+            using var conn = DbFactory.CreateConnection();
+            _config = await conn.QueryFirstOrDefaultAsync<SchoolErp.Domain.Entities.TimetableConfig>("SELECT * FROM TIMETABLE_CONFIG WHERE IS_DELETED = 0 LIMIT 1");
+            _subjects = (await conn.QueryAsync<Subject>("SELECT * FROM subject_list WHERE IS_DELETED = 0")).ToList();
+            
+            if (_config != null)
+            {
+                _periods = (await conn.QueryAsync<Period>("SELECT * FROM PERIODS WHERE CONFIG_ID = @ConfigId AND IS_DELETED = 0 ORDER BY PERIOD_NUMBER", new { ConfigId = _config.CONFIG_ID })).ToList();
+            }
+            else
+            {
+                _periods = new();
+            }
+            
+            _dayOrders = (await conn.QueryAsync<DayOrder>("SELECT * FROM SUP_DAY_ORDER ORDER BY DAY_ORDER")).ToList();
+            _rooms = (await conn.QueryAsync<Room>("SELECT * FROM ROOMS WHERE IS_DELETED = 0 ORDER BY ROOM_NAME")).ToList();
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = "Failed to load configuration: " + ex.Message;
+        }
+        finally 
+        {
+            _isBusy = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ShowAddRoomModal()
+    {
+        _newRoom = new Room { ROOM_ID = Guid.NewGuid().ToString(), CAPACITY = 40 };
+        _showAddRoomModal = true;
+    }
+
+    private async Task SaveNewRoom()
+    {
+        if (string.IsNullOrWhiteSpace(_newRoom.ROOM_NAME)) return;
+        
+        using var conn = DbFactory.CreateConnection();
+        await conn.ExecuteAsync("INSERT INTO ROOMS (ROOM_ID, ROOM_NAME, ROOM_TYPE, CAPACITY) VALUES (@ROOM_ID, @ROOM_NAME, @ROOM_TYPE, @CAPACITY)", _newRoom);
+        
+        _showAddRoomModal = false;
+        await LoadData();
+    }
+
+    private async Task DeleteRoom(string id)
+    {
+        if (!await JS.InvokeAsync<bool>("confirm", "Delete this room?")) return;
+        
+        using var conn = DbFactory.CreateConnection();
+        await conn.ExecuteAsync("UPDATE ROOMS SET IS_DELETED = 1 WHERE ROOM_ID = @Id", new { Id = id });
+        await LoadData();
+    }
+
+    private void ShowAddDayOrderModal()
+    {
+        _newDayOrder = new DayOrder { DAY_ID = Guid.NewGuid().ToString(), DAY_ORDER = _dayOrders.Count + 1 };
+        _showAddDayOrderModal = true;
+    }
+
+    private async Task SaveNewDayOrder()
+    {
+        if (string.IsNullOrWhiteSpace(_newDayOrder.DAY_ORDER_NAME)) return;
+        
+        using var conn = DbFactory.CreateConnection();
+        await conn.ExecuteAsync("INSERT INTO SUP_DAY_ORDER (DAY_ID, DAY_ORDER, DAY_ORDER_NAME, REMARK) VALUES (@DAY_ID, @DAY_ORDER, @DAY_ORDER_NAME, @REMARK)", _newDayOrder);
+        
+        // Also update DAYS_PER_WEEK in config to match count
+        if (_config != null)
+        {
+            _config.DAYS_PER_WEEK = _dayOrders.Count + 1;
+            await conn.ExecuteAsync("UPDATE TIMETABLE_CONFIG SET DAYS_PER_WEEK = @DAYS_PER_WEEK WHERE CONFIG_ID = @CONFIG_ID", _config);
+        }
+
+        _showAddDayOrderModal = false;
+        await LoadData();
+    }
+
+    private async Task DeleteDayOrder(string id)
+    {
+        if (!await JS.InvokeAsync<bool>("confirm", "Delete this day order?")) return;
+        
+        using var conn = DbFactory.CreateConnection();
+        await conn.ExecuteAsync("DELETE FROM SUP_DAY_ORDER WHERE DAY_ID = @Id", new { Id = id });
+        
+        if (_config != null)
+        {
+            _config.DAYS_PER_WEEK = Math.Max(0, _dayOrders.Count - 1);
+            await conn.ExecuteAsync("UPDATE TIMETABLE_CONFIG SET DAYS_PER_WEEK = @DAYS_PER_WEEK WHERE CONFIG_ID = @CONFIG_ID", _config);
+        }
+
+        await LoadData();
+    }
+
+    private async Task CreateDefaultConfig()
+    {
+        if (_isBusy) return;
+        _isBusy = true;
+        _errorMessage = null;
+        try 
+        {
+            using var conn = DbFactory.CreateConnection();
+            var acYear = await conn.QueryFirstOrDefaultAsync<string>("SELECT ACADEMIC_YEAR_ID FROM ACADEMIC_YEAR WHERE IS_ACTIVE = 1 LIMIT 1");
+            if (string.IsNullOrEmpty(acYear)) acYear = Guid.NewGuid().ToString();
+
+            // Clear old data to prevent duplication - Aggressive cleanup
+            await conn.ExecuteAsync("DELETE FROM SUP_DAY_ORDER");
+            await conn.ExecuteAsync("DELETE FROM PERIODS");
+            await conn.ExecuteAsync("DELETE FROM TIMETABLE_CONFIG");
+
+            _config = new SchoolErp.Domain.Entities.TimetableConfig
+            {
+                CONFIG_ID = Guid.NewGuid().ToString(),
+                ACADEMIC_YEAR_ID = acYear,
+                DAYS_PER_WEEK = 6,
+                PERIODS_PER_DAY = 11,
+                PERIOD_DURATION_MINS = 45
+            };
+
+            await conn.ExecuteAsync("INSERT INTO TIMETABLE_CONFIG (CONFIG_ID, ACADEMIC_YEAR_ID, DAYS_PER_WEEK, PERIODS_PER_DAY, PERIOD_DURATION_MINS) VALUES (@CONFIG_ID, @ACADEMIC_YEAR_ID, @DAYS_PER_WEEK, @PERIODS_PER_DAY, @PERIOD_DURATION_MINS)", _config);
+            
+            // Create default day orders for typical Tamil Nadu school week
+            var days = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            for (int i = 0; i < days.Length; i++)
+            {
+                await conn.ExecuteAsync("INSERT INTO SUP_DAY_ORDER (DAY_ID, DAY_ORDER, DAY_ORDER_NAME) VALUES (@DAY_ID, @DAY_ORDER, @DAY_ORDER_NAME)", 
+                    new { DAY_ID = Guid.NewGuid().ToString(), DAY_ORDER = i + 1, DAY_ORDER_NAME = days[i] });
+            }
+
+            _isBusy = false; // Allow RegeneratePeriods to run its own fetch
+            await RegeneratePeriods();
+            await LoadData();
+            _statusMessage = "Default configuration initialized successfully.";
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = "Failed to initialize defaults: " + ex.Message;
+        }
+        finally 
+        {
+            _isBusy = false;
+        }
+    }
+
+    private async Task RegeneratePeriods()
+    {
+        if (_config == null) return;
+        _errorMessage = null;
+        try 
+        {
+            using var conn = DbFactory.CreateConnection();
+            await conn.ExecuteAsync("DELETE FROM PERIODS WHERE CONFIG_ID = @ConfigId", new { ConfigId = _config.CONFIG_ID });
+            
+            var periodsData = new[] 
+            {
+                new { Duration = 45, IsBreak = 0, Label = "Period 1" },
+                new { Duration = 45, IsBreak = 0, Label = "Period 2" },
+                new { Duration = 15, IsBreak = 1, Label = "Morning Interval" },
+                new { Duration = 45, IsBreak = 0, Label = "Period 3" },
+                new { Duration = 45, IsBreak = 0, Label = "Period 4" },
+                new { Duration = 40, IsBreak = 1, Label = "Lunch Break" },
+                new { Duration = 40, IsBreak = 0, Label = "Period 5" },
+                new { Duration = 40, IsBreak = 0, Label = "Period 6" },
+                new { Duration = 10, IsBreak = 1, Label = "Afternoon Interval" },
+                new { Duration = 40, IsBreak = 0, Label = "Period 7" },
+                new { Duration = 40, IsBreak = 0, Label = "Period 8" }
+            };
+
+            var startTime = new TimeOnly(9, 15);
+            int slotNumber = 1;
+
+            foreach (var pd in periodsData)
+            {
+                var endTime = startTime.AddMinutes(pd.Duration);
+                var p = new Period
+                {
+                    PERIOD_ID = Guid.NewGuid().ToString(),
+                    CONFIG_ID = _config.CONFIG_ID,
+                    PERIOD_NUMBER = slotNumber,
+                    START_TIME = startTime,
+                    END_TIME = endTime,
+                    IS_BREAK = pd.IsBreak,
+                    LABEL = pd.Label
+                };
+                await conn.ExecuteAsync("INSERT INTO PERIODS (PERIOD_ID, CONFIG_ID, PERIOD_NUMBER, START_TIME, END_TIME, IS_BREAK, LABEL) VALUES (@PERIOD_ID, @CONFIG_ID, @PERIOD_NUMBER, @START_TIME, @END_TIME, @IS_BREAK, @LABEL)", p);
+                startTime = endTime;
+                slotNumber++;
+            }
+            
+            // Sync periods count with global config
+            _config.PERIODS_PER_DAY = periodsData.Length;
+            await conn.ExecuteAsync("UPDATE TIMETABLE_CONFIG SET PERIODS_PER_DAY = @PERIODS_PER_DAY WHERE CONFIG_ID = @CONFIG_ID", _config);
+            
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = "Failed to regenerate periods: " + ex.Message;
+        }
+    }
+
+    private async Task SaveConfig()
+    {
+        if (_isBusy || _config == null) return;
+        _isBusy = true;
+        _errorMessage = null;
+        try 
+        {
+            using var conn = DbFactory.CreateConnection();
+            await conn.ExecuteAsync("UPDATE TIMETABLE_CONFIG SET DAYS_PER_WEEK = @DAYS_PER_WEEK, PERIODS_PER_DAY = @PERIODS_PER_DAY, PERIOD_DURATION_MINS = @PERIOD_DURATION_MINS, DAY_ORDER_START_DATE = @DAY_ORDER_START_DATE WHERE CONFIG_ID = @CONFIG_ID", _config);
+            _statusMessage = "Global settings updated successfully.";
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = "Failed to update settings: " + ex.Message;
+        }
+        finally 
+        {
+            _isBusy = false;
+        }
+    }
+
+    private async Task SavePeriod(Period p)
+    {
+        _errorMessage = null;
+        try 
+        {
+            using var conn = DbFactory.CreateConnection();
+            await conn.ExecuteAsync("UPDATE PERIODS SET START_TIME = @START_TIME, END_TIME = @END_TIME, IS_BREAK = @IS_BREAK, LABEL = @LABEL WHERE PERIOD_ID = @PERIOD_ID", p);
+            _statusMessage = $"Period {p.PERIOD_NUMBER} updated.";
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = "Failed to update period: " + ex.Message;
+        }
+    }
+}

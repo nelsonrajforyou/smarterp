@@ -1,0 +1,141 @@
+@using SchoolErp.Application.Common.Interfaces
+@using SchoolErp.Application.Common.Models
+@inject IAcademicService AcademicService
+
+<div class="tab-pane animate-fade-in">
+    <div class="tab-content-header">
+        <div class="header-title">
+            <h3>Subject Repository</h3>
+            <p>Manage all subjects offered across different classes</p>
+        </div>
+        <button class="btn-primary-modern" @onclick="OpenAddForm">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add New Subject
+        </button>
+    </div>
+
+    @if (ShowForm)
+    {
+        <div class="form-card animate-fade-in-up" style="margin-bottom: 2rem;">
+            <div class="form-title">
+                <h4>@(EditingSubject.SUBJECT_ID == "" ? "Create New Subject" : "Edit Subject")</h4>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label">Subject Code</label>
+                    <input type="text" class="form-control-modern" @bind="EditingSubject.SUBJECT_CODE" placeholder="e.g. ENG101" />
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Subject Name</label>
+                    <input type="text" class="form-control-modern" @bind="EditingSubject.SUBJECT_NAME" placeholder="e.g. English Literature" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Type</label>
+                    <select class="form-select-modern" @bind="EditingSubject.SUBJECT_TYPE_ID">
+                        <option value="">Select Type</option>
+                        <option value="Theory">Theory</option>
+                        <option value="Practical">Practical</option>
+                        <option value="Extra">Extra Curricular</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-secondary-modern" @onclick="CloseForm">Cancel</button>
+                <button class="btn-primary-modern" @onclick="SaveSubject">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                    Save Subject
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Subject Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sub in Subjects)
+                    {
+                        <tr>
+                            <td><code class="code-badge">@sub.SUBJECT_CODE</code></td>
+                            <td style="font-weight: 600;">@sub.SUBJECT_NAME</td>
+                            <td><span class="badge-modern badge-info">@sub.SUBJECT_TYPE_ID</span></td>
+                            <td>
+                                <span class="badge-modern @(sub.IS_ACTIVE == "1" ? "badge-success" : "badge-danger")">
+                                    @(sub.IS_ACTIVE == "1" ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons" style="justify-content: flex-end;">
+                                    <button class="btn-icon-modern" title="Edit" @onclick="() => EditSubject(sub)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                    <button class="btn-icon-modern danger" title="Delete" @onclick="() => DeleteSubject(sub.SUBJECT_ID)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .code-badge { background: var(--gray-100); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: var(--primary-600); border: 1px solid var(--border-color); }
+</style>
+
+@code {
+    private List<SubjectModel> Subjects = new();
+    private SubjectModel EditingSubject = new();
+    private bool ShowForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSubjects();
+    }
+
+    private async Task LoadSubjects()
+    {
+        Subjects = await AcademicService.GetSubjectsAsync();
+    }
+
+    private void OpenAddForm() { EditingSubject = new(); ShowForm = true; }
+    private void CloseForm() { ShowForm = false; }
+
+    private void EditSubject(SubjectModel sub)
+    {
+        EditingSubject = new SubjectModel 
+        { 
+            SUBJECT_ID = sub.SUBJECT_ID,
+            SUBJECT_CODE = sub.SUBJECT_CODE,
+            SUBJECT_NAME = sub.SUBJECT_NAME,
+            SUBJECT_TYPE_ID = sub.SUBJECT_TYPE_ID,
+            IS_ACTIVE = sub.IS_ACTIVE
+        };
+        ShowForm = true;
+    }
+
+    private async Task SaveSubject()
+    {
+        if (await AcademicService.SaveSubjectAsync(EditingSubject))
+        {
+            await LoadSubjects();
+            CloseForm();
+        }
+    }
+
+    private async Task DeleteSubject(string id)
+    {
+        if (await AcademicService.DeleteSubjectAsync(id))
+        {
+            await LoadSubjects();
+        }
+    }
+}

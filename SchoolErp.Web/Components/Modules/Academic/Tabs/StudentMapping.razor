@@ -1,0 +1,198 @@
+@using SchoolErp.Application.Common.Interfaces
+@using SchoolErp.Application.Common.Models
+@inject IAcademicService AcademicService
+@inject ICommonDataService CommonData
+@inject IAcademicYearService AcademicYearService
+
+<div class="tab-pane animate-fade-in">
+    <div class="tab-content-header">
+        <div class="header-title">
+            <h3>Student-Class Mapping</h3>
+            <p>Assign students to specific classes for the current academic year</p>
+        </div>
+    </div>
+
+    <div class="card-modern" style="margin-bottom: 2rem; padding: 1.5rem;">
+        <div class="row g-4" style="align-items: flex-end;">
+            <div class="col-md-4">
+                <label class="form-label">Select Class</label>
+                <select class="form-select-modern" @bind="SelectedClassId">
+                    <option value="">Choose Class...</option>
+                    @foreach (var cls in Classes)
+                    {
+                        <option value="@cls.Value">@cls.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button class="btn-primary-modern" @onclick="LoadMappings" disabled="@(string.IsNullOrEmpty(SelectedClassId))">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Load Mapping
+                </button>
+            </div>
+            <div class="col-md-5" style="text-align: right;">
+                <button class="btn-secondary-modern" @onclick="OpenBulkMapping">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                    Bulk Mapping
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (IsLoading)
+    {
+        <div class="skeleton" style="height: 200px; width: 100%;"></div>
+    }
+    else if (!string.IsNullOrEmpty(SelectedClassId))
+    {
+        <div class="table-card animate-fade-in">
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Student ID</th>
+                            <th>Year</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Mappings.Any())
+                        {
+                            @foreach (var map in Mappings)
+                            {
+                                <tr>
+                                    <td style="font-weight: 600;">@map.STUDENT_NAME</td>
+                                    <td><code class="code-badge">@map.STUDENT_ID</code></td>
+                                    <td><span class="badge-modern badge-info">@ActiveYearName</span></td>
+                                    <td>
+                                        <div class="action-buttons" style="justify-content: flex-end;">
+                                            <button class="btn-icon-modern danger" title="Remove Mapping" @onclick="() => DeleteMapping(map.STU_CLASS_ID)">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                                    No students mapped to this class yet.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+    @if (ShowBulkModal)
+    {
+        <div class="modal-backdrop">
+            <div class="modal-card animate-fade-in-up">
+                <div class="modal-header">
+                    <h4>Bulk Student Mapping</h4>
+                    <button class="close-btn" @onclick="() => ShowBulkModal = false">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-subtitle">Select students to add to <strong>@SelectedClassName</strong></p>
+                    <div class="student-selector">
+                        @foreach (var stu in AvailableStudents)
+                        {
+                            <label class="student-checkbox-item">
+                                <input type="checkbox" @onchange="(e) => ToggleStudent(stu.Value, (bool)e.Value!)" />
+                                <span>@stu.Text</span>
+                            </label>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary-modern" @onclick="() => ShowBulkModal = false">Cancel</button>
+                    <button class="btn-primary-modern" @onclick="SaveBulkMapping" disabled="@(!SelectedStudentIds.Any())">
+                        Map Selected Students (@SelectedStudentIds.Count)
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .code-badge { background: var(--gray-100); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; }
+    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-card { background: var(--bg-card); width: 500px; border-radius: 16px; box-shadow: var(--shadow-xl); overflow: hidden; }
+    .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h4 { margin: 0; font-weight: 700; color: var(--text-primary); }
+    .modal-body { padding: 1.5rem; max-height: 400px; overflow-y: auto; }
+    .modal-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; }
+    .student-selector { display: flex; flex-direction: column; gap: 0.5rem; }
+    .student-checkbox-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+    .student-checkbox-item:hover { background: var(--gray-50); border-color: var(--primary-200); }
+    .modal-footer { padding: 1.25rem 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
+    .close-btn { background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+</style>
+
+@code {
+    private List<StudentClassMappingModel> Mappings = new();
+    private List<DropdownItem> Classes = new();
+    private List<DropdownItem> AvailableStudents = new();
+    private string SelectedClassId = "";
+    private string SelectedClassName => Classes.FirstOrDefault(c => c.Value == SelectedClassId)?.Text ?? "";
+    private string ActiveYearId = "";
+    private string ActiveYearName = "";
+    private bool IsLoading = false;
+    private bool ShowBulkModal = false;
+    private List<string> SelectedStudentIds = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Classes = await CommonData.GetClassListAsync();
+        var years = await CommonData.GetAcademicYearListAsync();
+        var activeYear = years.FirstOrDefault();
+        ActiveYearId = activeYear?.Value ?? "";
+        ActiveYearName = activeYear?.Text ?? "N/A";
+        
+        AvailableStudents = await CommonData.GetStudentListAsync();
+    }
+
+    private async Task LoadMappings()
+    {
+        if (string.IsNullOrEmpty(SelectedClassId)) return;
+        IsLoading = true;
+        Mappings = await AcademicService.GetStudentMappingsAsync(SelectedClassId, ActiveYearId);
+        IsLoading = false;
+    }
+
+    private void OpenBulkMapping()
+    {
+        if (string.IsNullOrEmpty(SelectedClassId)) return;
+        SelectedStudentIds.Clear();
+        ShowBulkModal = true;
+    }
+
+    private void ToggleStudent(string id, bool isChecked)
+    {
+        if (isChecked) SelectedStudentIds.Add(id);
+        else SelectedStudentIds.Remove(id);
+    }
+
+    private async Task SaveBulkMapping()
+    {
+        if (await AcademicService.BulkStudentMappingAsync(SelectedStudentIds, SelectedClassId, ActiveYearId))
+        {
+            await LoadMappings();
+            ShowBulkModal = false;
+        }
+    }
+
+    private async Task DeleteMapping(string id)
+    {
+        if (await AcademicService.DeleteStudentMappingAsync(id))
+        {
+            await LoadMappings();
+        }
+    }
+}

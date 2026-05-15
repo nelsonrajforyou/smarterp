@@ -1,0 +1,244 @@
+@using SchoolErp.Application.Common.Interfaces
+@using SchoolErp.Application.Common.Models
+@inject ICommonDataService CommonData
+@inject IAcademicService AcademicService
+
+<div class="support-tables-container animate-fade-in">
+    <div class="tab-content-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0;">System Support Tables</h2>
+        <div style="display: flex; gap: 1rem;">
+            <select class="form-select-modern" @bind="SelectedTableName" style="width: 250px;">
+                <option value="SUP_RELIGION">Religions</option>
+                <option value="SUP_NATIONALITY">Nationalities</option>
+                <option value="SUP_BLOOD_GROUP">Blood Groups</option>
+                <option value="SUP_GENDER">Genders</option>
+                <option value="DEPARTMENTS">Departments</option>
+                <option value="STAFF_CATEGORY">Staff Categories</option>
+                <option value="sup_designation">Designations</option>
+                <option value="SUP_QUALIFICATION">Qualifications</option>
+            </select>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 350px; gap: 2rem;">
+        <!-- Data Table -->
+        <div>
+            <!-- Toolbar with view toggle -->
+            <div class="list-toolbar" style="margin-bottom: 1rem;">
+                <div class="list-toolbar-left">
+                    <span class="result-count">@((Entries?.Count ?? 0)) entries</span>
+                </div>
+                <div class="list-toolbar-right">
+                    <div class="view-toggle">
+                        <button class="view-btn @(ViewMode == "grid" ? "active" : "")" title="Grid View" @onclick='() => ViewMode = "grid"'>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                        </button>
+                        <button class="view-btn @(ViewMode == "list" ? "active" : "")" title="List View" @onclick='() => ViewMode = "list"'>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            @if (Entries != null && Entries.Any())
+            {
+                @if (ViewMode == "list")
+                {
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70%;">Name / Description</th>
+                                        <th style="text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Entries)
+                                    {
+                                        <tr>
+                                            <td><div style="font-weight: 600; color: var(--text-primary);">@item.Text</div></td>
+                                            <td>
+                                                <div class="action-buttons" style="justify-content: flex-end;">
+                                                    <button class="btn-icon-modern" title="Edit" @onclick="() => StartEdit(item)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                                    <button class="btn-icon-modern danger" title="Remove" @onclick="() => DeleteEntry(item.Value)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="data-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                        @foreach (var item in Entries)
+                        {
+                            <div class="data-card" style="padding: 1rem;">
+                                <div class="data-card-header" style="gap: 0.6rem;">
+                                    <div class="data-card-avatar" style="width: 36px; height: 36px; font-size: 0.9rem;">@item.Text[0]</div>
+                                    <div class="data-card-title" style="font-size: 0.88rem;">@item.Text</div>
+                                </div>
+                                <div class="data-card-actions">
+                                    <button class="btn-icon-modern" title="Edit" @onclick="() => StartEdit(item)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                    <button class="btn-icon-modern danger" title="Remove" @onclick="() => DeleteEntry(item.Value)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    <p>No entries found in this table.</p>
+                </div>
+            }
+        </div>
+
+        <!-- Add/Edit Form -->
+        <div class="form-card" style="height: fit-content; position: sticky; top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0; font-size: 1rem; color: var(--text-primary); font-weight: 700;">@(IsEditMode ? "Edit Entry" : "Add New Entry")</h4>
+                @if (IsEditMode)
+                {
+                    <button class="btn-link-modern" style="font-size: 0.75rem;" @onclick="CancelEdit">Cancel</button>
+                }
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-12">
+                    <label class="form-label">Name / Label</label>
+                    <input type="text" class="form-control-modern" @bind="EntryName" placeholder="e.g. Christian, Hindu, etc." @onkeyup="HandleKeyUp" />
+                </div>
+                <div class="col-12">
+                    <button class="btn-primary-modern" @onclick="SaveEntry" disabled="@(string.IsNullOrEmpty(EntryName))" style="width: 100%;">
+                        @if (IsEditMode)
+                        {
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                            <span>Update Entry</span>
+                        }
+                        else
+                        {
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            <span>Save Entry</span>
+                        }
+                    </button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background: var(--gray-50); border-radius: 10px; border: 1px solid var(--border-color);">
+                <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+                    <strong>Tip:</strong> Press <code>Enter</code> to quickly save entries and move to the next.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _selectedTableName = "SUP_RELIGION";
+    private string ViewMode = "list";
+    private string SelectedTableName
+    {
+        get => _selectedTableName;
+        set { _selectedTableName = value; CancelEdit(); InvokeAsync(LoadEntries); }
+    }
+
+    private List<DropdownItem> Entries = new();
+    private string EntryName = "";
+    private string? EditingId = null;
+    private bool IsEditMode => EditingId != null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEntries();
+    }
+
+    private async Task LoadEntries()
+    {
+        string pk = GetPkColumn(SelectedTableName);
+        string nameCol = GetNameColumn(SelectedTableName);
+        Entries = await AcademicService.GetDynamicListAsync(SelectedTableName, pk, nameCol);
+        StateHasChanged();
+    }
+
+    private void StartEdit(DropdownItem item)
+    {
+        EditingId = item.Value;
+        EntryName = item.Text;
+    }
+
+    private void CancelEdit()
+    {
+        EditingId = null;
+        EntryName = "";
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await SaveEntry();
+        if (e.Key == "Escape") CancelEdit();
+    }
+
+    private async Task SaveEntry()
+    {
+        if (string.IsNullOrEmpty(EntryName)) return;
+
+        string pk = GetPkColumn(SelectedTableName);
+        string nameCol = GetNameColumn(SelectedTableName);
+        
+        bool success;
+        if (IsEditMode)
+        {
+            success = await AcademicService.UpdateDynamicEntryAsync(SelectedTableName, pk, nameCol, EditingId!, EntryName);
+        }
+        else
+        {
+            success = await AcademicService.SaveDynamicEntryAsync(SelectedTableName, pk, nameCol, EntryName);
+        }
+
+        if (success)
+        {
+            CancelEdit();
+            await LoadEntries();
+        }
+    }
+
+    private async Task DeleteEntry(string id)
+    {
+        string pk = GetPkColumn(SelectedTableName);
+        bool success = await AcademicService.DeleteDynamicEntryAsync(SelectedTableName, pk, id);
+        if (success)
+        {
+            await LoadEntries();
+        }
+    }
+
+    private string GetPkColumn(string table) => table switch {
+        "SUP_RELIGION" => "RELIGION_ID",
+        "SUP_NATIONALITY" => "NATIONALITY_ID",
+        "SUP_BLOOD_GROUP" => "BLOOD_ID",
+        "SUP_GENDER" => "GENDER_ID",
+        "DEPARTMENTS" => "DEPT_ID",
+        "STAFF_CATEGORY" => "CATEGORY_ID",
+        "sup_designation" => "DESIGANTION_ID",
+        "SUP_QUALIFICATION" => "QUALIFICATION_ID",
+        _ => "ID"
+    };
+
+    private string GetNameColumn(string table) => table switch {
+        "SUP_RELIGION" => "RELIGION_NAME",
+        "SUP_NATIONALITY" => "NATIONALITY_NAME",
+        "SUP_BLOOD_GROUP" => "BLOOD_NAME",
+        "SUP_GENDER" => "GENDER_NAME",
+        "DEPARTMENTS" => "DEPT_NAME",
+        "STAFF_CATEGORY" => "CATEGORY_NAME",
+        "sup_designation" => "DESIGANTION_NAME",
+        "SUP_QUALIFICATION" => "QUALIFICATION_NAME",
+        _ => "NAME"
+    };
+}
