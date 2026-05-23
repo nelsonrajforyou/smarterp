@@ -15,10 +15,15 @@
 <PageTitle>Student Attendance - School ERP</PageTitle>
 
 <div class="management-container animate-fade-in-up">
-    <header class="page-header">
+    <header class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
         <div class="header-main">
             <h1>Student Attendance</h1>
             <p>Record and manage daily student attendance.</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary-modern" @onclick="OpenReportsModal">
+                <i class="bi bi-file-earmark-bar-graph"></i> Generate Reports
+            </button>
         </div>
     </header>
 
@@ -240,9 +245,154 @@
             @Message
         </div>
     }
+
+    @if (ShowReportsModal)
+    {
+        <div class="modal-backdrop-modern animate-fade-in">
+            <div class="modal-modern animate-slide-up" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2>Generate Attendance Reports</h2>
+                    <button class="btn-close" @onclick="CloseReportsModal"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label class="form-label">Report Type</label>
+                        <select class="form-control-modern" @bind="ReportRequest.ReportType">
+                            <option value="DailyAttendance">Daily Attendance Report</option>
+                            <option value="MonthlyRegister">Monthly Attendance Register</option>
+                            <option value="Defaulters">Defaulters List (Below 75%)</option>
+                            <option value="ContinuousAbsentees">Continuous Absentees (3+ days)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">Select Class</label>
+                        <SelectPicker Items="ClassPickerItems"
+                                      Value="@ReportRequest.ClassId"
+                                      ValueChanged="OnReportClassChanged"
+                                      ValueField="Value"
+                                      LabelField="Label"
+                                      Placeholder="Select Class (Optional for Admin)"
+                                      Searchable="true" />
+                    </div>
+
+                    @if (ReportRequest.ReportType == "DailyAttendance" || ReportRequest.ReportType == "Defaulters" || ReportRequest.ReportType == "ContinuousAbsentees")
+                    {
+                        <div class="form-group mb-3">
+                            <label class="form-label">Target Date</label>
+                            <DatePicker Value="@ReportRequest.TargetDate" ValueChanged="OnReportDateChanged" />
+                        </div>
+                    }
+                    
+                    @if (ReportRequest.ReportType == "MonthlyRegister")
+                    {
+                        <div class="row">
+                            <div class="col-md-6 form-group mb-3">
+                                <label class="form-label">Month</label>
+                                <select class="form-control-modern" @bind="ReportRequest.Month">
+                                    @for (int i = 1; i <= 12; i++)
+                                    {
+                                        <option value="@i">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group mb-3">
+                                <label class="form-label">Year</label>
+                                <input type="number" class="form-control-modern" @bind="ReportRequest.Year" min="2000" max="2100" />
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary-modern" @onclick="CloseReportsModal">Cancel</button>
+                    <button class="btn-primary-modern" @onclick="GenerateReport">
+                        <i class="bi bi-file-earmark-text me-2"></i> View Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 <style>
+    /* Modern Modal Styling */
+    .modal-backdrop-modern {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1050;
+        padding: 1.5rem;
+    }
+
+    .modal-modern {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: none;
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        background: #ffffff;
+    }
+
+    .modal-header h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    .modal-header .btn-close {
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        font-size: 1.25rem;
+        cursor: pointer;
+        padding: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .modal-header .btn-close:hover {
+        background: #f1f5f9;
+        color: #334155;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+        overflow-y: auto;
+        max-height: 70vh;
+    }
+
+    .modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #f1f5f9;
+        background: #f8fafc;
+    }
+
     .attendance-main-grid {
         display: grid;
         grid-template-columns: 1fr 320px;
@@ -388,7 +538,7 @@
     .percentage-container {
         position: relative;
         width: 120px;
-        height: 120px;
+        height: 114px;
         margin: 0.5rem auto 1rem;
         display: flex;
         align-items: center;
@@ -613,6 +763,19 @@
     private List<StudentAttendanceDto>? Students;
     private List<AttendanceTypeDto> AttendanceTypes = new();
     private IEnumerable<object> ClassPickerItems = Enumerable.Empty<object>();
+
+    // Reports Modal
+    private bool ShowReportsModal = false;
+    private AttendanceReportRequest ReportRequest = new();
+
+    public class AttendanceReportRequest
+    {
+        public string ReportType { get; set; } = "DailyAttendance";
+        public string? ClassId { get; set; }
+        public DateTime TargetDate { get; set; } = DateTime.Today;
+        public int Month { get; set; } = DateTime.Today.Month;
+        public int Year { get; set; } = DateTime.Today.Year;
+    }
     private bool IsLoading = false;
     private bool IsSaving = false;
     private string? Message;
@@ -650,12 +813,20 @@
             List<SchoolErp.Application.Common.Models.DropdownItem> classes;
             if (role == "Admin")
             {
-                classes = await AcademicService.GetDynamicListAsync("CLASSES", "CLASS_ID", "CLASS_NAME");
+                classes = await CommonData.GetClassListAsync();
             }
             else
             {
-                // Filter by TeacherId for non-admin users
-                string sql = "SELECT CLASS_ID as Value, CLASS_NAME as Text FROM CLASSES WHERE TEACHER_ID = @StaffId AND IS_DELETED <> 1 ORDER BY CLASS_NAME";
+                // Filter by TeacherId using class_subject_staff table for non-admin users
+                string sql = @"
+                    SELECT DISTINCT c.CLASS_ID as Value, CONCAT(c.CLASS_NAME, ' - ', c.SECTION) as Text 
+                    FROM CLASSES c 
+                    JOIN class_subject_staff css ON c.CLASS_ID = css.CLASS_ID 
+                    WHERE css.STAFF_ID = @StaffId 
+                      AND css.IS_CLASS_INCHARGE = 1 
+                      AND css.IS_DELETED = 0 
+                      AND c.IS_DELETED = 0 
+                    ORDER BY c.CLASS_NAME, c.SECTION;";
                 classes = await CommonData.GetDropdownListAsync(sql, new { StaffId = staffId });
             }
             ClassPickerItems = classes.Select(c => (object)new { Value = c.Value, Label = c.Text });
@@ -782,5 +953,38 @@
             Message = null;
             InvokeAsync(StateHasChanged);
         });
+    }
+
+    private void OpenReportsModal()
+    {
+        ReportRequest = new AttendanceReportRequest
+        {
+            ClassId = SelectedClassId,
+            TargetDate = SelectedDate ?? DateTime.Today,
+            Month = DateTime.Today.Month,
+            Year = DateTime.Today.Year
+        };
+        ShowReportsModal = true;
+    }
+
+    private void CloseReportsModal()
+    {
+        ShowReportsModal = false;
+    }
+
+    private void OnReportClassChanged(string value)
+    {
+        ReportRequest.ClassId = value;
+    }
+
+    private void OnReportDateChanged(DateTime? date)
+    {
+        ReportRequest.TargetDate = date ?? DateTime.Today;
+    }
+
+    private void GenerateReport()
+    {
+        CloseReportsModal();
+        NavigationManager.NavigateTo($"/student-attendance/report?type={ReportRequest.ReportType}&classId={ReportRequest.ClassId}&date={ReportRequest.TargetDate:yyyy-MM-dd}&month={ReportRequest.Month}&year={ReportRequest.Year}");
     }
 }

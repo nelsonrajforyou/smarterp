@@ -24,11 +24,11 @@ public class GlobalExceptionMiddleware
             context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
             context.Response.Headers.Append("Content-Security-Policy", 
                 "default-src 'self'; " +
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; " +
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://cdn.datatables.net; " +
+                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdn.datatables.net; " +
                 "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; " +
                 "img-src 'self' data:; " +
-                "connect-src 'self' ws://localhost:* http://localhost:*;");
+                "connect-src 'self' ws://localhost:* wss://localhost:* http://localhost:* https://localhost:*;");
 
             await _next(context);
         }

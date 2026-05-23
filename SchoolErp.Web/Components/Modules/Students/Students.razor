@@ -14,25 +14,425 @@
 
 <PageTitle>Students Management - School ERP</PageTitle>
 
-<div class="students-page">
-    <div class="page-header">
-        <h2 class="page-title">Students Management</h2>
-        <div class="header-actions" style="display: flex; gap: 10px;">
-            <button class="btn-secondary-modern" @onclick="ToggleSettings">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                <span>Table Settings</span>
-            </button>
-            <button class="btn-secondary-modern" @onclick="ToggleReport">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                <span>Reports</span>
-            </button>
-            <button class="btn-add" @onclick="ShowCreateForm">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                <span>Add New Student</span>
-            </button>
+<div class="management-container p-3 animate-fade-in-up" style="min-height: 100vh;">
+    @if (!ShowForm)
+    {
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="header-main">
+                <h2 class="fw-bold mb-1 text-dark" style="font-size: 1.35rem;">Students Management</h2>
+                <p class="text-muted mb-0" style="font-size: 0.65rem;">View and manage all student records in the system</p>
+            </div>
+            <div class="d-flex gap-3">
+                <button class="btn btn-white border px-3 py-2 fw-medium shadow-sm d-flex align-items-center bg-white" @onclick="ToggleSettings"><i class="bi bi-gear me-2 text-muted"></i>Table Settings</button>
+                <button class="btn btn-white border px-3 py-2 fw-medium shadow-sm d-flex align-items-center bg-white" @onclick="ToggleReport"><i class="bi bi-file-earmark-text me-2 text-muted"></i>Reports</button>
+                <button class="btn btn-primary px-4 py-2 fw-medium shadow-sm d-flex align-items-center" style="background: #4f46e5; border-color: #4f46e5;" @onclick="ShowCreateForm">
+                    <i class="bi bi-plus fs-5 me-1"></i>Add New Student
+                </button>
+            </div>
         </div>
-    </div>
 
+        <!-- Compact Stats Badges -->
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <div class="d-flex align-items-center px-3 py-2 rounded-pill bg-white border shadow-sm">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; background: #eef2ff; color: #4f46e5;">
+                    <i class="bi bi-people fs-6"></i>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="text-muted text-dark fw-semibold" style="font-size: 0.8rem;">Total Students:</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.9rem;">@(Stats?.TotalStudents ?? 0)</span>
+                    <span class="text-success ms-1" style="font-size: 0.75rem; font-weight: 500;"><i class="bi bi-arrow-up-short"></i>8.5%</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center px-3 py-2 rounded-pill bg-white border shadow-sm">
+                <div class="rounded-circle  d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; background: #e0f2fe; color: #0284c7;">
+                    <i class="bi bi-person-badge fs-6"></i>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="text-muted text-dark fw-semibold" style="font-size: 0.8rem;">Male:</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.9rem;">@(Stats?.MaleCount ?? 0)</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center px-3 py-2 rounded-pill bg-white border shadow-sm">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; background: #fce7f3; color: #db2777;">
+                    <i class="bi bi-person-dress fs-6"></i>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="text-muted text-dark fw-semibold" style="font-size: 0.8rem;">Female:</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.9rem;">@(Stats?.FemaleCount ?? 0)</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center px-3 py-2 rounded-pill bg-white border shadow-sm">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; background: #dcfce7; color: #16a34a;">
+                    <i class="bi bi-mortarboard fs-6"></i>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="text-muted text-dark fw-semibold" style="font-size: 0.8rem;">New Admissions:</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.9rem;">@(Stats?.NewAdmissionsCount ?? 0)</span>
+                    <span class="text-success ms-1" style="font-size: 0.75rem; font-weight: 500;"><i class="bi bi-arrow-up-short"></i>30d</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <!-- Main Content: Table -->
+            <div class="col-lg-@(ShowSidebar ? "9" : "12")">
+                <div class="card border-0 shadow-sm rounded-4 h-100 d-flex flex-column">
+                    <div class="card-header bg-white border-bottom-0 py-2 px-3 d-flex justify-content-between align-items-center rounded-top-3">
+                        <div class="d-flex gap-3 flex-grow-1" style="max-width: 600px;">
+                            <div class="position-relative flex-grow-1">
+                                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                                <input type="text" class="form-control bg-light border-0 py-2 ps-5 rounded-3" placeholder="Search by name, admission no, mobile no..." @bind="SearchTerm" @bind:event="oninput" @onkeyup="HandleSearch">
+                            </div>
+                            <select class="form-select bg-light border-0 py-2 rounded-3" style="width: 160px;" value="@FilterClassId" @onchange="@(async e => { FilterClassId = e.Value?.ToString(); await LoadPage(1); })">
+                                <option value="">All Classes</option>
+                                @if (Classes != null)
+                                {
+                                    @foreach (var cls in Classes) { <option value="@cls.Value">@cls.Text</option> }
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-white border fw-medium bg-white rounded-3 shadow-sm d-flex align-items-center @(ShowSidebar ? "border-primary text-primary" : "")" @onclick="() => ShowSidebar = !ShowSidebar">
+                                <i class="bi bi-funnel me-2"></i>Filter
+                            </button>
+                            
+                            <div class="dropdown">
+                                <button class="btn btn-white border fw-medium bg-white rounded-3 shadow-sm d-flex align-items-center" id="moreDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i> More
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 mt-2" aria-labelledby="moreDropdown">
+                                    <li><button class="dropdown-item py-2" @onclick="ToggleReport"><i class="bi bi-file-earmark-text me-2 text-muted"></i>Generate Report</button></li>
+                                    <li><button class="dropdown-item py-2" @onclick="ToggleSettings"><i class="bi bi-gear me-2 text-muted"></i>Table Settings</button></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><button class="dropdown-item py-2 text-danger" @onclick="ResetFilters"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset All Filters</button></li>
+                                </ul>
+                            </div>
+                            <div class="btn-group shadow-sm rounded-3">
+                                <button class="btn btn-white border bg-white @(ViewMode == "grid" ? "active text-primary" : "")" @onclick='() => ViewMode = "grid"'><i class="bi bi-grid"></i></button>
+                                <button class="btn btn-white border bg-white @(ViewMode == "list" ? "active text-primary" : "")" @onclick='() => ViewMode = "list"'><i class="bi bi-list"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body p-0 flex-grow-1">
+                        @if (IsLoading)
+                        {
+                            <div class="p-5 text-center text-muted">
+                                <div class="spinner-border text-primary mb-3" role="status"></div>
+                                <div>Loading students...</div>
+                            </div>
+                        }
+                        else if (StudentsList == null || !StudentsList.Items.Any())
+                        {
+                            <div class="p-5 text-center text-muted">
+                                <i class="bi bi-inbox fs-1"></i>
+                                <p class="mt-2">No students matching your criteria were found.</p>
+                            </div>
+                        }
+                        else if (ViewMode == "list")
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 custom-datatable" id="studentsTable" style="width:100%">
+                                    <thead style="background: #f8fafc;">
+                                        <tr>
+                                            <th class="ps-3" style="width: 40px; color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;"><input class="form-check-input" type="checkbox"></th>
+                                            @foreach(var col in SelectedColumns)
+                                            {
+                                                if(col == "STUDENT_ID") continue;
+                                                <th style="color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;">@(col.Replace("_", " ")) &darr;</th>
+                                            }
+                                            <th class="text-end pe-3" style="color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;">ACTIONS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="border-top-0">
+                                        @foreach (var student in StudentsList.Items)
+                                        {
+                                            <tr>
+                                                <td class="ps-3"><input class="form-check-input" type="checkbox"></td>
+                                                @foreach(var col in SelectedColumns)
+                                                {
+                                                    if(col == "STUDENT_ID") continue;
+
+                                                    var val = GetColumnValue(student, col);
+                                                    var displayVal = GetDisplayValue(student, col, val);
+
+                                                    <td>
+                                                        @if(col == "NAME")
+                                                        {
+                                                            <div class="d-flex align-items-center py-2">
+                                                                <div class="me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; border-radius: 8px; background: #eef2ff; color: #4f46e5; font-weight: 600; font-size: 0.9rem;">
+                                                                    @(displayVal?.FirstOrDefault() ?? '?')
+                                                                </div>
+                                                                <div>
+                                                                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">@displayVal</div>
+                                                                    <div class="text-muted" style="font-size: 0.8rem;">@(displayVal?.ToLower().Replace(" ", "."))@("@email.com")</div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else if(col == "MOBILE_NO")
+                                                        {
+                                                            <div class="d-flex align-items-center text-dark fw-medium" style="font-size: 0.9rem;">
+                                                                <i class="bi bi-telephone text-muted me-2" style="font-size: 0.85rem;"></i>
+                                                                @(string.IsNullOrEmpty(displayVal) || displayVal == "—" ? "N/A" : displayVal)
+                                                            </div>
+                                                        }
+                                                        else if(col == "ADMISSION_NO")
+                                                        {
+                                                            <span class="text-primary fw-medium" style="font-size: 0.9rem;">@displayVal</span>
+                                                        }
+                                                        else if(col == "CLASS_ID")
+                                                        {
+                                                            <span class="badge rounded-pill px-3 py-2 fw-medium" style="background: #eef2ff; color: #4f46e5; font-size: 0.8rem;">@displayVal</span>
+                                                        }
+                                                        else if(col == "GENDER_ID")
+                                                        {
+                                                            <span class="badge rounded-pill px-3 py-2 fw-medium" style="background: #e0f2fe; color: #0284c7; font-size: 0.8rem;">@displayVal</span>
+                                                        }
+                                                        else if(col == "IS_ACTIVE" || col == "STATUS")
+                                                        {
+                                                            @if(val?.ToString() == "1" || displayVal == "Active") {
+                                                                <span class="badge rounded-pill px-3 py-2 fw-medium" style="background: #dcfce7; color: #16a34a; font-size: 0.8rem;">Active</span>
+                                                            } else {
+                                                                <span class="badge rounded-pill px-3 py-2 fw-medium" style="background: #fef3c7; color: #d97706; font-size: 0.8rem;">Inactive</span>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-dark fw-medium" style="font-size: 0.9rem;">@displayVal</span>
+                                                        }
+                                                    </td>
+                                                }
+                                                <td class="text-end pe-3">
+                                                    <button class="btn btn-sm btn-white border rounded-2 me-1 shadow-sm" @onclick='() => EditStudent(GetStringValue(student, "STUDENT_ID"))'><i class="bi bi-pencil-square text-muted"></i></button>
+                                                    <button class="btn btn-sm btn-white border rounded-2 shadow-sm text-danger" @onclick='() => DeleteStudent(GetStringValue(student, "STUDENT_ID"))'><i class="bi bi-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Grid View -->
+                            <div class="row g-3 p-3">
+                                @foreach (var student in StudentsList.Items)
+                                {
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card border border-light shadow-sm rounded-4 h-100">
+                                            <div class="card-body p-3">
+                                                <div class="d-flex justify-content-between mb-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 10px; background: #eef2ff; color: #4f46e5; font-weight: bold;">
+                                                            @(GetStringValue(student, "NAME")?.FirstOrDefault() ?? '?')
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-0 fw-bold text-dark">@GetStringValue(student, "NAME")</h6>
+                                                            <small class="text-muted">@GetStringValue(student, "ADMISSION_NO")</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span class="text-muted small">Class</span>
+                                                    <span class="fw-medium small">@GetDisplayValue(student, "CLASS_ID", GetColumnValue(student, "CLASS_ID"))</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-3">
+                                                    <span class="text-muted small">Mobile</span>
+                                                    <span class="fw-medium small">@GetStringValue(student, "MOBILE_NO")</span>
+                                                </div>
+                                                <div class="d-flex justify-content-end border-top pt-3">
+                                                    <button class="btn btn-sm btn-light me-2" @onclick='() => EditStudent(GetStringValue(student, "STUDENT_ID"))'>Edit</button>
+                                                    <button class="btn btn-sm btn-light text-danger" @onclick='() => DeleteStudent(GetStringValue(student, "STUDENT_ID"))'>Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    
+                    <!-- Pagination (DataTables style custom) -->
+                    @if (StudentsList != null && StudentsList.TotalPages > 0)
+                    {
+                        <div class="d-flex justify-content-between align-items-center p-3 px-4 mt-auto border-top">
+                            <span class="text-muted fw-medium" style="font-size: 0.85rem;">Showing @(((PageNumber - 1) * PageSize) + 1) to @(Math.Min(PageNumber * PageSize, StudentsList.TotalCount)) of @StudentsList.TotalCount entries</span>
+                            <div class="btn-group shadow-sm rounded-3">
+                                <button class="btn btn-white border bg-white" disabled="@(!StudentsList.HasPreviousPage)" @onclick="() => LoadPage(PageNumber - 1)"><i class="bi bi-chevron-left text-muted"></i></button>
+                                @for(int i = Math.Max(1, PageNumber - 2); i <= Math.Min(StudentsList.TotalPages, PageNumber + 2); i++)
+                                {
+                                    int p = i;
+                                    <button class="btn btn-white border @(p == PageNumber ? "bg-primary bg-opacity-10 text-primary fw-bold" : "bg-white text-muted fw-medium")" style="min-width: 40px;" @onclick="() => LoadPage(p)">@p</button>
+                                }
+                                <button class="btn btn-white border bg-white" disabled="@(!StudentsList.HasNextPage)" @onclick="() => LoadPage(PageNumber + 1)"><i class="bi bi-chevron-right text-muted"></i></button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (ShowSidebar)
+            {
+                <!-- Right Sidebar Filters -->
+                <div class="col-lg-3 animate-fade-in">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-header bg-white border-bottom py-2 px-3 d-flex justify-content-between align-items-center rounded-top-3">
+                        <h5 class="mb-0 fw-bold d-flex align-items-center" style="font-size: 1.1rem;"><i class="bi bi-funnel text-muted me-2"></i>Filters</h5>
+                        <button class="btn btn-link text-primary text-decoration-none fw-medium p-0" style="font-size: 0.85rem;" @onclick="ResetFilters">Clear All</button>
+                    </div>
+                    <div class="card-body p-3 d-flex flex-column">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Class</label>
+                            <select class="form-select bg-light border-0 py-2 rounded-3 text-dark fw-medium" value="@FilterClassId" @onchange="@(e => { FilterClassId = e.Value?.ToString(); })">
+                                <option value="">All Classes</option>
+                                @if (Classes != null)
+                                {
+                                    @foreach (var cls in Classes) { <option value="@cls.Value">@cls.Text</option> }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Gender</label>
+                            <select class="form-select bg-light border-0 py-2 rounded-3 text-dark fw-medium" value="@FilterGenderId" @onchange="@(e => { FilterGenderId = e.Value?.ToString(); })">
+                                <option value="">All Genders</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Status</label>
+                            <select class="form-select bg-light border-0 py-2 rounded-3 text-dark fw-medium">
+                                <option>All Status</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Admission Date</label>
+                            <div class="position-relative">
+                                <input type="text" class="form-control bg-light border-0 py-2 pe-5 rounded-3 text-dark fw-medium" placeholder="01/01/2026 - 31/12/2026">
+                                <i class="bi bi-calendar3 position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-3 mt-auto pt-4 border-top">
+                            <button class="btn btn-primary py-2 fw-medium rounded-3" style="background: #4f46e5; border-color: #4f46e5;" @onclick="() => LoadPage(1)">Apply Filters</button>
+                            <button class="btn btn-white border py-2 fw-medium rounded-3 d-flex align-items-center justify-content-center bg-white" @onclick="ResetFilters"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            }
+        </div>
+    }
+    else if (ShowForm)
+    {
+        <!-- Form View -->
+        <div class="form-card animate-fade-in-up mt-3 p-3 card border-0 shadow-sm rounded-4">
+            <h3 class="form-title fw-bold text-dark mb-3">@(IsEditMode ? "Edit Student Details" : "Register New Student")</h3>
+            
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger d-flex align-items-center mb-3 rounded-3 border-0" style="background: rgba(239, 68, 68, 0.1); color: var(--danger-600);">
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i> @ErrorMessage
+                </div>
+            }
+
+            <EditForm Model="StudentForm" OnValidSubmit="SaveStudent">
+                <DataAnnotationsValidator />
+                
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Full Name</label>
+                        <InputText @bind-Value="StudentForm.Name" class="form-control bg-light border-0 py-2 rounded-3" placeholder="e.g. John Doe" />
+                        <ValidationMessage For="@(() => StudentForm.Name)" class="text-danger small mt-1" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Admission No</label>
+                        <InputText @bind-Value="StudentForm.AdmissionNo" class="form-control bg-light border-0 py-2 rounded-3" placeholder="e.g. ADM1001" />
+                        <ValidationMessage For="@(() => StudentForm.AdmissionNo)" class="text-danger small mt-1" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        <InputText @bind-Value="StudentForm.EmailId" class="form-control bg-light border-0 py-2 rounded-3" placeholder="e.g. john@example.com" />
+                        <ValidationMessage For="@(() => StudentForm.EmailId)" class="text-danger small mt-1" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Mobile No</label>
+                        <InputText @bind-Value="StudentForm.MobileNo" class="form-control bg-light border-0 py-2 rounded-3" placeholder="e.g. 9876543210" />
+                        <ValidationMessage For="@(() => StudentForm.MobileNo)" class="text-danger small mt-1" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Gender</label>
+                        <InputSelect @bind-Value="StudentForm.GenderId" class="form-select bg-light border-0 py-2 rounded-3">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => StudentForm.GenderId)" class="text-danger small mt-1" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Date of Birth</label>
+                        <InputDate @bind-Value="StudentForm.DateOfBirth" class="form-control bg-light border-0 py-2 rounded-3" />
+                        <ValidationMessage For="@(() => StudentForm.DateOfBirth)" class="text-danger small mt-1" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Father's Name</label>
+                        <InputText @bind-Value="StudentForm.FatherName" class="form-control bg-light border-0 py-2 rounded-3" placeholder="Father's full name" />
+                        <ValidationMessage For="@(() => StudentForm.FatherName)" class="text-danger small mt-1" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Mother's Name</label>
+                        <InputText @bind-Value="StudentForm.MotherName" class="form-control bg-light border-0 py-2 rounded-3" placeholder="Mother's full name" />
+                        <ValidationMessage For="@(() => StudentForm.MotherName)" class="text-danger small mt-1" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Address</label>
+                        <InputText @bind-Value="StudentForm.Address" class="form-control bg-light border-0 py-2 rounded-3" placeholder="Home address" />
+                        <ValidationMessage For="@(() => StudentForm.Address)" class="text-danger small mt-1" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Class</label>
+                        <InputSelect @bind-Value="StudentForm.ClassId" class="form-select bg-light border-0 py-2 rounded-3">
+                            <option value="">Select Class</option>
+                            @if (Classes != null)
+                            {
+                                @foreach (var c in Classes)
+                                {
+                                    <option value="@c.Value">@c.Text</option>
+                                }
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => StudentForm.ClassId)" class="text-danger small mt-1" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Register No</label>
+                        <InputText @bind-Value="StudentForm.RegisterNo" class="form-control bg-light border-0 py-2 rounded-3" placeholder="e.g. REG1001" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Roll No</label>
+                        <InputText @bind-Value="StudentForm.RollNo" class="form-control bg-light border-0 py-2 rounded-3" placeholder="e.g. 01" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">User ID (Optional)</label>
+                        <InputText @bind-Value="StudentForm.UserId" class="form-control bg-light border-0 py-2 rounded-3" placeholder="Link to user account" />
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3 mt-5 pt-4 border-top">
+                    <button type="button" class="btn btn-white border px-4 py-2 fw-medium rounded-3" @onclick="CancelForm">Discard</button>
+                    <button type="submit" class="btn btn-primary px-4 py-2 fw-medium rounded-3" style="background: #4f46e5; border-color: #4f46e5;">@(IsEditMode ? "Update Student" : "Save Student")</button>
+                </div>
+            </EditForm>
+        </div>
+    }
+
+    <!-- Modals (Settings & Report) -->
     @if (ShowSettingsModal)
     {
         <div class="settings-modal-overlay" @onclick="ToggleSettings">
@@ -47,19 +447,19 @@
                     <div class="settings-body">
                         <div class="form-group mb-3">
                             <label class="form-label">Column Name (e.g., COMMUNITY_ID)</label>
-                            <input type="text" class="form-control-modern" @bind="NewColumnName" placeholder="Uppercase, no spaces" />
+                            <input type="text" class="form-control bg-light border-0 py-2 rounded-3" @bind="NewColumnName" placeholder="Uppercase, no spaces" />
                         </div>
                         <div class="form-group mb-3">
                             <label class="form-label">Data Type</label>
-                            <select class="form-select-modern" @bind="NewColumnDataType">
+                            <select class="form-select bg-light border-0 py-2 rounded-3" @bind="NewColumnDataType">
                                 <option value="VARCHAR(255)">Text (VARCHAR)</option>
                                 <option value="INT">Number (INT)</option>
                                 <option value="DATE">Date (DATE)</option>
                             </select>
                         </div>
                         <div class="form-group mb-3">
-                            <label class="column-checkbox">
-                                <input type="checkbox" @bind="IsNewColumnRef" />
+                            <label class="d-flex align-items-center gap-2">
+                                <input type="checkbox" class="form-check-input" @bind="IsNewColumnRef" />
                                 <span>Is this an ID linking to a sub-table?</span>
                             </label>
                         </div>
@@ -67,15 +467,15 @@
                         {
                             <div class="form-group mb-3">
                                 <label class="form-label">Reference Table Name (e.g. COMMUNITY)</label>
-                                <input type="text" class="form-control-modern" @bind="RefTableName" />
+                                <input type="text" class="form-control bg-light border-0 py-2 rounded-3" @bind="RefTableName" />
                             </div>
                             <div class="form-group mb-3">
                                 <label class="form-label">Reference Primary Key (e.g. COMMUNITY_ID)</label>
-                                <input type="text" class="form-control-modern" @bind="RefPrimaryKey" />
+                                <input type="text" class="form-control bg-light border-0 py-2 rounded-3" @bind="RefPrimaryKey" />
                             </div>
                             <div class="form-group mb-3">
                                 <label class="form-label">Reference Display Column (e.g. COMMUNITY_NAME)</label>
-                                <input type="text" class="form-control-modern" @bind="RefDisplayColumn" />
+                                <input type="text" class="form-control bg-light border-0 py-2 rounded-3" @bind="RefDisplayColumn" />
                             </div>
                         }
                         
@@ -85,14 +485,14 @@
                         }
                     </div>
                     <div class="settings-footer" style="justify-content: space-between;">
-                        <button class="btn-secondary-modern" @onclick="() => IsAddingColumn = false">Back</button>
-                        <button class="btn-apply-modern" @onclick="AddNewColumn">Create Column</button>
+                        <button class="btn btn-white border px-4 py-2 fw-medium rounded-3" @onclick="() => IsAddingColumn = false">Back</button>
+                        <button class="btn btn-primary px-4 py-2 fw-medium rounded-3" style="background: #4f46e5; border-color: #4f46e5;" @onclick="AddNewColumn">Create Column</button>
                     </div>
                 }
                 else
                 {
                     <div class="settings-body">
-                        <p class="settings-desc-modern">Select the fields you want to fetch and display dynamically. Required fields cannot be deselected.</p>
+                        <p class="settings-desc-modern text-muted mb-3">Select the fields you want to fetch and display dynamically. Required fields cannot be deselected.</p>
                         <div class="column-selection-grid">
                             @foreach (var col in AvailableColumns)
                             {
@@ -115,8 +515,8 @@
                         </div>
                     </div>
                     <div class="settings-footer" style="justify-content: space-between;">
-                        <button class="btn-secondary-modern" style="border: 1px dashed var(--primary-color); color: var(--primary-color);" @onclick="() => IsAddingColumn = true">+ Add Field to DB</button>
-                        <button class="btn-apply-modern" @onclick="ApplySettings">Apply & Fetch</button>
+                        <button class="btn btn-white border px-4 py-2 fw-medium rounded-3 text-primary" style="border: 1px dashed var(--bs-primary) !important;" @onclick="() => IsAddingColumn = true">+ Add Field to DB</button>
+                        <button class="btn btn-primary px-4 py-2 fw-medium rounded-3" style="background: #4f46e5; border-color: #4f46e5;" @onclick="ApplySettings">Apply & Fetch</button>
                     </div>
                 }
             </div>
@@ -132,16 +532,16 @@
                     <button class="btn-close-square" @onclick="ToggleReport">&times;</button>
                 </div>
                 <div class="settings-body">
-                    <div class="form-group mb-4">
+                    <div class="form-group mb-3">
                         <label class="form-label" style="font-weight: 600; color: #475569;">Report Type</label>
-                        <select class="form-select-modern" @bind="ReportType">
+                        <select class="form-select bg-light border-0 py-2 rounded-3" @bind="ReportType">
                             <option value="General">General Student List</option>
                             <option value="Admission">Admission Register</option>
                             <option value="Contact">Contact Information</option>
                         </select>
                     </div>
 
-                    <div class="form-group mb-4">
+                    <div class="form-group mb-3">
                         <label class="form-label" style="font-weight: 600; color: #475569;">Choose Columns to Include</label>
                         <div class="column-selection-grid">
                             @foreach (var col in AvailableColumns)
@@ -178,276 +578,34 @@
                 <div class="settings-footer">
                     @if (IsGeneratingReport)
                     {
-                        <button class="btn-apply-modern" disabled style="opacity: 0.8; cursor: wait;">
+                        <button class="btn btn-primary px-4 py-2 fw-medium rounded-3" disabled style="background: #4f46e5; border-color: #4f46e5; opacity: 0.8; cursor: wait;">
                              Generating...
                         </button>
                     }
                     else
                     {
-                        <button class="btn-apply-modern" @onclick="GenerateReport">Generate & Download</button>
+                        <button class="btn btn-primary px-4 py-2 fw-medium rounded-3" style="background: #4f46e5; border-color: #4f46e5;" @onclick="GenerateReport">Generate & Download</button>
                     }
                 </div>
             </div>
         </div>
     }
-
-    @if (IsLoading)
-    {
-        <div class="skeleton-container">
-            <div class="skeleton" style="height: 100px; margin-bottom: 1.5rem;"></div>
-            <div class="skeleton" style="height: 400px;"></div>
-        </div>
-    }
-    else if (ShowForm)
-    {
-        <!-- Form code kept mostly the same... -->
-        <div class="form-card animate-fade-in-up">
-            <h3 class="form-title">@(IsEditMode ? "Edit Student Details" : "Register New Student")</h3>
-            
-            @if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                <div class="login-error" style="background: rgba(239, 68, 68, 0.1); color: var(--danger-600); border: 1px solid var(--danger-100); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @ErrorMessage
-                </div>
-            }
-
-            <EditForm Model="StudentForm" OnValidSubmit="SaveStudent">
-                <DataAnnotationsValidator />
-                
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <label class="form-label">Full Name</label>
-                        <InputText @bind-Value="StudentForm.Name" class="form-control-modern" placeholder="e.g. John Doe" />
-                        <ValidationMessage For="@(() => StudentForm.Name)" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Admission No</label>
-                        <InputText @bind-Value="StudentForm.AdmissionNo" class="form-control-modern" placeholder="e.g. ADM1001" />
-                        <ValidationMessage For="@(() => StudentForm.AdmissionNo)" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Email Address</label>
-                        <InputText @bind-Value="StudentForm.EmailId" class="form-control-modern" placeholder="e.g. john@example.com" />
-                        <ValidationMessage For="@(() => StudentForm.EmailId)" />
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Mobile No</label>
-                        <InputText @bind-Value="StudentForm.MobileNo" class="form-control-modern" placeholder="e.g. 9876543210" />
-                        <ValidationMessage For="@(() => StudentForm.MobileNo)" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Gender</label>
-                        <InputSelect @bind-Value="StudentForm.GenderId" class="form-control-modern">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </InputSelect>
-                        <ValidationMessage For="@(() => StudentForm.GenderId)" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Date of Birth</label>
-                        <InputDate @bind-Value="StudentForm.DateOfBirth" class="form-control-modern" />
-                        <ValidationMessage For="@(() => StudentForm.DateOfBirth)" />
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Father's Name</label>
-                        <InputText @bind-Value="StudentForm.FatherName" class="form-control-modern" placeholder="Father's full name" />
-                        <ValidationMessage For="@(() => StudentForm.FatherName)" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Mother's Name</label>
-                        <InputText @bind-Value="StudentForm.MotherName" class="form-control-modern" placeholder="Mother's full name" />
-                        <ValidationMessage For="@(() => StudentForm.MotherName)" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Address</label>
-                        <InputText @bind-Value="StudentForm.Address" class="form-control-modern" placeholder="Home address" />
-                        <ValidationMessage For="@(() => StudentForm.Address)" />
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label">Class</label>
-                        <InputSelect @bind-Value="StudentForm.ClassId" class="form-select-modern">
-                            <option value="">Select Class</option>
-                            @if (Classes != null)
-                            {
-                                @foreach (var c in Classes)
-                                {
-                                    <option value="@c.Value">@c.Text</option>
-                                }
-                            }
-                        </InputSelect>
-                        <ValidationMessage For="@(() => StudentForm.ClassId)" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Register No</label>
-                        <InputText @bind-Value="StudentForm.RegisterNo" class="form-control-modern" placeholder="e.g. REG1001" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Roll No</label>
-                        <InputText @bind-Value="StudentForm.RollNo" class="form-control-modern" placeholder="e.g. 01" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">User ID (Optional)</label>
-                        <InputText @bind-Value="StudentForm.UserId" class="form-control-modern" placeholder="Link to user account" />
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary-modern" @onclick="CancelForm">Discard</button>
-                    <button type="submit" class="btn-primary-modern">@(IsEditMode ? "Update Student" : "Save Student")</button>
-                </div>
-            </EditForm>
-        </div>
-    }
-
-    @if (StudentsList != null && !ShowForm)
-    {
-        <div class="list-toolbar animate-fade-in-up">
-            <div class="list-toolbar-left">
-                <div class="toolbar-search">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                    <input type="text" placeholder="Search by name..." @bind="SearchTerm" @bind:event="oninput" @onkeyup="HandleSearch" />
-                </div>
-                <button class="btn-icon-modern" title="Search" @onclick="() => LoadPage(1)">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                </button>
-                <span class="result-count">@(StudentsList.TotalCount) student(s)</span>
-            </div>
-            <div class="list-toolbar-right">
-                <div class="view-toggle">
-                    <button class="view-btn @(ViewMode == "grid" ? "active" : "")" title="Grid View" @onclick='() => ViewMode = "grid"'>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                    </button>
-                    <button class="view-btn @(ViewMode == "list" ? "active" : "")" title="List View" @onclick='() => ViewMode = "list"'>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        @if (!StudentsList.Items.Any())
-        {
-            <div class="empty-state">
-                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
-                <p>No students matching your criteria were found.</p>
-            </div>
-        }
-        else if (ViewMode == "list")
-        {
-            <div class="table-card animate-fade-in-up">
-                <div class="table-responsive">
-                    <table class="modern-table">
-                        <thead>
-                            <tr>
-                                @foreach(var col in SelectedColumns)
-                                {
-                                    if(col == "STUDENT_ID") continue; // Hide internal ID from UI
-                                    <th>@(col.Replace("_", " "))</th>
-                                }
-                                <th style="text-align: right;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var student in StudentsList.Items)
-                            {
-                                <tr>
-                                    @foreach(var col in SelectedColumns)
-                                    {
-                                        if(col == "STUDENT_ID") continue;
-
-                                        var val = GetColumnValue(student, col);
-                                        var displayVal = GetDisplayValue(student, col, val);
-
-                                        <td>
-                                            @if(col == "NAME")
-                                            {
-                                                <div class="student-name">@displayVal</div>
-                                            }
-                                            else if(col.Contains("ID") || col.Contains("NO"))
-                                            {
-                                                <span class="badge-modern badge-info">@displayVal</span>
-                                            }
-                                            else
-                                            {
-                                                @displayVal
-                                            }
-                                        </td>
-                                    }
-                                    <td>
-                                        <div class="action-buttons" style="justify-content: flex-end;">
-                                            <button class="btn-icon-modern" @onclick='() => EditStudent(GetStringValue(student, "STUDENT_ID"))' title="Edit">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                            </button>
-                                            <button class="btn-icon-modern danger" @onclick='() => DeleteStudent(GetStringValue(student, "STUDENT_ID"))' title="Delete">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-        else
-        {
-            <!-- GRID VIEW -->
-            <div class="data-grid animate-fade-in">
-                @foreach (var student in StudentsList.Items)
-                {
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-avatar">@(GetStringValue(student, "NAME")?.FirstOrDefault() ?? '?')</div>
-                            <div>
-                                <div class="data-card-title">@GetStringValue(student, "NAME")</div>
-                                <div class="data-card-subtitle">@GetDisplayValue(student, "EMAIL_ID", GetColumnValue(student, "EMAIL_ID"))</div>
-                            </div>
-                        </div>
-                        <div class="data-card-body">
-                            @foreach(var col in SelectedColumns.Where(c => c != "NAME" && c != "STUDENT_ID" && c != "EMAIL_ID").Take(4))
-                            {
-                                <div class="data-card-row">
-                                    <span class="data-card-label">@(col.Replace("_", " "))</span>
-                                    <span class="data-card-value">@GetDisplayValue(student, col, GetColumnValue(student, col))</span>
-                                </div>
-                            }
-                        </div>
-                        <div class="data-card-actions">
-                            <button class="btn-icon-modern" @onclick='() => EditStudent(GetStringValue(student, "STUDENT_ID"))' title="Edit">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                            </button>
-                            <button class="btn-icon-modern danger" @onclick='() => DeleteStudent(GetStringValue(student, "STUDENT_ID"))' title="Delete">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-                            </button>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-
-        @if (StudentsList.TotalPages > 1)
-        {
-            <div class="pagination-bar">
-                <span class="pagination-info">Page @PageNumber of @StudentsList.TotalPages (@StudentsList.TotalCount total)</span>
-                <div class="pagination-controls">
-                    <button class="page-btn-modern" disabled="@(!StudentsList.HasPreviousPage)" @onclick="() => LoadPage(PageNumber - 1)">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-                    </button>
-                    <button class="page-btn-modern" disabled="@(!StudentsList.HasNextPage)" @onclick="() => LoadPage(PageNumber + 1)">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                    </button>
-                </div>
-            </div>
-        }
-    }
 </div>
 
 <style>
+    /* Hide client-side jQuery DataTables elements that cause empty space */
+    #studentsTable_wrapper .dataTables_paginate,
+    #studentsTable_wrapper .dataTables_info,
+    #studentsTable_wrapper .dataTables_length,
+    #studentsTable_wrapper .dataTables_filter {
+        display: none !important;
+    }
+
+    /* DataTables Custom Overrides & UI specific styling */
+    .custom-datatable th { border-bottom: 1px solid #f1f5f9 !important; }
+    .custom-datatable td { border-bottom: 1px solid #f1f5f9 !important; vertical-align: middle; }
+    .custom-datatable tr:hover td { background-color: #f8fafc !important; }
+    
     .settings-modal-overlay {
         position: fixed; top: 0; left: 0; right: 0; bottom: 0;
         background: rgba(15, 23, 42, 0.4);
@@ -470,86 +628,242 @@
     }
     .modal-title-modern { margin: 0; font-weight: 700; font-size: 1.15rem; color: #1e293b; }
     .btn-close-square {
-        background: #f1f5f9;
-        color: #64748b;
-        border: 1px solid #e2e8f0;
-        border-radius: 4px;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        cursor: pointer;
-        transition: all 0.2s;
+        background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; border-radius: 4px;
+        width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem; cursor: pointer; transition: all 0.2s;
     }
     .btn-close-square:hover { background: #e2e8f0; color: #1e293b; }
 
     .settings-body { padding: 1.5rem; max-height: 65vh; overflow-y: auto; }
-    .settings-desc-modern { font-size: 0.9rem; color: #94a3b8; margin-bottom: 1.5rem; line-height: 1.5; }
     
-    .column-selection-grid {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
-    }
+    .column-selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
     
     .column-pill {
         display: flex; align-items: center; gap: 0.75rem;
         padding: 0.7rem 1rem; border: 1.5px solid #e2e8f0;
-        border-radius: 12px; cursor: pointer;
-        background: #ffffff;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        user-select: none;
+        border-radius: 12px; cursor: pointer; background: #ffffff;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); user-select: none;
     }
     .column-pill:hover { border-color: #cbd5e1; background: #f8fafc; }
     .column-pill.active { border-color: #94a3b8; background: #f1f5f9; }
     .column-pill.disabled { opacity: 0.6; cursor: not-allowed; background: #f8fafc; }
-    
     .column-pill input { display: none; }
     
     .custom-checkbox {
-        width: 18px; height: 18px;
-        border: 2px solid #cbd5e1;
-        border-radius: 4px;
-        background: #ffffff;
-        display: flex; align-items: center; justify-content: center;
-        color: #ffffff;
-        transition: all 0.2s;
+        width: 18px; height: 18px; border: 2px solid #cbd5e1; border-radius: 4px;
+        background: #ffffff; display: flex; align-items: center; justify-content: center;
+        color: #ffffff; transition: all 0.2s;
     }
-    .column-pill.active .custom-checkbox {
-        background: #10b981;
-        border-color: #10b981;
-    }
-    .column-pill.disabled .custom-checkbox {
-        background: #94a3b8;
-        border-color: #94a3b8;
-    }
-    
+    .column-pill.active .custom-checkbox { background: #10b981; border-color: #10b981; }
+    .column-pill.disabled .custom-checkbox { background: #94a3b8; border-color: #94a3b8; }
     .column-name { font-size: 0.875rem; font-weight: 600; color: #475569; }
     .column-pill.active .column-name { color: #1e293b; }
 
     .settings-footer {
-        padding: 1.25rem 1.5rem;
-        border-top: 1px solid #f1f5f9;
-        display: flex; justify-content: flex-end;
-        background: #ffffff;
+        padding: 1.25rem 1.5rem; border-top: 1px solid #f1f5f9;
+        display: flex; justify-content: flex-end; background: #ffffff;
     }
-    .btn-apply-modern {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-        color: #ffffff;
-        padding: 0.7rem 1.5rem;
-        border-radius: 10px;
-        border: none;
-        font-weight: 700;
-        font-size: 0.95rem;
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
+
+    /* ============================================
+       DARK MODE SUPPORT OVERRIDES
+       ============================================ */
+    [data-theme="dark"] .management-container {
+        background-color: transparent !important;
     }
-    .btn-apply-modern:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+    
+    [data-theme="dark"] .card {
+        background-color: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
     }
-    .btn-apply-modern:active { transform: translateY(0); }
+    
+    [data-theme="dark"] .card-header {
+        background-color: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .text-dark {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .bg-light {
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .form-control.bg-light,
+    [data-theme="dark"] .form-select.bg-light,
+    [data-theme="dark"] .form-control,
+    [data-theme="dark"] .form-select {
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .btn-white,
+    [data-theme="dark"] .bg-white {
+        background-color: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-secondary) !important;
+    }
+    
+    [data-theme="dark"] .btn-white:hover,
+    [data-theme="dark"] .bg-white:hover {
+        background-color: var(--gray-100) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .btn-white.bg-primary.bg-opacity-10 {
+        background-color: rgba(99, 102, 241, 0.2) !important;
+        color: var(--primary-500) !important;
+        border-color: var(--primary-500) !important;
+    }
+    
+    [data-theme="dark"] .table {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .table th {
+        background-color: var(--gray-50) !important;
+        color: var(--text-secondary) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .table td {
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+        background-color: var(--bg-card) !important;
+    }
+    
+    [data-theme="dark"] .table tr:hover td {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+    }
+    
+    [data-theme="dark"] .custom-datatable th {
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .custom-datatable td {
+        border-bottom: 1px solid var(--border-color) !important;
+        color: var(--text-primary) !important;
+        background-color: var(--bg-card) !important;
+    }
+    
+    [data-theme="dark"] .custom-datatable tr:hover td {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+    }
+    
+    [data-theme="dark"] .settings-modal {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .settings-header,
+    [data-theme="dark"] .settings-footer {
+        background: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .modal-title-modern {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .btn-close-square {
+        background: var(--gray-100) !important;
+        color: var(--text-secondary) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .btn-close-square:hover {
+        background: var(--gray-200) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .column-pill {
+        background: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .column-pill:hover {
+        border-color: var(--primary-200) !important;
+        background: var(--gray-100) !important;
+    }
+    
+    [data-theme="dark"] .column-pill.active {
+        border-color: var(--primary-500) !important;
+        background: rgba(99, 102, 241, 0.1) !important;
+    }
+    
+    [data-theme="dark"] .column-pill.active .column-name {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .column-name {
+        color: var(--text-secondary) !important;
+    }
+    
+    [data-theme="dark"] .custom-checkbox {
+        background: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .column-pill.active .custom-checkbox {
+        background: #10b981 !important;
+        border-color: #10b981 !important;
+    }
+    
+    [data-theme="dark"] .management-container .me-3.d-flex[style*="background: #eef2ff"],
+    [data-theme="dark"] .management-container .rounded-circle[style*="background: #eef2ff"] {
+        background-color: rgba(99, 102, 241, 0.15) !important;
+        color: #818cf8 !important;
+    }
+    
+    [data-theme="dark"] .management-container .rounded-circle[style*="background: #e0f2fe"] {
+        background-color: rgba(56, 189, 248, 0.15) !important;
+        color: #38bdf8 !important;
+    }
+    
+    [data-theme="dark"] .management-container .rounded-circle[style*="background: #fce7f3"] {
+        background-color: rgba(219, 39, 119, 0.15) !important;
+        color: #f472b6 !important;
+    }
+    
+    [data-theme="dark"] .management-container .rounded-circle[style*="background: #dcfce7"] {
+        background-color: rgba(34, 197, 94, 0.15) !important;
+        color: #4ade80 !important;
+    }
+    
+    [data-theme="dark"] span.badge[style*="background: #eef2ff"] {
+        background-color: rgba(99, 102, 241, 0.15) !important;
+        color: #818cf8 !important;
+    }
+    
+    [data-theme="dark"] span.badge[style*="background: #e0f2fe"] {
+        background-color: rgba(56, 189, 248, 0.15) !important;
+        color: #38bdf8 !important;
+    }
+    
+    [data-theme="dark"] span.badge[style*="background: #dcfce7"] {
+        background-color: rgba(34, 197, 94, 0.15) !important;
+        color: #4ade80 !important;
+    }
+    
+    [data-theme="dark"] span.badge[style*="background: #fef3c7"] {
+        background-color: rgba(245, 158, 11, 0.15) !important;
+        color: #fbbf24 !important;
+    }
+    
+    [data-theme="dark"] .form-card {
+        background: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .form-title {
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
 </style>
 
 @code {
@@ -569,6 +883,10 @@
     private List<DropdownItem>? Classes;
     private StudentFormModel StudentForm = new();
 
+    private bool ShowSidebar = true;
+    private StudentStatsDto? Stats;
+    private string? FilterClassId;
+    private string? FilterGenderId;
     private List<ColumnDto> AvailableColumns = new();
     private List<string> SelectedColumns = new();
     private List<string> SelectedReportColumns = new();
@@ -581,6 +899,7 @@
     protected override async Task OnInitializedAsync()
     {
         Classes = await CommonData.GetClassListAsync();
+        Stats = await Mediator.Send(new GetStudentStatsQuery());
         
         // Load available columns from DB schema
         AvailableColumns = await Mediator.Send(new GetTableColumnsQuery { TableName = "STUDENTS_INFO" });
@@ -597,6 +916,21 @@
         if (!SelectedColumns.Contains("STUDENT_ID")) SelectedColumns.Insert(0, "STUDENT_ID");
 
         await LoadStudents();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!IsLoading && !ShowForm && ViewMode == "list" && StudentsList != null && StudentsList.Items.Any())
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("eval", "if ($.fn.DataTable.isDataTable('#studentsTable')) { $('#studentsTable').DataTable().destroy(); } $('#studentsTable').DataTable({ paging: false, ordering: true, info: false, searching: false, lengthChange: false });");
+            }
+            catch (Exception)
+            {
+                // Suppress JS disconnected errors during navigation
+            }
+        }
     }
 
     private void ToggleSettings()
@@ -723,20 +1057,35 @@
     private async Task LoadStudents()
     {
         IsLoading = true;
+        ErrorMessage = null;
         try
         {
             StudentsList = await Mediator.Send(new GetDynamicStudentsQuery 
             { 
                 SearchTerm = SearchTerm,
+                ClassId = FilterClassId,
+                GenderId = FilterGenderId,
                 PageNumber = PageNumber, 
                 PageSize = PageSize,
                 SelectedColumns = SelectedColumns
             });
         }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Error loading students: " + ex.Message;
+        }
         finally
         {
             IsLoading = false;
         }
+    }
+
+    private async Task ResetFilters()
+    {
+        SearchTerm = null;
+        FilterClassId = null;
+        FilterGenderId = null;
+        await LoadPage(1);
     }
 
     private async Task LoadPage(int pageNumber)

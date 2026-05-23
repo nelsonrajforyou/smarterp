@@ -4,118 +4,208 @@
 @attribute [Authorize]
 @using SchoolErp.Application.Common.Interfaces
 @using SchoolErp.Application.Common.Models
+@inject IJSRuntime JSRuntime
 @inject ICommonDataService CommonData
 @inject IAcademicService AcademicService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IAcademicYearService AcademicYearService
 
-<div class="management-container animate-fade-in-up">
-    <header class="page-header">
-        <div class="header-main">
-            <h1>Student Management</h1>
-            <p>Enroll and manage student profiles for the current academic year</p>
-        </div>
-        @if (!ShowForm)
-        {
-            <button class="btn-primary-modern" @onclick="OpenAddForm">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Admission Entry
-            </button>
-        }
-    </header>
-
+<div class="management-container p-4 animate-fade-in-up" style="min-height: 100vh;">
     @if (!ShowForm)
     {
-        <!-- Search & Filter Bar -->
-        <div class="card-modern animate-fade-in" style="margin-bottom: 1.5rem; padding: 1.25rem;">
-            <div class="row g-4" style="align-items: flex-end;">
-                <div class="col-md-5">
-                    <label class="form-label">Search Student</label>
-                    <div style="position: relative;">
-                        <svg style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        <input type="text" class="form-control-modern" style="padding-left: 2.8rem;" placeholder="Search by name, admission no..." @bind="SearchTerm" @bind:event="oninput" />
-                    </div>
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1 text-dark" style="font-size: 1.75rem;">Students Management</h2>
+                <p class="text-muted mb-0">View and manage all student records in the system</p>
+            </div>
+            <div class="d-flex gap-3">
+                <button class="btn btn-white border px-3 py-2 fw-medium shadow-sm d-flex align-items-center bg-white"><i class="bi bi-gear me-2 text-muted"></i>Table Settings</button>
+                <button class="btn btn-white border px-3 py-2 fw-medium shadow-sm d-flex align-items-center bg-white"><i class="bi bi-file-earmark-text me-2 text-muted"></i>Reports</button>
+                <button class="btn btn-primary px-4 py-2 fw-medium shadow-sm d-flex align-items-center" style="background: #4f46e5; border-color: #4f46e5;" @onclick="OpenAddForm">
+                    <i class="bi bi-plus fs-5 me-1"></i>Add New Student
+                </button>
+            </div>
+        </div>
+
+        <!-- Compact Stats Badges -->
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <div class="d-flex align-items-center px-3 py-2 rounded-pill bg-white border shadow-sm">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; background: #eef2ff; color: #4f46e5;">
+                    <i class="bi bi-people fs-6"></i>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Class</label>
-                    <select @bind="SelectedClass" class="form-select-modern">
-                        <option value="">All Classes</option>
-                        @foreach (var cls in Classes)
-                        {
-                            <option value="@cls.Value">@cls.Text</option>
-                        }
-                    </select>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="text-muted fw-semibold" style="font-size: 0.8rem;">Total Students:</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.9rem;">1,248</span>
+                    <span class="text-success ms-1" style="font-size: 0.75rem; font-weight: 500;"><i class="bi bi-arrow-up-short"></i>8.5%</span>
                 </div>
-                <div class="col-md-4">
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn-secondary-modern" style="flex: 1;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            Export
-                        </button>
-                        <button class="btn-secondary-modern" style="flex: 1;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-                            Import
-                        </button>
-                    </div>
+            </div>
+            <div class="d-flex align-items-center px-3 py-2 rounded-pill bg-white border shadow-sm">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; background: #e0f2fe; color: #0284c7;">
+                    <i class="bi bi-person-badge fs-6"></i>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="text-muted fw-semibold" style="font-size: 0.8rem;">Male:</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.9rem;">648</span>
+                    <span class="text-primary ms-1" style="font-size: 0.75rem; font-weight: 500;">51.9%</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center px-3 py-2 rounded-pill bg-white border shadow-sm">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; background: #fce7f3; color: #db2777;">
+                    <i class="bi bi-person-dress fs-6"></i>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="text-muted fw-semibold" style="font-size: 0.8rem;">Female:</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.9rem;">600</span>
+                    <span class="text-danger ms-1" style="font-size: 0.75rem; font-weight: 500;">48.1%</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center px-3 py-2 rounded-pill bg-white border shadow-sm">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; background: #dcfce7; color: #16a34a;">
+                    <i class="bi bi-mortarboard fs-6"></i>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="text-muted fw-semibold" style="font-size: 0.8rem;">New Admissions:</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.9rem;">128</span>
+                    <span class="text-success ms-1" style="font-size: 0.75rem; font-weight: 500;"><i class="bi bi-arrow-up-short"></i>12.3%</span>
                 </div>
             </div>
         </div>
 
-        <div class="table-card animate-fade-in">
-            <div class="card-header-modern" style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--gray-50);">
-                <h3 style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin: 0;">Student Directory</h3>
-                <span class="badge-modern badge-info">@FilteredStudents.Count() Records Found</span>
+        <div class="row g-4">
+            <!-- Main Content: Table -->
+            <div class="col-lg-9">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <!-- Toolbar inside card -->
+                    <div class="card-header bg-white border-bottom-0 py-3 px-4 d-flex justify-content-between align-items-center rounded-top-4">
+                        <div class="d-flex gap-3 flex-grow-1" style="max-width: 600px;">
+                            <div class="position-relative flex-grow-1">
+                                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                                <input type="text" class="form-control bg-light border-0 py-2 ps-5 rounded-3" placeholder="Search by name, admission no, mobile no..." @bind="SearchTerm" @bind:event="oninput">
+                            </div>
+                            <select class="form-select bg-light border-0 py-2 rounded-3" style="width: 160px;" @bind="SelectedClass">
+                                <option value="">All Classes</option>
+                                @foreach (var cls in Classes) { <option value="@cls.Value">@cls.Text</option> }
+                            </select>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-white border fw-medium bg-white rounded-3 shadow-sm d-flex align-items-center"><i class="bi bi-funnel me-2"></i>Filter</button>
+                            <button class="btn btn-white border fw-medium bg-white rounded-3 shadow-sm d-flex align-items-center"><i class="bi bi-three-dots"></i> More</button>
+                            <div class="btn-group shadow-sm rounded-3">
+                                <button class="btn btn-white border bg-white active text-primary"><i class="bi bi-grid"></i></button>
+                                <button class="btn btn-white border bg-white"><i class="bi bi-list"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 custom-datatable" id="studentsTable" style="width:100%">
+                                <thead style="background: #f8fafc;">
+                                    <tr>
+                                        <th class="ps-4" style="width: 40px; color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;"><input class="form-check-input" type="checkbox"></th>
+                                        <th style="color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;">STUDENT</th>
+                                        <th style="color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;">MOBILE NO &darr;</th>
+                                        <th style="color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;">ADMISSION NO &darr;</th>
+                                        <th style="color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;">CLASS &darr;</th>
+                                        <th style="color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;">GENDER &darr;</th>
+                                        <th style="color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;">STATUS &darr;</th>
+                                        <th class="text-end pe-4" style="color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase;">ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="border-top-0">
+                                    @foreach (var student in FilteredStudents)
+                                    {
+                                        <tr>
+                                            <td class="ps-4"><input class="form-check-input" type="checkbox"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center py-2">
+                                                    <div class="me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; border-radius: 8px; background: #eef2ff; color: #4f46e5; font-weight: 600; font-size: 0.9rem;">
+                                                        @student.NAME[0]
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-bold text-dark" style="font-size: 0.9rem;">@student.NAME</div>
+                                                        <div class="text-muted" style="font-size: 0.8rem;">@(student.NAME.ToLower().Replace(" ", "."))@("@email.com")</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center text-dark fw-medium" style="font-size: 0.9rem;">
+                                                    <i class="bi bi-telephone text-muted me-2" style="font-size: 0.85rem;"></i>
+                                                    23423324
+                                                </div>
+                                            </td>
+                                            <td><span class="text-primary fw-medium" style="font-size: 0.9rem;">@student.ADMISSION_NO</span></td>
+                                            <td><span class="badge rounded-pill px-3 py-2 fw-medium" style="background: #eef2ff; color: #4f46e5; font-size: 0.8rem;">@student.CLASS_NAME</span></td>
+                                            <td>
+                                                <span class="badge rounded-pill px-3 py-2 fw-medium" style="background: #e0f2fe; color: #0284c7; font-size: 0.8rem;">Male</span>
+                                            </td>
+                                            <td>
+                                                @if(student.IS_ACTIVE == "1") {
+                                                    <span class="badge rounded-pill px-3 py-2 fw-medium" style="background: #dcfce7; color: #16a34a; font-size: 0.8rem;">Active</span>
+                                                } else {
+                                                    <span class="badge rounded-pill px-3 py-2 fw-medium" style="background: #fef3c7; color: #d97706; font-size: 0.8rem;">Inactive</span>
+                                                }
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <button class="btn btn-sm btn-white border rounded-2 me-1 shadow-sm"><i class="bi bi-pencil-square text-muted"></i></button>
+                                                <button class="btn btn-sm btn-white border rounded-2 shadow-sm text-danger"><i class="bi bi-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="table-responsive">
-                <table class="modern-table">
-                    <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Adm No</th>
-                            <th>Class</th>
-                            <th>Parent Details</th>
-                            <th>Status</th>
-                            <th style="text-align: right;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var student in FilteredStudents)
-                        {
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 1rem;">
-                                        <div class="avatar-modern">@student.NAME[0]</div>
-                                        <div style="font-weight: 700;">@student.NAME</div>
-                                    </div>
-                                </td>
-                                <td><code style="font-size: 0.8rem; background: var(--gray-100); padding: 2px 6px; border-radius: 4px;">@student.ADMISSION_NO</code></td>
-                                <td><span class="badge-modern badge-info">@student.CLASS_NAME</span></td>
-                                <td>
-                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">F: @student.FATHER_NAME</div>
-                                    <div style="font-size: 0.75rem; color: var(--text-muted);">M: @student.MOTHER_NAME</div>
-                                </td>
-                                <td>
-                                    <span class="badge-modern @(student.IS_ACTIVE == "1" ? "badge-success" : "badge-danger")">
-                                        <span class="status-dot @(student.IS_ACTIVE == "1" ? "bg-success" : "bg-danger")"></span>
-                                        @(student.IS_ACTIVE == "1" ? "Active" : "Inactive")
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="action-buttons" style="justify-content: flex-end;">
-                                        <button class="btn-icon-modern" title="View Profile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                                        <button class="btn-icon-modern" title="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+
+            <!-- Right Sidebar Filters -->
+            <div class="col-lg-3">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center rounded-top-4">
+                        <h5 class="mb-0 fw-bold d-flex align-items-center" style="font-size: 1.1rem;"><i class="bi bi-funnel text-muted me-2"></i>Filters</h5>
+                        <a href="#" class="text-primary text-decoration-none fw-medium" style="font-size: 0.85rem;">Clear All</a>
+                    </div>
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Class</label>
+                            <select class="form-select bg-light border-0 py-2 rounded-3 text-dark fw-medium">
+                                <option>All Classes</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Gender</label>
+                            <select class="form-select bg-light border-0 py-2 rounded-3 text-dark fw-medium">
+                                <option>All Genders</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Status</label>
+                            <select class="form-select bg-light border-0 py-2 rounded-3 text-dark fw-medium">
+                                <option>All Status</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Admission Date</label>
+                            <div class="position-relative">
+                                <input type="text" class="form-control bg-light border-0 py-2 pe-5 rounded-3 text-dark fw-medium" placeholder="01/01/2026 - 31/12/2026">
+                                <i class="bi bi-calendar3 position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-3 mt-auto pt-4 border-top">
+                            <button class="btn btn-primary py-2 fw-medium rounded-3" style="background: #4f46e5; border-color: #4f46e5;">Apply Filters</button>
+                            <button class="btn btn-white border py-2 fw-medium rounded-3 d-flex align-items-center justify-content-center bg-white"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     }
     else
     {
-        <!-- Admission Form View -->
         <SchoolErp.Web.Components.Modules.Students.Shared.StudentAdmissionForm 
             Model="StudentForm" 
             Genders="Genders" 
@@ -127,15 +217,256 @@
 </div>
 
 <style>
-    .section-subtitle {
+    /* DataTables Custom Overrides */
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        display: none !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current, 
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        background: #eef2ff !important;
+        color: #4f46e5 !important;
+        border: 1px solid #c7d2fe !important;
+        border-radius: 8px !important;
+        font-weight: 600;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 8px !important;
+        border: 1px solid transparent !important;
+        color: #64748b !important;
+        font-weight: 500;
+        margin: 0 4px;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #0f172a !important;
+    }
+    .dataTables_wrapper .dataTables_info {
+        padding-top: 1.5rem !important;
+        color: #64748b !important;
+        font-weight: 500;
         font-size: 0.85rem;
-        color: var(--primary-500);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 700;
-        margin: 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--primary-50);
+    }
+    .custom-datatable th {
+        border-bottom: 1px solid #f1f5f9 !important;
+    }
+    .custom-datatable td {
+        border-bottom: 1px solid #f1f5f9 !important;
+        vertical-align: middle;
+    }
+    .custom-datatable tr:hover td {
+        background-color: #f8fafc !important;
+    }
+    .dataTables_wrapper {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+    table.dataTable thead th {
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+    table.dataTable.no-footer {
+        border-bottom: 0 !important;
+    }
+
+    /* ============================================
+       DARK MODE SUPPORT OVERRIDES
+       ============================================ */
+    [data-theme="dark"] .management-container {
+        background-color: transparent !important;
+    }
+    
+    [data-theme="dark"] .card {
+        background-color: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .card-header {
+        background-color: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .text-dark {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .bg-light {
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .form-control.bg-light,
+    [data-theme="dark"] .form-select.bg-light,
+    [data-theme="dark"] .form-control,
+    [data-theme="dark"] .form-select {
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .btn-white,
+    [data-theme="dark"] .bg-white {
+        background-color: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-secondary) !important;
+    }
+    
+    [data-theme="dark"] .btn-white:hover,
+    [data-theme="dark"] .bg-white:hover {
+        background-color: var(--gray-100) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .btn-white.bg-primary.bg-opacity-10 {
+        background-color: rgba(99, 102, 241, 0.2) !important;
+        color: var(--primary-500) !important;
+        border-color: var(--primary-500) !important;
+    }
+    
+    [data-theme="dark"] .table {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .table th {
+        background-color: var(--gray-50) !important;
+        color: var(--text-secondary) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .table td {
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+        background-color: var(--bg-card) !important;
+    }
+    
+    [data-theme="dark"] .table tr:hover td {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+    }
+    
+    [data-theme="dark"] .custom-datatable th {
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .custom-datatable td {
+        border-bottom: 1px solid var(--border-color) !important;
+        color: var(--text-primary) !important;
+        background-color: var(--bg-card) !important;
+    }
+    
+    [data-theme="dark"] .custom-datatable tr:hover td {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+    }
+    
+    [data-theme="dark"] .settings-modal {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .settings-header,
+    [data-theme="dark"] .settings-footer {
+        background: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .modal-title-modern {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .btn-close-square {
+        background: var(--gray-100) !important;
+        color: var(--text-secondary) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .btn-close-square:hover {
+        background: var(--gray-200) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .column-pill {
+        background: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .column-pill:hover {
+        border-color: var(--primary-200) !important;
+        background: var(--gray-100) !important;
+    }
+    
+    [data-theme="dark"] .column-pill.active {
+        border-color: var(--primary-500) !important;
+        background: rgba(99, 102, 241, 0.1) !important;
+    }
+    
+    [data-theme="dark"] .column-pill.active .column-name {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .column-name {
+        color: var(--text-secondary) !important;
+    }
+    
+    [data-theme="dark"] .custom-checkbox {
+        background: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .column-pill.active .custom-checkbox {
+        background: #10b981 !important;
+        border-color: #10b981 !important;
+    }
+    
+    [data-theme="dark"] .management-container .me-3.d-flex[style*="background: #eef2ff"],
+    [data-theme="dark"] .management-container .rounded-circle[style*="background: #eef2ff"] {
+        background-color: rgba(99, 102, 241, 0.15) !important;
+        color: #818cf8 !important;
+    }
+    
+    [data-theme="dark"] .management-container .rounded-circle[style*="background: #e0f2fe"] {
+        background-color: rgba(56, 189, 248, 0.15) !important;
+        color: #38bdf8 !important;
+    }
+    
+    [data-theme="dark"] .management-container .rounded-circle[style*="background: #fce7f3"] {
+        background-color: rgba(219, 39, 119, 0.15) !important;
+        color: #f472b6 !important;
+    }
+    
+    [data-theme="dark"] .management-container .rounded-circle[style*="background: #dcfce7"] {
+        background-color: rgba(34, 197, 94, 0.15) !important;
+        color: #4ade80 !important;
+    }
+    
+    [data-theme="dark"] span.badge[style*="background: #eef2ff"] {
+        background-color: rgba(99, 102, 241, 0.15) !important;
+        color: #818cf8 !important;
+    }
+    
+    [data-theme="dark"] span.badge[style*="background: #e0f2fe"] {
+        background-color: rgba(56, 189, 248, 0.15) !important;
+        color: #38bdf8 !important;
+    }
+    
+    [data-theme="dark"] span.badge[style*="background: #dcfce7"] {
+        background-color: rgba(34, 197, 94, 0.15) !important;
+        color: #4ade80 !important;
+    }
+    
+    [data-theme="dark"] span.badge[style*="background: #fef3c7"] {
+        background-color: rgba(245, 158, 11, 0.15) !important;
+        color: #fbbf24 !important;
+    }
+    
+    [data-theme="dark"] .form-card {
+        background: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .form-title {
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
     }
 </style>
 
@@ -157,6 +488,15 @@
         await LoadStudents();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !ShowForm)
+        {
+            await Task.Delay(100);
+            await JSRuntime.InvokeVoidAsync("initDataTable", "#studentsTable");
+        }
+    }
+
     private async Task LoadStudents()
     {
         StudentsList = await AcademicService.GetStudentDirectoryAsync(SelectedClass);
@@ -165,18 +505,24 @@
     private IEnumerable<StudentDirectoryModel> FilteredStudents => StudentsList
         .Where(s => (string.IsNullOrEmpty(SearchTerm) || s.NAME.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) || s.ADMISSION_NO.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)));
 
-    private void OpenAddForm() 
+    private async Task OpenAddForm() 
     {
         StudentForm = new();
         ShowForm = true;
+        await JSRuntime.InvokeVoidAsync("eval", "$('#studentsTable').DataTable().destroy()");
     }
-    private void CloseForm() => ShowForm = false;
+    private async Task CloseForm() 
+    {
+        ShowForm = false;
+        StateHasChanged();
+        await Task.Delay(100);
+        await JSRuntime.InvokeVoidAsync("initDataTable", "#studentsTable");
+    }
 
     private async Task SaveStudent()
     {
-        // Admission saving logic here using StudentForm
         await LoadStudents();
-        CloseForm();
+        await CloseForm();
         StudentForm = new();
     }
 }

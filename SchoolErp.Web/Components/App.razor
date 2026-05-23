@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["SchoolErp.Web.styles.css"]" />
     <ImportMap />
@@ -44,6 +46,26 @@
     <script src="lib/flatpickr/flatpickr.min.js"></script>
     <script src="js/datepicker.js"></script>
     <script src="js/download.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        window.initDataTable = function (selector, options) {
+            if ($.fn.DataTable.isDataTable(selector)) {
+                $(selector).DataTable().destroy();
+            }
+            var defaults = {
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searching": false, // Using custom search
+                "lengthChange": false,
+                "pageLength": 10
+            };
+            var settings = $.extend({}, defaults, options || {});
+            $(selector).DataTable(settings);
+        };
+    </script>
     <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
 

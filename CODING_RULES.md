@@ -17,6 +17,7 @@
 9. [Scoped CSS vs Global CSS Rules](#9-scoped-css-vs-global-css-rules)
 10. [Blazor Component Conventions](#10-blazor-component-conventions)
 11. [Custom Shared Components — SelectPicker](#11-custom-shared-components--selectpicker)
+12. [DataTables Integration Rules](#12-datatables-integration-rules)
 
 ---
 
@@ -664,5 +665,49 @@ private static readonly IEnumerable<object> StatusPickerItems = new object[]
 
 ---
 
-> **Last updated**: 2026-05-13  
+## 12. DataTables Integration Rules
+
+For any module displaying data in a table, the **DataTables** plugin must be used to provide a professional, interactive experience (sorting, searching, etc.).
+
+### 12.1 Infrastructure (Global)
+- DataTables CSS and JS are loaded via CDN in `App.razor`.
+- A global helper `window.initDataTable(selector)` is defined in `App.razor` to handle initialization and re-initialization (essential for Blazor's SPA lifecycle).
+- **Security**: The `https://cdn.datatables.net` domain must be whitelisted in the `GlobalExceptionMiddleware.cs` Content Security Policy (CSP).
+
+### 12.2 Implementation Pattern
+Every component using a table must follow this pattern:
+
+1. **Table Definition**: Assign a unique `id` and the `custom-datatable` class.
+```razor
+<table class="table table-hover align-middle mb-0 custom-datatable" id="myUniqueTableId">
+    ...
+</table>
+```
+
+2. **C# Initialization**: Invoke the initialization in `OnAfterRenderAsync`.
+```csharp
+@inject IJSRuntime JS
+
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (!IsLoading && !ShowForm && ViewMode == "list" && Items != null && Items.Any())
+    {
+        try
+        {
+            // Re-initialize DataTable on every render to ensure it binds to new DOM
+            await JS.InvokeVoidAsync("initDataTable", "#myUniqueTableId");
+        }
+        catch (JSDisconnectedException) { /* Handle navigation away */ }
+    }
+}
+```
+
+### 12.3 Configuration Rules
+- **Paging**: Let Blazor handle server-side paging if the dataset is large; set DataTables `"paging": false` if using custom pagination.
+- **Searching**: Use the custom search input provided in the layout (`.list-toolbar`) and pass it to the backend; disable DataTables native search via `"searching": false`.
+- **Styling**: Always use the Bootstrap 5 DataTables adapter for consistent look and feel.
+
+---
+
+> **Last updated**: 2026-05-16  
 > Maintained by: Development Team — update this file whenever a new pattern or convention is established.

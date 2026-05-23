@@ -17,3 +17,7 @@ project.nuget.cache
 
 # Rider
 .idea/
+
+# Agent brain/logs directory
+brain/
+
