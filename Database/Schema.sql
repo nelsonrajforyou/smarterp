@@ -208,6 +208,8 @@ CREATE TABLE `sup_attendance_type` (
   `ATTENDANCE_TYPE_ID` varchar(36) NOT NULL,
   `ATTENDANCE_TYPE_NAME` varchar(100) NOT NULL,
   `ATTENDANCE_TYPE_CODE` varchar(100) NOT NULL,
+  `ORDER_NO` int(1) default '0',
+  `COLOR_CODE` varchar(20) default 'fff',
   `IS_ACTIVE` int DEFAULT '1',
   `IS_DELETED` int DEFAULT '0',
   PRIMARY KEY (`ATTENDANCE_TYPE_ID`),

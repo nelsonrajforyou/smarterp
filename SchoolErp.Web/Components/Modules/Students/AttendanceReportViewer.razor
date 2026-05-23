@@ -1,0 +1,412 @@
+@page "/student-attendance/report"
+@using SchoolErp.Application.Features.Attendance.Reports
+@using SchoolErp.Application.Common.Mediator
+@using Microsoft.AspNetCore.Authorization
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = "Admin,Teacher")]
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+<PageTitle>Attendance Report - School ERP</PageTitle>
+
+<div class="report-viewer-container animate-fade-in-up">
+    @if (IsLoading)
+    {
+        <div class="report-loading">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-3">Generating Report...</p>
+        </div>
+    }
+    else if (ReportData == null)
+    {
+        <div class="alert alert-danger">
+            Failed to load report data. <button class="btn btn-link" @onclick="GoBack">Go Back</button>
+        </div>
+    }
+    else
+    {
+        <div class="report-actions d-print-none mb-4">
+            <button class="btn-secondary-modern" @onclick="GoBack">
+                <i class="bi bi-arrow-left"></i> Back to Attendance
+            </button>
+            <div class="action-buttons" style="display: flex; gap: 0.75rem;">
+                <button class="btn-secondary-modern" style="background: #107c41; color: white; border: none;" @onclick="ExportToExcel">
+                    <i class="bi bi-file-earmark-excel me-2"></i> Export Excel
+                </button>
+                <button class="btn-secondary-modern" style="background: #e02424; color: white; border: none;" @onclick="PrintReport">
+                    <i class="bi bi-file-earmark-pdf me-2"></i> Export PDF
+                </button>
+                <button class="btn-primary-modern" @onclick="PrintReport">
+                    <i class="bi bi-printer me-2"></i> Print Report
+                </button>
+            </div>
+        </div>
+
+        <div class="report-page" id="report-printable-area">
+            <div class="report-header">
+                <h2>@ReportData.ReportTitle</h2>
+                <p><strong>Class/Section:</strong> @ReportData.ClassName</p>
+                <p><strong>Generated On:</strong> @ReportData.GeneratedAt.ToString("dd MMM yyyy, hh:mm tt")</p>
+            </div>
+
+            <div class="report-content">
+                @if (ReportType == "DailyAttendance" && ReportData.DailyReport != null)
+                {
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Admission No</th>
+                                <th>Student Name</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!ReportData.DailyReport.Any())
+                            {
+                                <tr><td colspan="5" class="text-center">No records found.</td></tr>
+                            }
+                            @foreach (var (row, index) in ReportData.DailyReport.Select((v, i) => (v, i)))
+                            {
+                                <tr>
+                                    <td>@(index + 1)</td>
+                                    <td>@row.AdmissionNo</td>
+                                    <td>@row.StudentName</td>
+                                    <td class="@GetStatusCss(row.Status)">@row.Status</td>
+                                    <td>@row.Remarks</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else if (ReportType == "MonthlyRegister" && ReportData.MonthlyRegister != null)
+                {
+                    <div class="table-responsive">
+                        <table class="report-table monthly-table">
+                            <thead>
+                                <tr>
+                                    <th class="sticky-col">Student Name</th>
+                                    @for (int i = 1; i <= ReportData.MonthlyRegister.DaysInMonth; i++)
+                                    {
+                                        <th title="Day @i">@i</th>
+                                    }
+                                    <th class="summary-col">P</th>
+                                    <th class="summary-col">A</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!ReportData.MonthlyRegister.Rows.Any())
+                                {
+                                    <tr><td colspan="@(ReportData.MonthlyRegister.DaysInMonth + 3)" class="text-center">No records found.</td></tr>
+                                }
+                                @foreach (var row in ReportData.MonthlyRegister.Rows)
+                                {
+                                    <tr>
+                                        <td class="sticky-col">@row.StudentName</td>
+                                        @for (int i = 1; i <= ReportData.MonthlyRegister.DaysInMonth; i++)
+                                        {
+                                            var status = row.DailyStatus.ContainsKey(i) ? row.DailyStatus[i] : "-";
+                                            <td class="@GetShortStatusCss(status)">@status</td>
+                                        }
+                                        <td class="summary-col present-count">@row.TotalPresent</td>
+                                        <td class="summary-col absent-count">@row.TotalAbsent</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else if ((ReportType == "Defaulters" || ReportType == "ContinuousAbsentees") && ReportData.DefaultersReport != null)
+                {
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Admission No</th>
+                                <th>Student Name</th>
+                                @if (ReportType == "Defaulters")
+                                {
+                                    <th>Total Working Days</th>
+                                    <th>Days Present</th>
+                                    <th>Days Absent</th>
+                                    <th>Attendance %</th>
+                                }
+                                else
+                                {
+                                    <th>Consecutive Days Absent</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!ReportData.DefaultersReport.Any())
+                            {
+                                <tr><td colspan="7" class="text-center">No students found matching the criteria.</td></tr>
+                            }
+                            @foreach (var (row, index) in ReportData.DefaultersReport.Select((v, i) => (v, i)))
+                            {
+                                <tr>
+                                    <td>@(index + 1)</td>
+                                    <td>@row.AdmissionNo</td>
+                                    <td>@row.StudentName</td>
+                                    @if (ReportType == "Defaulters")
+                                    {
+                                        <td>@row.TotalWorkingDays</td>
+                                        <td>@row.DaysPresent</td>
+                                        <td>@row.DaysAbsent</td>
+                                        <td style="color: var(--danger-600); font-weight: bold;">@row.Percentage%</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color: var(--danger-600); font-weight: bold;">@row.DaysAbsent Days</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+            
+            <div class="report-footer">
+                <p>Generated by School ERP System</p>
+                <div class="signature-line">Authorized Signatory</div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .report-viewer-container {
+        padding: 20px;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+
+    .report-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .report-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 50vh;
+        font-size: 1.2rem;
+        color: var(--gray-600);
+    }
+
+    .report-page {
+        background: white;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border-radius: 8px;
+    }
+
+    .report-header {
+        text-align: center;
+        border-bottom: 2px solid var(--gray-200);
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .report-header h2 {
+        margin: 0 0 15px 0;
+        color: var(--gray-800);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .report-header p {
+        margin: 5px 0;
+        color: var(--gray-600);
+        font-size: 0.95rem;
+    }
+
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        font-size: 0.9rem;
+    }
+
+    .report-table th, .report-table td {
+        padding: 10px;
+        border: 1px solid var(--gray-300);
+        text-align: left;
+    }
+
+    .report-table th {
+        background-color: var(--gray-100);
+        font-weight: 600;
+        color: var(--gray-700);
+    }
+
+    .monthly-table th, .monthly-table td {
+        padding: 6px 4px;
+        text-align: center;
+        font-size: 0.8rem;
+    }
+
+    .monthly-table .sticky-col {
+        text-align: left;
+        min-width: 150px;
+        font-weight: 600;
+        background-color: #fff;
+    }
+    
+    .monthly-table .summary-col {
+        font-weight: 700;
+        background-color: var(--gray-50);
+    }
+
+    .status-p { color: var(--success-600); font-weight: 600; }
+    .status-a { color: var(--danger-600); font-weight: 600; }
+    .status-l { color: var(--warning-600); font-weight: 600; }
+    .status-hd { color: var(--info-600); font-weight: 600; }
+
+    .report-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 50px;
+        padding-top: 20px;
+        color: var(--gray-500);
+        font-size: 0.85rem;
+    }
+
+    .signature-line {
+        border-top: 1px solid var(--gray-400);
+        padding-top: 5px;
+        width: 200px;
+        text-align: center;
+    }
+
+    /* Print Styles */
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
+        #report-printable-area, #report-printable-area * {
+            visibility: visible;
+        }
+        #report-printable-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+        .d-print-none {
+            display: none !important;
+        }
+        .report-viewer-container {
+            padding: 0;
+            background: transparent;
+        }
+    }
+</style>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string? Type { get; set; }
+    
+    [SupplyParameterFromQuery]
+    public string? ClassId { get; set; }
+    
+    [SupplyParameterFromQuery]
+    public string? Date { get; set; }
+    
+    [SupplyParameterFromQuery]
+    public int? Month { get; set; }
+    
+    [SupplyParameterFromQuery]
+    public int? Year { get; set; }
+
+    private bool IsLoading = true;
+    private AttendanceReportResponse? ReportData;
+    private string ReportType => Type ?? "DailyAttendance";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadReportData();
+    }
+
+    private async Task LoadReportData()
+    {
+        IsLoading = true;
+        try
+        {
+            DateTime targetDate = DateTime.Today;
+            if (!string.IsNullOrEmpty(Date) && DateTime.TryParse(Date, out var parsedDate))
+            {
+                targetDate = parsedDate;
+            }
+
+            var query = new GenerateAttendanceReportQuery
+            {
+                ReportType = ReportType,
+                ClassId = ClassId,
+                TargetDate = targetDate,
+                Month = Month ?? DateTime.Today.Month,
+                Year = Year ?? DateTime.Today.Year
+            };
+
+            ReportData = await Mediator.Send(query);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading report: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private string GetStatusCss(string status)
+    {
+        if (status.Contains("Present", StringComparison.OrdinalIgnoreCase) || status == "P") return "status-p";
+        if (status.Contains("Absent", StringComparison.OrdinalIgnoreCase) || status == "A") return "status-a";
+        if (status.Contains("Late", StringComparison.OrdinalIgnoreCase) || status == "L") return "status-l";
+        if (status.Contains("Half", StringComparison.OrdinalIgnoreCase) || status == "HD") return "status-hd";
+        return "";
+    }
+
+    private string GetShortStatusCss(string status)
+    {
+        return status switch
+        {
+            "P" => "status-p",
+            "A" => "status-a",
+            "L" => "status-l",
+            "HD" => "status-hd",
+            _ => ""
+        };
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/student-attendance");
+    }
+
+    private async Task PrintReport()
+    {
+        await JS.InvokeVoidAsync("window.print");
+    }
+
+    private async Task ExportToExcel()
+    {
+        string filename = $"{ReportData?.ReportTitle.Replace(" ", "_")}.csv";
+        await JS.InvokeVoidAsync("window.exportTableToExcel", ".report-table", filename);
+    }
+}

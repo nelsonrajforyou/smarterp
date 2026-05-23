@@ -12,6 +12,8 @@ namespace SchoolErp.Application.Features.Students;
 public class GetDynamicStudentsQuery : IRequest<PaginatedList<IDictionary<string, object>>>
 {
     public string? SearchTerm { get; set; }
+    public string? ClassId { get; set; }
+    public string? GenderId { get; set; }
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 10;
     public List<string> SelectedColumns { get; set; } = new();
@@ -41,7 +43,7 @@ public class GetDynamicStudentsQueryHandler : IRequestHandler<GetDynamicStudents
         if (!safeColumns.Contains("STUDENT_ID"))
             safeColumns.Insert(0, "STUDENT_ID");
 
-        // Ensure mapping table exists
+        // Ensure mapping table exists before querying
         await connection.ExecuteAsync(@"
             CREATE TABLE IF NOT EXISTS DYNAMIC_COLUMN_MAPPINGS (
                 Id INT AUTO_INCREMENT PRIMARY KEY,
@@ -63,7 +65,7 @@ public class GetDynamicStudentsQueryHandler : IRequestHandler<GetDynamicStudents
 
         foreach(var col in safeColumns)
         {
-            var mapping = mappings.FirstOrDefault(m => m.ColumnName == col);
+            var mapping = mappings.FirstOrDefault(m => (string)m.ColumnName == col);
             if (mapping != null && !string.IsNullOrEmpty((string)mapping.RefTableName))
             {
                 string alias = $"j{joinAliasCounter++}";
@@ -86,25 +88,47 @@ public class GetDynamicStudentsQueryHandler : IRequestHandler<GetDynamicStudents
         }
 
         var selectClause = string.Join(", ", selectParts);
+        
+        var whereParts = new List<string> { "s.IS_DELETED = 0" };
+        var parameters = new DynamicParameters();
+        parameters.Add("Limit", request.PageSize);
+        parameters.Add("Offset", offset);
+        parameters.Add("SearchTerm", request.SearchTerm);
+        parameters.Add("ClassId", request.ClassId);
+        parameters.Add("GenderId", request.GenderId);
+
+        if (!string.IsNullOrEmpty(request.SearchTerm))
+            whereParts.Add("s.NAME LIKE CONCAT('%', @SearchTerm, '%')");
+        
+        if (!string.IsNullOrEmpty(request.ClassId))
+            whereParts.Add("sc.CLASS_ID = @ClassId");
+            
+        if (!string.IsNullOrEmpty(request.GenderId))
+            whereParts.Add("s.GENDER_ID = @GenderId");
+
+        var whereClause = string.Join(" AND ", whereParts);
 
         string query = $@"
             SELECT {selectClause}
             FROM STUDENTS_INFO s
             LEFT JOIN STU_CLASS sc ON s.STUDENT_ID = sc.STUDENT_ID AND sc.IS_ACTIVE = 1 AND sc.IS_DELETED = 0
             {string.Join("\n            ", joinParts)}
-            WHERE s.IS_DELETED = 0 
-              AND (@SearchTerm IS NULL OR s.NAME LIKE CONCAT('%', @SearchTerm, '%'))
+            WHERE {whereClause}
             ORDER BY s.CREATED_AT DESC
             LIMIT @Limit OFFSET @Offset;";
 
-        var items = await connection.QueryAsync<dynamic>(query, 
-            new { Limit = request.PageSize, Offset = offset, SearchTerm = request.SearchTerm });
+        var items = await connection.QueryAsync<dynamic>(query, parameters, commandTimeout: 30);
             
-        var totalCount = await connection.ExecuteScalarAsync<int>(
-            StudentQueries.GetTotalStudentsCount,
-            new { SearchTerm = request.SearchTerm });
+        var countQuery = $@"
+            SELECT COUNT(1) 
+            FROM STUDENTS_INFO s
+            {(request.ClassId != null ? "LEFT JOIN STU_CLASS sc ON s.STUDENT_ID = sc.STUDENT_ID AND sc.IS_ACTIVE = 1 AND sc.IS_DELETED = 0" : "")}
+            WHERE {whereClause};";
 
-        // Convert DapperRow to IDictionary<string, object>
+        // MySQL COUNT(*) returns BIGINT (long), so we must cast to long then int
+        var totalCountLong = await connection.ExecuteScalarAsync<long>(countQuery, parameters, commandTimeout: 30);
+        var totalCount = (int)totalCountLong;
+
         var dictList = items.Select(x => (IDictionary<string, object>)x).ToList();
 
         return new PaginatedList<IDictionary<string, object>>(dictList, totalCount, request.PageNumber, request.PageSize);

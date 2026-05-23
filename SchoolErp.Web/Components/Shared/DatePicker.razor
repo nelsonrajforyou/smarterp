@@ -26,6 +26,13 @@
     private DotNetObjectReference<DatePicker>? objRef;
     private bool isInitialized = false;
 
+    private string GetFormattedDate()
+    {
+        if (Value == null) return string.Empty;
+        string dotnetFormat = DateFormat.Replace("d", "dd").Replace("m", "MM").Replace("Y", "yyyy");
+        return Value.Value.ToString(dotnetFormat, System.Globalization.CultureInfo.InvariantCulture);
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -35,7 +42,7 @@
                 objRef = DotNetObjectReference.Create(this);
                 await JS.InvokeVoidAsync("datepicker.init", dateInput, new { 
                     dateFormat = DateFormat,
-                    defaultDate = Value?.ToString("yyyy-MM-dd")
+                    defaultDate = GetFormattedDate()
                 }, objRef);
                 isInitialized = true;
             }
@@ -49,7 +56,7 @@
         {
             if (isInitialized)
             {
-                await JS.InvokeVoidAsync("datepicker.setValue", dateInput, Value?.ToString("yyyy-MM-dd"));
+                await JS.InvokeVoidAsync("datepicker.setValue", dateInput, GetFormattedDate());
             }
         }
         catch (JSDisconnectedException) { /* Circuit disconnected */ }
@@ -58,17 +65,28 @@
     [JSInvokable]
     public async Task OnDateChanged(string dateStr)
     {
-        // Try parsing with the display format or ISO format
-        string dotnetFormat = DateFormat.Replace("d", "dd").Replace("m", "MM").Replace("Y", "yyyy");
-        
-        if (DateTime.TryParseExact(dateStr, dotnetFormat, null, System.Globalization.DateTimeStyles.None, out var date) ||
-            DateTime.TryParse(dateStr, out date))
+        if (string.IsNullOrWhiteSpace(dateStr))
         {
-            Value = date;
+            Value = null;
+        }
+        else if (DateTime.TryParseExact(dateStr, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var parsedDate))
+        {
+            Value = parsedDate;
         }
         else
         {
-            Value = null;
+            // Try parsing with the display format or ISO format using InvariantCulture
+            string dotnetFormat = DateFormat.Replace("d", "dd").Replace("m", "MM").Replace("Y", "yyyy");
+            
+            if (DateTime.TryParseExact(dateStr, dotnetFormat, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsedDate) ||
+                DateTime.TryParse(dateStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsedDate))
+            {
+                Value = parsedDate;
+            }
+            else
+            {
+                Value = null;
+            }
         }
         await ValueChanged.InvokeAsync(Value);
     }
